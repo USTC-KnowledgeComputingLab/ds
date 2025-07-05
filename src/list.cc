@@ -1,5 +1,6 @@
 #include <cstring>
 
+#include <ds/helper.hh>
 #include <ds/list.hh>
 #include <ds/term.hh>
 
@@ -9,18 +10,17 @@ namespace ds {
     }
 
     length_t* list_t::term_size_pointer(length_t index) {
+        if (index < 0 || index > get_list_size()) [[unlikely]] {
+            return nullptr;
+        }
         return reinterpret_cast<length_t*>(reinterpret_cast<std::byte*>(this) + sizeof(length_t) + sizeof(length_t) * index);
     }
 
     term_t* list_t::term_pointer(length_t index) {
-        if (index == 0) {
-            // term_size_pointer的输入index溢出后正好是第0个term的位置
-            return reinterpret_cast<term_t*>(term_size_pointer(get_list_size()));
-        } else if (index < 0 || index >= get_list_size()) {
+        if (index < 0 || index >= get_list_size()) [[unlikely]] {
             return nullptr;
-        } else {
-            return reinterpret_cast<term_t*>(reinterpret_cast<std::byte*>(term_size_pointer(get_list_size())) + term_size(index - 1));
         }
+        return reinterpret_cast<term_t*>(reinterpret_cast<std::byte*>(term_size_pointer(get_list_size())) + term_size(index - 1));
     }
 
     length_t list_t::get_list_size() {
@@ -28,22 +28,10 @@ namespace ds {
     }
 
     list_t* list_t::set_list_size(length_t list_size, std::byte* check_tail) {
-        // 检查对象能否存下list size数据
-        // 考虑极限情况，list size为0时，check_tail == term_size_pointer(0)是可以的
-        // 只有在check_tail比这个还小的情况下，才会出错
-        if (check_tail != nullptr) {
-            if (check_tail < reinterpret_cast<std::byte*>(term_size_pointer(0))) {
-                return nullptr;
-            }
+        if (check_before_fail(check_tail, this, sizeof(length_t) + sizeof(length_t) * list_size)) [[unlikely]] {
+            return nullptr;
         }
         *list_size_pointer() = list_size;
-        // 检查对象能否存下term size数据
-        // 可以用第0个term的位置来判断是否溢出
-        if (check_tail != nullptr) {
-            if (check_tail < reinterpret_cast<std::byte*>(term_pointer(0))) {
-                return nullptr;
-            }
-        }
         for (length_t index = 0; index < get_list_size(); ++index) {
             *term_size_pointer(index) = 0;
         }
@@ -51,6 +39,9 @@ namespace ds {
     }
 
     length_t list_t::term_size(length_t index) {
+        if (index == -1) {
+            return 0;
+        }
         return *term_size_pointer(index);
     }
 
@@ -59,11 +50,7 @@ namespace ds {
     }
 
     void list_t::update_term_size(length_t index) {
-        if (index == 0) {
-            *term_size_pointer(index) = term(index)->data_size();
-        } else {
-            *term_size_pointer(index) = term(index)->data_size() + *term_size_pointer(index - 1);
-        }
+        *term_size_pointer(index) = term(index)->data_size() + term_size(index - 1);
     }
 
     length_t list_t::data_size() {
@@ -79,32 +66,24 @@ namespace ds {
     }
 
     char* list_t::print(char* buffer, char* check_tail) {
-        // 在每次写入单个字符前都需要检查
-        // 在调用term的print时，传入check_tail并检查返回值是否为nullptr
-        if (check_tail != nullptr) {
-            if (check_tail <= buffer) {
-                return nullptr;
-            }
+        if (check_till_fail(check_tail, buffer)) [[unlikely]] {
+            return nullptr;
         }
         *(buffer++) = '(';
         for (length_t index = 0; index < get_list_size(); ++index) {
-            if (check_tail != nullptr) {
-                if (check_tail <= buffer) {
+            if (index != 0) {
+                if (check_till_fail(check_tail, buffer)) [[unlikely]] {
                     return nullptr;
                 }
-            }
-            if (index != 0) {
                 *(buffer++) = ' ';
             }
             buffer = term(index)->print(buffer, check_tail);
-            if (buffer == nullptr) {
+            if (buffer == nullptr) [[unlikely]] {
                 return nullptr;
             }
         }
-        if (check_tail != nullptr) {
-            if (check_tail <= buffer) {
-                return nullptr;
-            }
+        if (check_till_fail(check_tail, buffer)) [[unlikely]] {
+            return nullptr;
         }
         *(buffer++) = ')';
         return buffer;
@@ -126,21 +105,16 @@ namespace ds {
                 ++buffer;
                 continue;
             }
-            // 读term的时候需要检查尾指针
             buffer = term->scan(buffer, check_tail);
-            if (buffer == nullptr) {
+            if (buffer == nullptr) [[unlikely]] {
                 return nullptr;
             }
             term = reinterpret_cast<term_t*>(term->tail());
             ++list_size;
         }
         length_t offset = sizeof(length_t) + sizeof(length_t) * list_size;
-        // 需要将list中的term整体向后移动offset个字节
-        // 需要检查目前的尾巴，也就是term加上offset后是否溢出
-        if (check_tail != nullptr) {
-            if (check_tail < reinterpret_cast<std::byte*>(term) + offset) {
-                return nullptr;
-            }
+        if (check_before_fail(check_tail, term, offset)) [[unlikely]] {
+            return nullptr;
         }
         memmove(
             reinterpret_cast<std::byte*>(this) + offset,
