@@ -26,11 +26,14 @@ class Term(Common[ds.Term]):
             case ds.Term.Type.List:
                 return List(self.value.list())
             case _:
-                raise TypeError(f"Unexpected term type.")
+                raise TypeError("Unexpected term type.")
 
     def __floordiv__(self, other: Term) -> Term | None:
+        return self.ground(other)
+
+    def ground(self, other: Term, scope: str | None = None) -> Term | None:
         capacity = buffer_size()
-        term = ds.Term.ground(self.value, other.value, capacity)
+        term = ds.Term.ground(self.value, other.value, scope, capacity)
         if term is None:
             return None
         return Term(term, capacity)

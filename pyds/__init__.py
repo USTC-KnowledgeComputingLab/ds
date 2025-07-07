@@ -1,5 +1,6 @@
 __all__ = [
     "buffer_size",
+    "scoped_buffer_size",
     "String",
     "Variable",
     "Item",
@@ -9,7 +10,7 @@ __all__ = [
     "__version__",
 ]
 
-from .buffer_size import buffer_size
+from .buffer_size import buffer_size, scoped_buffer_size
 from .string_t import String
 from .variable_t import Variable
 from .item_t import Item

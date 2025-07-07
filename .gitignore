@@ -4,7 +4,7 @@
 *.so
 __pycache__
 .cache
+.coverage
 .vscode
 build
 compile_commands.json
-pyds/_version.py

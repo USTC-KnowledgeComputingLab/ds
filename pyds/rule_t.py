@@ -25,8 +25,11 @@ class Rule(Common[ds.Rule]):
         return Term(self.value.conclusion())
 
     def __floordiv__(self, other: Rule) -> Rule | None:
+        return self.ground(other)
+
+    def ground(self, other: Rule, scope: str | None = None) -> Rule | None:
         capacity = buffer_size()
-        rule = ds.Rule.ground(self.value, other.value, capacity)
+        rule = ds.Rule.ground(self.value, other.value, scope, capacity)
         if rule is None:
             return None
         return Rule(rule, capacity)
