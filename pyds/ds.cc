@@ -18,11 +18,11 @@ template<typename T>
 auto to_string(T* value, int buffer_size) -> py::str {
     auto result = reinterpret_cast<char*>(operator new(buffer_size));
     auto print_result = value->print(result, reinterpret_cast<char*>(result) + buffer_size);
-    if (print_result == nullptr || print_result - result == buffer_size - 1) {
+    if (print_result == nullptr || print_result - result == buffer_size) {
         operator delete(result);
         return py::str();
     }
-    *print_result = 0;
+    *print_result = '\0';
     auto string = py::str(result);
     operator delete(result);
     return string;

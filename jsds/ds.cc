@@ -18,11 +18,11 @@ template<typename T>
 auto to_string(T* value, int buffer_size) -> std::string {
     auto result = reinterpret_cast<char*>(operator new(buffer_size));
     auto print_result = value->print(result, reinterpret_cast<char*>(result) + buffer_size);
-    if (print_result == nullptr || print_result - result == buffer_size - 1) {
+    if (print_result == nullptr || print_result - result == buffer_size) {
         operator delete(result);
         return std::string();
     }
-    *print_result = 0;
+    *print_result = '\0';
     auto string = std::string(result);
     operator delete(result);
     return string;
