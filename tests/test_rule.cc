@@ -151,14 +151,14 @@ TEST_F(TestRule, print) {
 }
 
 TEST_F(TestRule, scan) {
-    const char* input_1 = "-a-premise-start-with-`-`\n"
+    const char* input_1 = "-a-premise-start-with-'-'\n"
                           "q\n"
-                          "----\n"
+                          "-------------------------\n"
                           "r\n";
     const char* scan_result_f = r1->scan(input_1, nullptr);
     EXPECT_EQ(scan_result_f, input_1 + strlen(input_1) - 1); // 被"----"终止，最后一个 \n 并没有读入
     EXPECT_EQ(r1->premises_count(), 2);
-    EXPECT_STREQ(r1->premises(0)->item()->name()->get_string(), "-a-premise-start-with-`-`");
+    EXPECT_STREQ(r1->premises(0)->item()->name()->get_string(), "-a-premise-start-with-'-'");
     EXPECT_STREQ(r1->premises(1)->item()->name()->get_string(), "q");
     EXPECT_STREQ(r1->conclusion()->item()->name()->get_string(), "r");
 

@@ -138,7 +138,7 @@ TEST_F(TestTerm, print) {
     char buffer[100];
     EXPECT_EQ(t2n->print(buffer, nullptr), nullptr);
 
-    const char* expect_v = "'v";
+    const char* expect_v = "`v";
     char* print_result_v = t3v->print(buffer, buffer + sizeof(buffer));
     EXPECT_NE(print_result_v, nullptr);
     *print_result_v = '\0';
@@ -170,7 +170,7 @@ TEST_F(TestTerm, print) {
 }
 
 TEST_F(TestTerm, scan) {
-    const char* input_v = "'v";
+    const char* input_v = "`v";
     const char* expect_v = "v";
     const char* scan_result_v = t3v->scan(input_v, nullptr);
     EXPECT_EQ(scan_result_v, input_v + strlen(input_v));

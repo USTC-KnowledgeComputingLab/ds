@@ -8,33 +8,29 @@ import {
 buffer_size(1000);
 
 // P -> Q, P |- Q
-const mp = new rule_t(`
-('P -> 'Q)
-'P
-----------
-'Q
-`);
+const mp = new rule_t(
+    "(`P -> `Q)\n" +
+    "`P\n" +
+    "----------\n" +
+    "`Q\n");
 
 // p -> (q -> p)
-const axiom1 = new rule_t(`
-------------------
-('p -> ('q -> 'p))
-`);
+const axiom1 = new rule_t(
+    "(`p -> (`q -> `p))"
+);
 
 // (p -> (q -> r)) -> ((p -> q) -> (p -> r))
-const axiom2 = new rule_t(`
---------------------------------------------------
-(('p -> ('q -> 'r)) -> (('p -> 'q) -> ('p -> 'r)))
-`);
+const axiom2 = new rule_t(
+    "((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))"
+);
 
 // (!p -> !q) -> (q -> p)
-const axiom3 = new rule_t(`
-----------------------------------
-(((! 'p) -> (! 'q)) -> ('q -> 'p))
-`);
+const axiom3 = new rule_t(
+    "(((! `p) -> (! `q)) -> (`q -> `p))"
+);
 
-const premise = new rule_t(`(! (! X))`);
-const target = new rule_t(`X`);
+const premise = new rule_t("(! (! X))");
+const target = new rule_t("X");
 const target_hash = target.data_string();
 
 function main() {

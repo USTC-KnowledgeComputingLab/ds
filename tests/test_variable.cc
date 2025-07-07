@@ -40,7 +40,7 @@ TEST_F(TestVariable, head_tail) {
 
 TEST_F(TestVariable, print) {
     char long_buffer[100];
-    const char* expect = "'Hello";
+    const char* expect = "`Hello";
     char* print_result = v2->print(long_buffer, long_buffer + sizeof(long_buffer));
     EXPECT_EQ(print_result, long_buffer + strlen(v2_name) + 1);
     for (ds::length_t i = 0; i < strlen(v2_name) + 1; ++i) {
@@ -53,7 +53,7 @@ TEST_F(TestVariable, print) {
 }
 
 TEST_F(TestVariable, scan) {
-    const char* input = "'World World";
+    const char* input = "`World World";
     const char* expect = "World";
     const char* scan_result = v2->scan(input, nullptr);
     EXPECT_EQ(scan_result, input + strlen(expect) + 1);

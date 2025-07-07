@@ -39,28 +39,28 @@ void run() {
 
     // P -> Q, P |- Q
     auto mp = ds::text_to_rule(
-        "('P -> 'Q)\n"
-        "'P\n"
+        "(`P -> `Q)\n"
+        "`P\n"
         "----------\n"
-        "'Q",
+        "`Q",
         temp_data_size
     );
     // p -> (q -> p)
     auto axiom1 = ds::text_to_rule(
         "------------------\n"
-        "('p -> ('q -> 'p))\n",
+        "(`p -> (`q -> `p))\n",
         temp_data_size
     );
     // (p -> (q -> r)) -> ((p -> q) -> (p -> r))
     auto axiom2 = ds::text_to_rule(
         "--------------------------------------------------\n"
-        "(('p -> ('q -> 'r)) -> (('p -> 'q) -> ('p -> 'r)))\n",
+        "((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))\n",
         temp_data_size
     );
     // (!p -> !q) -> (q -> p)
     auto axiom3 = ds::text_to_rule(
         "----------------------------------\n"
-        "(((! 'p) -> (! 'q)) -> ('q -> 'p))\n",
+        "(((! `p) -> (! `q)) -> (`q -> `p))\n",
         temp_data_size
     );
 

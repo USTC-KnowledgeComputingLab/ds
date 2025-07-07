@@ -84,7 +84,7 @@ namespace ds {
         const char* src = buffer;
         char* dst = get_string();
         while (true) {
-            if (strchr("'() \t\r\n", *src) != nullptr) {
+            if (strchr("`() \t\r\n", *src) != nullptr) {
                 break;
             }
             if (check_till_fail(check_tail, dst)) [[unlikely]] {

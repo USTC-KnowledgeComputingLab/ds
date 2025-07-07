@@ -103,7 +103,7 @@ namespace ds {
         if (check_before_fail(check_tail, this, sizeof(term_type_t))) [[unlikely]] {
             return nullptr;
         }
-        if (*buffer == '\'') {
+        if (*buffer == '`') {
             return set_variable(nullptr)->variable()->scan(buffer, check_tail);
         } else if (*buffer == '(') {
             return set_list(nullptr)->list()->scan(buffer, check_tail);
