@@ -24,3 +24,12 @@ build.verbose = true
 [tool.yapf]
 based_on_style = "google"
 column_limit = 200
+
+[project.optional-dependencies]
+dev = [
+  "yapf",
+  "pylint",
+  "mypy",
+  "pytest",
+  "pytest-cov",
+]
