@@ -1,0 +1,27 @@
+name: examples
+
+on:
+  - pull_request
+  - push
+
+jobs:
+  cxx:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dependencies
+        run: sudo apt-get update && sudo apt-get install -y libgtest-dev
+
+      - name: mkdir
+        run: mkdir ${{runner.workspace}}/build
+
+      - name: configure
+        run: cmake -S ${{github.workspace}} -B ${{runner.workspace}}/build
+
+      - name: build
+        run: cmake --build ${{runner.workspace}}/build --target main
+
+      - name: run
+        run: ${{runner.workspace}}/build/main
