@@ -113,7 +113,7 @@ namespace ds {
         /// @param rule_1 待被apply的rule。
         /// @param rule_2 待作为fact的rule。
         /// @param check_tail 可选的尾指针检查。
-        /// @return 自身，是一个rule_t对象的指针，如果尾指针检查失败则返回nullptr。
+        /// @return 自身，如果匹配失败则返回nullptr，如果尾指针检查失败则返回nullptr，在尾指针检查正常时，匹配失败会将本对象设置为null。
         rule_t* match(rule_t* rule_1, rule_t* rule_2, std::byte* check_tail = nullptr);
     };
 } // namespace ds

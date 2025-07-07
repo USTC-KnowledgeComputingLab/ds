@@ -146,13 +146,14 @@ namespace ds {
         /// @note 如果dictionary格式不正确，则行为未定义。
         term_t* ground(term_t* term, term_t* dictionary, const char* scope, std::byte* check_tail = nullptr);
 
-        /// @brief 将term_1匹配term_2。
+        /// @brief 将term_1和term_2相互匹配，结果作为一个用于ground的dictionary被更新至本对象。
         /// @param term_1 第一个term。
         /// @param term_2 第二个term。
-        /// @param follow_first_for_double_variable 当两个term都是variable时, 是否使用第一个term的名字。
+        /// @param scope_1 结果中用于标记给term_1使用的scope。
+        /// @param scope_2 结果中用于标记给term_2使用的scope。
         /// @param check_tail 可选的尾指针检查。
-        /// @return 自身，是一个用于第一个term ground的dictionary，如果匹配失败则返回nullptr。
-        term_t* match(term_t* term_1, term_t* term_2, bool follow_first_for_double_variable, std::byte* check_tail = nullptr);
+        /// @return 自身，如果匹配失败则返回nullptr，如果尾指针检查失败则返回nullptr，在尾指针检查正常时，匹配失败会将本对象设置为null。
+        term_t* match(term_t* term_1, term_t* term_2, const char* scope_1, const char* scope_2, std::byte* check_tail = nullptr);
     };
 } // namespace ds
 
