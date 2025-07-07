@@ -134,10 +134,17 @@ namespace ds {
 
         /// @brief 将term使用dictionary进行ground, 结果更新至本对象。
         /// @param term 待被ground的term。
-        /// @param dictionary 含有list of pair的term作为的dictionary, pair的两个部分分别是key和value。
+        /// @param dictionary 含有list of tuple的term作为的dictionary。
+        /// @param scope 给定的term所在的scope，如果为nullptr则无视scope判断，且要求dictionary内无scope。
         /// @param check_tail 可选的尾指针检查。
         /// @return 自身，是一个term_t对象的指针，如果尾指针检查失败则返回nullptr。
-        term_t* ground(term_t* term, term_t* dictionary, std::byte* check_tail = nullptr);
+        ///
+        /// @note dictionary中每个tuple可以是下面的形式：
+        /// 1. key, value (视为对所有scope有效)；
+        /// 2. scope, key, value (key和value的scope相同)；
+        /// 2. scope_key, scope_value, key, value。
+        /// @note 如果dictionary格式不正确，则行为未定义。
+        term_t* ground(term_t* term, term_t* dictionary, const char* scope, std::byte* check_tail = nullptr);
 
         /// @brief 将term_1匹配term_2。
         /// @param term_1 第一个term。

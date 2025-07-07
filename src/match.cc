@@ -197,12 +197,12 @@ namespace ds {
         }
         // 那自己继续当buffer存ground的结果
         rule_t* candidate_1 = reinterpret_cast<rule_t*>(dict_2->tail());
-        if (candidate_1->ground(rule_1, dict_1, check_tail) == nullptr) {
+        if (candidate_1->ground(rule_1, dict_1, nullptr, check_tail) == nullptr) {
             set_null(nullptr);
             return nullptr;
         }
         rule_t* candidate_2 = reinterpret_cast<rule_t*>(candidate_1->tail());
-        if (candidate_2->ground(rule_2, dict_2, check_tail) == nullptr) {
+        if (candidate_2->ground(rule_2, dict_2, nullptr, check_tail) == nullptr) {
             set_null(nullptr);
             return nullptr;
         }
