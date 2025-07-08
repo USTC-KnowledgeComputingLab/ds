@@ -43,7 +43,7 @@ class TestMatch : public ::testing::Test {
     void ground_rule_check(const char* rule_text, const char* dict_text, const char* expect_text) {
         auto rule = ds::text_to_rule(rule_text, buffer_size);
         auto dict = ds::text_to_rule(dict_text, buffer_size);
-        auto match_result = result_r->match(rule.get(), dict.get());
+        auto match_result = result_r->match(rule.get(), dict.get(), nullptr);
         if (expect_text == nullptr) {
             EXPECT_EQ(match_result, nullptr);
         } else {
