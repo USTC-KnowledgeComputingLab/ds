@@ -4,9 +4,9 @@
 namespace py = pybind11;
 
 template<typename T>
-auto from_string(const std::string& text, int buffer_size) -> std::unique_ptr<T> {
+auto from_string(const std::string_view& string, int buffer_size) -> std::unique_ptr<T> {
     auto result = reinterpret_cast<T*>(operator new(buffer_size));
-    auto scan_result = result->scan(text.c_str(), reinterpret_cast<std::byte*>(result) + buffer_size);
+    auto scan_result = result->scan(string.data(), reinterpret_cast<std::byte*>(result) + buffer_size);
     if (scan_result == nullptr) [[unlikely]] {
         operator delete(result);
         return std::unique_ptr<T>(nullptr);
@@ -29,15 +29,14 @@ auto to_string(T* value, int buffer_size) -> py::str {
 }
 
 template<typename T>
-auto from_binary(const std::string& text) -> std::unique_ptr<T> {
-    auto dst = std::unique_ptr<T>(reinterpret_cast<T*>(operator new(text.size())));
-    memcpy(dst.get(), text.data(), text.size());
-    return dst;
+auto from_binary(const py::buffer& binary) -> T* {
+    py::buffer_info info = binary.request();
+    return reinterpret_cast<T*>(info.ptr);
 }
 
 template<typename T>
-auto to_binary(T* value) -> py::bytes {
-    return py::bytes(reinterpret_cast<char*>(value), value->data_size());
+auto to_binary(T* value) -> py::memoryview {
+    return py::memoryview::from_memory(reinterpret_cast<char*>(value), value->data_size(), true);
 }
 
 template<typename T>
@@ -56,8 +55,8 @@ template<typename T>
 auto common_declaration(py::class_<T>& t) {
     t.def_static("from_string", from_string<T>);
     t.def_static("to_string", to_string<T>);
-    t.def_static("from_binary", from_binary<T>);
-    t.def_static("to_binary", to_binary<T>);
+    t.def_static("from_binary", from_binary<T>, py::return_value_policy::reference_internal);
+    t.def_static("to_binary", to_binary<T>, py::return_value_policy::reference_internal);
     t.def("clone", clone<T>);
     t.def("data_size", data_size<T>);
 }

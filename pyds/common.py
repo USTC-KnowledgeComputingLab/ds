@@ -30,7 +30,7 @@ class Common(typing.Generic[T]):
             self.value = self._base.from_string(value, self.capacity)
             if self.value is None:
                 raise ValueError("Initialization from a string failed.")
-        elif isinstance(value, bytes):
+        elif isinstance(value, memoryview):
             self.value = self._base.from_binary(value)
             self.capacity = self.size()
             if size is not None:
