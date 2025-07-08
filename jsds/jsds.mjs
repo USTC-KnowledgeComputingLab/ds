@@ -26,7 +26,7 @@ class _common_t {
         } else if (value instanceof this.type) {
             this.value = value;
             this.capacity = size;
-        } else if (value instanceof Uint8Array) {
+        } else if (value instanceof ds.Buffer) {
             this.value = this.type.from_binary(value);
             this.capacity = this.size();
             if (size != 0) {
@@ -55,17 +55,16 @@ class _common_t {
         return this.type.to_binary(this.value);
     }
 
-    data_string() {
-        const decoder = new TextDecoder("utf-8");
-        return decoder.decode(this.data());
-    }
-
     size() {
         return this.value.data_size();
     }
 
     copy() {
         return new this.constructor(this.value.clone(), this.size());
+    }
+
+    key() {
+        return this.toString();
     }
 }
 
@@ -127,9 +126,9 @@ export class term_t extends _common_t {
         }
     }
 
-    ground(other) {
+    ground(other, scope = null) {
         const capacity = buffer_size();
-        const term = this.type.ground(this.value, other.value, capacity);
+        const term = this.type.ground(this.value, other.value, scope, capacity);
         if (term == null) {
             return null;
         }
@@ -154,9 +153,9 @@ export class rule_t extends _common_t {
         return new term_t(this.value.conclusion());
     }
 
-    ground(other) {
+    ground(other, scope = null) {
         const capacity = buffer_size();
-        const rule = this.type.ground(this.value, other.value, capacity);
+        const rule = this.type.ground(this.value, other.value, scope, capacity);
         if (rule == null) {
             return null;
         }

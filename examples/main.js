@@ -31,18 +31,18 @@ const axiom3 = new rule_t(
 
 const premise = new rule_t("(! (! X))");
 const target = new rule_t("X");
-const target_hash = target.data_string();
+const target_hash = target.key();
 
 function main() {
     let rules = {};
     let facts = {};
 
     let cycle = -1;
-    rules[mp.data_string()] = [mp, cycle];
-    facts[axiom1.data_string()] = [axiom1, cycle];
-    facts[axiom2.data_string()] = [axiom2, cycle];
-    facts[axiom3.data_string()] = [axiom3, cycle];
-    facts[premise.data_string()] = [premise, cycle];
+    rules[mp.key()] = [mp, cycle];
+    facts[axiom1.key()] = [axiom1, cycle];
+    facts[axiom2.key()] = [axiom2, cycle];
+    facts[axiom3.key()] = [axiom3, cycle];
+    facts[premise.key()] = [premise, cycle];
 
     while (true) {
         let temp_rules = {};
@@ -59,7 +59,7 @@ function main() {
                 if (candidate === null) {
                     continue;
                 }
-                const candidate_hash = candidate.data_string();
+                const candidate_hash = candidate.key();
                 if (candidate.length() != 0) {
                     // rule
                     if (candidate_hash in rules || candidate_hash in temp_rules) {
@@ -84,11 +84,11 @@ function main() {
         cycle++;
         for (let r_hash in temp_rules) {
             const rule = temp_rules[r_hash];
-            rules[rule.data_string()] = [rule, cycle];
+            rules[rule.key()] = [rule, cycle];
         }
         for (let f_hash in temp_facts) {
             const fact = temp_facts[f_hash];
-            facts[fact.data_string()] = [fact, cycle];
+            facts[fact.key()] = [fact, cycle];
         }
     }
 }
