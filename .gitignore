@@ -9,5 +9,6 @@ __pycache__
 build
 dist
 node_modules
+coverage
 package-lock.json
 compile_commands.json

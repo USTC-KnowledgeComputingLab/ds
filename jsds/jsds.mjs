@@ -1,8 +1,8 @@
 /* jshint esversion:6 */
 
-import createDs from './ds.mjs';
+import create_ds from "./ds.mjs";
 
-const ds = await createDs(); // jshint ignore:line
+const ds = await create_ds(); // jshint ignore:line
 
 let _buffer_size = 1024;
 
@@ -26,17 +26,17 @@ class _common_t {
         } else if (value instanceof this.type) {
             this.value = value;
             this.capacity = size;
-        } else if (value instanceof ds.Buffer) {
-            this.value = this.type.from_binary(value);
-            this.capacity = this.size();
-            if (size != 0) {
-                throw new Error("Cannot set capacity when initializing from bytes.");
-            }
         } else if (typeof value == "string") {
             this.capacity = size != 0 ? size : buffer_size();
             this.value = this.type.from_string(value, this.capacity);
             if (this.value == null) {
                 throw new Error("Initialization from a string failed.");
+            }
+        } else if (value instanceof ds.Buffer) {
+            this.value = this.type.from_binary(value);
+            this.capacity = this.size();
+            if (size != 0) {
+                throw new Error("Cannot set capacity when initializing from bytes.");
             }
         } else {
             throw new Error("Unsupported type for initialization.");
@@ -126,7 +126,7 @@ export class term_t extends _common_t {
         }
     }
 
-    ground(other, scope = null) {
+    ground(other, scope = "") {
         const capacity = buffer_size();
         const term = this.type.ground(this.value, other.value, scope, capacity);
         if (term == null) {
@@ -153,7 +153,7 @@ export class rule_t extends _common_t {
         return new term_t(this.value.conclusion());
     }
 
-    ground(other, scope = null) {
+    ground(other, scope = "") {
         const capacity = buffer_size();
         const rule = this.type.ground(this.value, other.value, scope, capacity);
         if (rule == null) {

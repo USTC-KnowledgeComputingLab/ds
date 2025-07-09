@@ -1,6 +1,5 @@
 #include <ds/ds.hh>
 #include <emscripten/bind.h>
-#include <vector>
 
 namespace em = emscripten;
 
@@ -68,18 +67,20 @@ auto common_declaration(em::class_<T>& t) {
     t.function("data_size", data_size<T>, em::allow_raw_pointers());
 }
 
-auto term_ground(ds::term_t* term, ds::term_t* dictionary, const char* scope, int length) -> std::unique_ptr<ds::term_t> {
+auto term_ground(ds::term_t* term, ds::term_t* dictionary, const std::string& scope, int length) -> std::unique_ptr<ds::term_t> {
+    const char* scope_ptr = scope.size() != 0 ? scope.data() : nullptr;
     auto result = reinterpret_cast<ds::term_t*>(operator new(length));
-    if (result->ground(term, dictionary, scope, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+    if (result->ground(term, dictionary, scope_ptr, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
         operator delete(result);
         return std::unique_ptr<ds::term_t>(nullptr);
     }
     return std::unique_ptr<ds::term_t>(result);
 }
 
-auto rule_ground(ds::rule_t* rule, ds::rule_t* dictionary, const char* scope, int length) -> std::unique_ptr<ds::rule_t> {
+auto rule_ground(ds::rule_t* rule, ds::rule_t* dictionary, const std::string& scope, int length) -> std::unique_ptr<ds::rule_t> {
+    const char* scope_ptr = scope.size() != 0 ? scope.data() : nullptr;
     ds::rule_t* result = reinterpret_cast<ds::rule_t*>(operator new(length));
-    if (result->ground(rule, dictionary, scope, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+    if (result->ground(rule, dictionary, scope_ptr, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
         operator delete(result);
         return std::unique_ptr<ds::rule_t>(nullptr);
     }
