@@ -98,8 +98,8 @@ def test_ground_scope() -> None:
 
 def test_match() -> None:
     mp = pyds.Rule("(`p -> `q)\n`p\n`q\n")
-    p = pyds.Rule("((! (! `x)) -> `x)")
-    assert str(mp @ p) == "(! (! `x))\n----------\n`x\n"
+    pq = pyds.Rule("((! (! `x)) -> `x)")
+    assert str(mp @ pq) == "(! (! `x))\n----------\n`x\n"
 
     fail = pyds.Rule("`q <- `p")
     assert mp @ fail is None
