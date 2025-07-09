@@ -8,7 +8,7 @@ let _buffer_size = 1024;
 
 export function buffer_size(size = 0) {
     const old_buffer_size = _buffer_size;
-    if (size != 0) {
+    if (size !== 0) {
         _buffer_size = size;
     }
     return old_buffer_size;
@@ -20,22 +20,22 @@ class _common_t {
         if (value instanceof _common_t) {
             this.value = value.value;
             this.capacity = value.capacity;
-            if (size != 0) {
+            if (size !== 0) {
                 throw new Error("Cannot set capacity when copying from another instance.");
             }
         } else if (value instanceof this.type) {
             this.value = value;
             this.capacity = size;
-        } else if (typeof value == "string") {
-            this.capacity = size != 0 ? size : buffer_size();
+        } else if (typeof value === "string") {
+            this.capacity = size !== 0 ? size : buffer_size();
             this.value = this.type.from_string(value, this.capacity);
-            if (this.value == null) {
+            if (this.value === null) {
                 throw new Error("Initialization from a string failed.");
             }
         } else if (value instanceof ds.Buffer) {
             this.value = this.type.from_binary(value);
             this.capacity = this.size();
-            if (size != 0) {
+            if (size !== 0) {
                 throw new Error("Cannot set capacity when initializing from bytes.");
             }
         } else {
@@ -45,7 +45,7 @@ class _common_t {
 
     toString() {
         const result = this.type.to_string(this.value, buffer_size());
-        if (result == "") {
+        if (result === "") {
             throw new Error("Conversion to string failed.");
         }
         return result;
@@ -115,11 +115,11 @@ export class term_t extends _common_t {
 
     term() {
         const term_type = this.value.get_type();
-        if (term_type == ds.TermType.Variable) {
+        if (term_type === ds.TermType.Variable) {
             return new variable_t(this.value.variable());
-        } else if (term_type == ds.TermType.Item) {
+        } else if (term_type === ds.TermType.Item) {
             return new item_t(this.value.item());
-        } else if (term_type == ds.TermType.List) {
+        } else if (term_type === ds.TermType.List) {
             return new list_t(this.value.list());
         } else {
             throw new TypeError("Unexpected term type.");
@@ -129,7 +129,7 @@ export class term_t extends _common_t {
     ground(other, scope = "") {
         const capacity = buffer_size();
         const term = this.type.ground(this.value, other.value, scope, capacity);
-        if (term == null) {
+        if (term === null) {
             return null;
         }
         return new this.constructor(term, capacity);
@@ -156,7 +156,7 @@ export class rule_t extends _common_t {
     ground(other, scope = "") {
         const capacity = buffer_size();
         const rule = this.type.ground(this.value, other.value, scope, capacity);
-        if (rule == null) {
+        if (rule === null) {
             return null;
         }
         return new this.constructor(rule, capacity);
@@ -165,7 +165,7 @@ export class rule_t extends _common_t {
     match(other) {
         const capacity = buffer_size();
         const rule = this.type.match(this.value, other.value, capacity);
-        if (rule == null) {
+        if (rule === null) {
             return null;
         }
         return new this.constructor(rule, capacity);

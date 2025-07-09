@@ -52,7 +52,7 @@ function main() {
             for (const f_hash in facts) {
                 const [rule, r_cycle] = rules[r_hash];
                 const [fact, f_cycle] = facts[f_hash];
-                if (r_cycle != cycle && f_cycle != cycle) {
+                if (r_cycle !== cycle && f_cycle !== cycle) {
                     continue;
                 }
                 const candidate = rule.match(fact);
@@ -60,7 +60,7 @@ function main() {
                     continue;
                 }
                 const candidate_hash = candidate.key();
-                if (candidate.length() != 0) {
+                if (candidate.length() !== 0) {
                     // rule
                     if (candidate_hash in rules || candidate_hash in temp_rules) {
                         continue;
@@ -71,7 +71,7 @@ function main() {
                     if (candidate_hash in facts || candidate_hash in temp_facts) {
                         continue;
                     }
-                    if (candidate_hash == target_hash) {
+                    if (candidate_hash === target_hash) {
                         console.log("Found!");
                         console.log(candidate.toString());
                         return;
