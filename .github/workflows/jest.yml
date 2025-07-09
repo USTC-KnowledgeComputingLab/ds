@@ -1,0 +1,29 @@
+name: jest
+
+on:
+  - pull_request
+  - push
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['20', '22', '24']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: mymindstorm/setup-emsdk@v14
+
+      - name: dependencies
+        run: npm install --include=dev
+
+      - name: jest
+        run: npm run all

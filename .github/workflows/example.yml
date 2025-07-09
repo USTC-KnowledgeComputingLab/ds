@@ -41,8 +41,31 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: dependencies
+      - name: build
         run: pip install .
 
-      - name: pytest
+      - name: run
         run: python examples/main.py
+
+  javascript:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['20', '22', '24']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: mymindstorm/setup-emsdk@v14
+
+      - name: build
+        run: npm run emcc
+
+      - name: run
+        run: node examples/main.mjs
