@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "emcc": "emcc jsds/ds.cc src/*.cc -Iinclude -lembind -o jsds/ds.mjs --emit-tsd ds.d.ts -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1 -s SINGLE_FILE=1",
+        "emcc": "emcc jsds/ds.cc src/*.cc -Iinclude -lembind -o jsds/ds.mjs --emit-tsd ds.d.mts -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1 -s SINGLE_FILE=1",
         "build": "npx rollup --config",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --testMatch '**/test_*.mjs' --coverage",
         "all": "run-s emcc build test"
