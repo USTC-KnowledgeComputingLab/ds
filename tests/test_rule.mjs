@@ -3,7 +3,7 @@
 import {
     rule_t,
     buffer_size
-} from "../jsds/jsds.mjs";
+} from "../jsds/jsds.mts";
 
 let v = null;
 
