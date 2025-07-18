@@ -1,5 +1,6 @@
 /* jshint esversion:11 */
 
+import path from "node:path";
 import {
     readFile,
 } from "node:fs/promises";
@@ -18,11 +19,7 @@ import {
 }
 from "../jsds/jsds.mjs";
 
-function default_callback(candidate) {
-    console.log(candidate.toString());
-}
-
-function* search(input_strings, buffer_limit = 1024, callback = default_callback) {
+function* search(input_strings, buffer_limit, callback) {
     buffer_size(buffer_limit);
 
     let rules = {};
@@ -100,8 +97,12 @@ async function read_file_to_string_array(file_path) {
     return results;
 }
 
+function default_callback(candidate) {
+    console.log(candidate.toString());
+}
+
 async function main() {
-    const help_message = "Usage: node engine.mjs <file_path> <buffer_limit> [callback_module]";
+    const help_message = "Usage: node engine.mjs <file_path> <buffer_limit> [config_module]";
     if (argv.length != 4 && argv.length != 5) {
         console.error(help_message);
         exit(1);
@@ -109,36 +110,41 @@ async function main() {
     const file_path = argv[2];
     const buffer_limit = parseInt(argv[3], 10);
     let callback;
+    let await_each_step;
     if (argv.length == 5) {
         try {
-            const callback_module = await import(argv[4]);
-            if (typeof callback_module.default === "function") {
-                callback = callback_module.default;
-            } else {
-                console.error("Callback module must export a default function.");
-                exit(1);
-            }
+            const config_module = await import(path.resolve(argv[4]));
+            callback = config_module.callback;
+            await_each_step = config_module.await_each_step;
         } catch (error) {
             console.error(`Error importing callback module: ${error.message}`);
             exit(1);
         }
     } else {
         callback = default_callback;
+        await_each_step = true;
     }
 
     const data = await read_file_to_string_array(file_path);
+    for (const input of data) {
+        callback(new rule_t(input));
+    }
     const generator = search(data, buffer_limit, callback);
     const handle = createInterface({
         input: stdin,
         output: stdout
     });
+    console.log("Search starting...");
     while (true) {
         if (generator.next().done) {
             console.log("Search completed.");
             break;
         }
-        await handle.question("Press Enter to continue...");
+        if (await_each_step) {
+            await handle.question("Press Enter to continue...");
+        }
     }
+    exit(0);
 }
 
 await main(); // jshint ignore:line

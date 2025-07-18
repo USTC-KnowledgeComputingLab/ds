@@ -6,7 +6,7 @@ let array = Array.from({
     length: 9
 }, () => " "));
 
-export default function callback(candidate) {
+export function callback(candidate) {
     if (candidate.length() === 0) {
         const text = candidate.toString();
         const match = text.match(/\(\(Cell (\d) (\d)\) = \(Literal (\d)\)\)/);
@@ -22,3 +22,5 @@ export default function callback(candidate) {
         }
     }
 }
+
+export const await_each_step = false;
