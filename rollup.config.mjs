@@ -5,12 +5,13 @@ import terser from "@rollup/plugin-terser";
 export default {
     input: {
         jsds: "jsds/jsds.mjs",
-        example: "examples/main.mjs"
+        example: "examples/main.mjs",
+        engine: "examples/engine.mjs",
     },
     output: [{
         dir: "dist",
         format: "es",
-        entryFileNames: "[name].mjs"
+        entryFileNames: "[name].mjs",
     }],
-    plugins: [terser()]
+    plugins: [terser()],
 };
