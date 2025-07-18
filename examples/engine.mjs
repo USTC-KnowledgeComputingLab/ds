@@ -1,4 +1,4 @@
-/* jshint esversion:8 */
+/* jshint esversion:11 */
 
 import {
     readFile,
@@ -18,8 +18,12 @@ import {
 }
 from "../jsds/jsds.mjs";
 
-function* search(input_strings) {
-    buffer_size(1000);
+function default_callback(candidate) {
+    console.log(candidate.toString());
+}
+
+function* search(input_strings, buffer_limit = 1024, callback = default_callback) {
+    buffer_size(buffer_limit);
 
     let rules = {};
     let facts = {};
@@ -38,6 +42,7 @@ function* search(input_strings) {
     while (true) {
         let temp_rules = {};
         let temp_facts = {};
+        let something_new = false;
 
         for (let r_hash in rules) {
             for (const f_hash in facts) {
@@ -64,7 +69,8 @@ function* search(input_strings) {
                     }
                     temp_facts[candidate_hash] = candidate;
                 }
-                console.log(candidate.toString());
+                callback(candidate);
+                something_new = true;
             }
         }
 
@@ -76,6 +82,9 @@ function* search(input_strings) {
         for (let f_hash in temp_facts) {
             const fact = temp_facts[f_hash];
             facts[fact.key()] = [fact, cycle];
+        }
+        if (!something_new) {
+            return;
         }
 
         yield;
@@ -92,19 +101,42 @@ async function read_file_to_string_array(file_path) {
 }
 
 async function main() {
-    if (argv.length < 3) {
-        console.error("Usage: node engine.mjs <file_path>");
+    const help_message = "Usage: node engine.mjs <file_path> <buffer_limit> [callback_module]";
+    if (argv.length != 4 && argv.length != 5) {
+        console.error(help_message);
         exit(1);
     }
     const file_path = argv[2];
+    const buffer_limit = parseInt(argv[3], 10);
+    let callback;
+    if (argv.length == 5) {
+        try {
+            const callback_module = await import(argv[4]);
+            if (typeof callback_module.default === "function") {
+                callback = callback_module.default;
+            } else {
+                console.error("Callback module must export a default function.");
+                exit(1);
+            }
+        } catch (error) {
+            console.error(`Error importing callback module: ${error.message}`);
+            exit(1);
+        }
+    } else {
+        callback = default_callback;
+    }
+
     const data = await read_file_to_string_array(file_path);
-    const generator = search(data);
+    const generator = search(data, buffer_limit, callback);
     const handle = createInterface({
         input: stdin,
         output: stdout
     });
     while (true) {
-        generator.next();
+        if (generator.next().done) {
+            console.log("Search completed.");
+            break;
+        }
         await handle.question("Press Enter to continue...");
     }
 }
