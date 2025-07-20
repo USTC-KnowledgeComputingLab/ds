@@ -11,8 +11,8 @@ export function callback(candidate) {
         const text = candidate.toString();
         const match = text.match(/\(\(Cell (\d) (\d)\) = \(Literal (\d)\)\)/);
         if (match) {
-            const row = parseInt(match[1], 10);
-            const col = parseInt(match[2], 10);
+            const row = parseInt(match[1]);
+            const col = parseInt(match[2]);
             const value = match[3];
             array[row - 1][col - 1] = value;
             console.log("Current partial solution:");

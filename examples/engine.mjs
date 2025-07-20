@@ -108,7 +108,7 @@ async function main() {
         exit(1);
     }
     const file_path = argv[2];
-    const buffer_limit = parseInt(argv[3], 10);
+    const buffer_limit = parseInt(argv[3]);
     let callback;
     let await_each_step;
     if (argv.length == 5) {
