@@ -1,9 +1,6 @@
 /* jshint esversion: 6 */
 
-import {
-    list_t,
-    buffer_size
-} from "../jsds/jsds.mjs";
+import { list_t, buffer_size } from "../jsds/jsds.mjs";
 
 let v = null;
 

@@ -1,23 +1,10 @@
 /* jshint esversion:11 */
 
 import path from "node:path";
-import {
-    readFile,
-} from "node:fs/promises";
-import {
-    argv,
-    stdin,
-    stdout,
-    exit,
-} from "node:process";
-import {
-    createInterface
-} from "node:readline/promises";
-import {
-    buffer_size,
-    rule_t,
-}
-from "../jsds/jsds.mjs";
+import { readFile } from "node:fs/promises";
+import { argv, stdin, stdout, exit } from "node:process";
+import { createInterface } from "node:readline/promises";
+import { buffer_size, rule_t } from "../jsds/jsds.mjs";
 
 function* search(input_strings, buffer_limit, callback) {
     buffer_size(buffer_limit);
@@ -91,9 +78,7 @@ function* search(input_strings, buffer_limit, callback) {
 async function read_file_to_string_array(file_path) {
     const content = await readFile(file_path, "utf-8");
     const sections = content.split(/\n\n/);
-    const results = sections
-          .filter(section => section.trim().length > 0)
-          .map(section => section.trim());
+    const results = sections.filter((section) => section.trim().length > 0).map((section) => section.trim());
     return results;
 }
 
@@ -132,7 +117,7 @@ async function main() {
     const generator = search(data, buffer_limit, callback);
     const handle = createInterface({
         input: stdin,
-        output: stdout
+        output: stdout,
     });
     console.log("Search starting...");
     while (true) {

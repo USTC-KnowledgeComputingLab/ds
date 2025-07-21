@@ -1,12 +1,10 @@
 /* jshint esversion:6 */
 
-import {
-    buffer_size,
-    rule_t,
-} from "../jsds/jsds.mjs";
+import { buffer_size, rule_t } from "../jsds/jsds.mjs";
 
 buffer_size(1000);
 
+// biome-ignore format: 保持多行对齐
 // P -> Q, P |- Q
 const mp = new rule_t(
     "(`P -> `Q)\n" +
@@ -14,16 +12,19 @@ const mp = new rule_t(
     "----------\n" +
     "`Q\n");
 
+// biome-ignore format: 保持多行对齐
 // p -> (q -> p)
 const axiom1 = new rule_t(
     "(`p -> (`q -> `p))"
 );
 
+// biome-ignore format: 保持多行对齐
 // (p -> (q -> r)) -> ((p -> q) -> (p -> r))
 const axiom2 = new rule_t(
     "((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))"
 );
 
+// biome-ignore format: 保持多行对齐
 // (!p -> !q) -> (q -> p)
 const axiom3 = new rule_t(
     "(((! `p) -> (! `q)) -> (`q -> `p))"

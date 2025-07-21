@@ -8,10 +8,12 @@ export default {
         example: "examples/main.mjs",
         engine: "examples/engine.mjs",
     },
-    output: [{
-        dir: "dist",
-        format: "es",
-        entryFileNames: "[name].mjs",
-    }],
+    output: [
+        {
+            dir: "dist",
+            format: "es",
+            entryFileNames: "[name].mjs",
+        },
+    ],
     plugins: [terser()],
 };
