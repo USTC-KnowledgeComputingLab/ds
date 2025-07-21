@@ -1,5 +1,3 @@
-/* jshint esversion:6 */
-
 import { buffer_size, rule_t } from "../jsds/jsds.mjs";
 
 buffer_size(1000);

@@ -1,5 +1,3 @@
-/* jshint esversion:6 */
-
 let array = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => " "));
 
 export function callback(candidate) {

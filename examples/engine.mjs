@@ -1,5 +1,3 @@
-/* jshint esversion:11 */
-
 import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { argv, stdin, stdout, exit } from "node:process";

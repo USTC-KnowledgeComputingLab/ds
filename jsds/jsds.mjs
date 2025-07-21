@@ -1,8 +1,6 @@
-/* jshint esversion:6 */
-
 import create_ds from "./ds.mjs";
 
-const ds = await create_ds(); // jshint ignore:line
+const ds = await create_ds();
 
 let _buffer_size = 1024;
 

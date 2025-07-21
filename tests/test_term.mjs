@@ -1,5 +1,3 @@
-/* jshint esversion: 6 */
-
 import { list_t, item_t, variable_t, term_t, buffer_size } from "../jsds/jsds.mjs";
 
 let v = null;
