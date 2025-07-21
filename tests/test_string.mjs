@@ -23,24 +23,24 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    let v2 = new string_t(v);
+    const v2 = new string_t(v);
     expect(v2.toString()).toBe("string");
 
     expect(() => new string_t(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    let v2 = new string_t(v.value);
+    const v2 = new string_t(v.value);
     expect(v2.toString()).toBe("string");
 });
 
 test("create_from_text", () => {
-    let v2 = new string_t("string");
+    const v2 = new string_t("string");
     expect(v2.toString()).toBe("string");
 });
 
 test("create_from_bytes", () => {
-    let v2 = new string_t(v.data());
+    const v2 = new string_t(v.data());
     expect(v2.toString()).toBe("string");
 
     expect(() => new string_t(v.data(), 100)).toThrow();

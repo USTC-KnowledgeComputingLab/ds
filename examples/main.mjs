@@ -33,8 +33,8 @@ const target = new rule_t("X");
 const target_hash = target.key();
 
 function main() {
-    let rules = {};
-    let facts = {};
+    const rules = {};
+    const facts = {};
 
     let cycle = -1;
     rules[mp.key()] = [mp, cycle];
@@ -44,10 +44,10 @@ function main() {
     facts[premise.key()] = [premise, cycle];
 
     while (true) {
-        let temp_rules = {};
-        let temp_facts = {};
+        const temp_rules = {};
+        const temp_facts = {};
 
-        for (let r_hash in rules) {
+        for (const r_hash in rules) {
             for (const f_hash in facts) {
                 const [rule, r_cycle] = rules[r_hash];
                 const [fact, f_cycle] = facts[f_hash];
@@ -81,11 +81,11 @@ function main() {
         }
 
         cycle++;
-        for (let r_hash in temp_rules) {
+        for (const r_hash in temp_rules) {
             const rule = temp_rules[r_hash];
             rules[rule.key()] = [rule, cycle];
         }
-        for (let f_hash in temp_facts) {
+        for (const f_hash in temp_facts) {
             const fact = temp_facts[f_hash];
             facts[fact.key()] = [fact, cycle];
         }
@@ -96,5 +96,5 @@ for (let i = 0; i < 10; i++) {
     const begin = new Date();
     main();
     const end = new Date();
-    console.log("Time taken: " + (end - begin) / 1000 + "s");
+    console.log(`Time taken: ${(end - begin) / 1000}s`);
 }

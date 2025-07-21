@@ -1,4 +1,4 @@
-let array = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => " "));
+const array = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => " "));
 
 export function callback(candidate) {
     if (candidate.length() === 0) {
@@ -11,7 +11,7 @@ export function callback(candidate) {
             array[row - 1][col - 1] = value;
             console.log("Current partial solution:");
             for (let i = 0; i < 9; i++) {
-                console.log("|" + array[i].join("|") + "|");
+                console.log(`|${array[i].join("|")}|`);
             }
         }
     }

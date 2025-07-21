@@ -23,24 +23,24 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    let v2 = new term_t(v);
+    const v2 = new term_t(v);
     expect(v2.toString()).toBe("(a b c)");
 
     expect(() => new term_t(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    let v2 = new term_t(v.value);
+    const v2 = new term_t(v.value);
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_text", () => {
-    let v2 = new term_t("(a b c)");
+    const v2 = new term_t("(a b c)");
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_bytes", () => {
-    let v2 = new term_t(v.data());
+    const v2 = new term_t(v.data());
     expect(v2.toString()).toBe("(a b c)");
 
     expect(() => new term_t(v.data(), 100)).toThrow();
@@ -57,15 +57,15 @@ test("term", () => {
 });
 
 test("ground_simple", () => {
-    let a = new term_t("`a");
-    let b = new term_t("((`a b))");
+    const a = new term_t("`a");
+    const b = new term_t("((`a b))");
     expect(a.ground(b).toString()).toBe("b");
 
     expect(a.ground(new term_t("((`a b c d e))"))).toBeNull();
 });
 
 test("ground_scope", () => {
-    let a = new term_t("`a");
-    let b = new term_t("((x y `a `b) (y x `b `c))");
+    const a = new term_t("`a");
+    const b = new term_t("((x y `a `b) (y x `b `c))");
     expect(a.ground(b, "x").toString()).toBe("`c");
 });

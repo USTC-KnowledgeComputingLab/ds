@@ -7,13 +7,13 @@ import { buffer_size, rule_t } from "../jsds/jsds.mjs";
 function* search(input_strings, buffer_limit, callback) {
     buffer_size(buffer_limit);
 
-    let rules = {};
-    let facts = {};
+    const rules = {};
+    const facts = {};
 
     let cycle = -1;
 
-    for (let input_string of input_strings) {
-        let rule = new rule_t(input_string);
+    for (const input_string of input_strings) {
+        const rule = new rule_t(input_string);
         if (rule.length() !== 0) {
             rules[rule.key()] = [rule, cycle];
         } else {
@@ -22,11 +22,11 @@ function* search(input_strings, buffer_limit, callback) {
     }
 
     while (true) {
-        let temp_rules = {};
-        let temp_facts = {};
+        const temp_rules = {};
+        const temp_facts = {};
         let something_new = false;
 
-        for (let r_hash in rules) {
+        for (const r_hash in rules) {
             for (const f_hash in facts) {
                 const [rule, r_cycle] = rules[r_hash];
                 const [fact, f_cycle] = facts[f_hash];
@@ -57,11 +57,11 @@ function* search(input_strings, buffer_limit, callback) {
         }
 
         cycle++;
-        for (let r_hash in temp_rules) {
+        for (const r_hash in temp_rules) {
             const rule = temp_rules[r_hash];
             rules[rule.key()] = [rule, cycle];
         }
-        for (let f_hash in temp_facts) {
+        for (const f_hash in temp_facts) {
             const fact = temp_facts[f_hash];
             facts[fact.key()] = [fact, cycle];
         }
@@ -86,7 +86,7 @@ function default_callback(candidate) {
 
 async function main() {
     const help_message = "Usage: node engine.mjs <file_path> <buffer_limit> [config_module]";
-    if (argv.length != 4 && argv.length != 5) {
+    if (argv.length !== 4 && argv.length !== 5) {
         console.error(help_message);
         exit(1);
     }
@@ -94,7 +94,7 @@ async function main() {
     const buffer_limit = parseInt(argv[3]);
     let callback;
     let await_each_step;
-    if (argv.length == 5) {
+    if (argv.length === 5) {
         try {
             const config_module = await import(path.resolve(argv[4]));
             callback = config_module.callback;
