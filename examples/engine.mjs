@@ -2,7 +2,7 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { argv, stdin, stdout, exit } from "node:process";
 import { createInterface } from "node:readline/promises";
-import { buffer_size, rule_t } from "../jsds/jsds.mjs";
+import { buffer_size, rule_t } from "../jsds/tsds.mts";
 
 function* search(input_strings, buffer_limit, callback) {
     buffer_size(buffer_limit);

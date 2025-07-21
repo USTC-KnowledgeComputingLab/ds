@@ -1,8 +1,9 @@
 import terser from "@rollup/plugin-terser";
+import typescript from "@rollup/plugin-typescript";
 
 export default {
     input: {
-        jsds: "jsds/jsds.mjs",
+        jsds: "jsds/tsds.mts",
         example: "examples/main.mjs",
         engine: "examples/engine.mjs",
     },
@@ -13,5 +14,5 @@ export default {
             entryFileNames: "[name].mjs",
         },
     ],
-    plugins: [terser()],
+    plugins: [terser(), typescript({ compilerOptions: { target: "esnext" } })],
 };

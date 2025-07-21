@@ -1,4 +1,4 @@
-import { list_t, item_t, variable_t, term_t, buffer_size } from "../jsds/jsds.mjs";
+import { list_t, item_t, variable_t, term_t, buffer_size } from "../jsds/tsds.mts";
 
 let v = null;
 
