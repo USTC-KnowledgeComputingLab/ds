@@ -4,8 +4,8 @@ import { copy } from "@web/rollup-plugin-copy";
 
 export default {
     input: {
-        ds: "jsds/ds.mjs",
-        jsds: "jsds/tsds.mts",
+        ds: "tsds/ds.mjs",
+        tsds: "tsds/tsds.mts",
         example: "examples/main.mjs",
         engine: "examples/engine.mjs",
     },
@@ -20,7 +20,7 @@ export default {
         typescript(),
         copy({
             patterns: ["**/*.wasm", "**/*.wasm.map"],
-            rootDir: "jsds",
+            rootDir: "tsds",
         }),
     ],
 };

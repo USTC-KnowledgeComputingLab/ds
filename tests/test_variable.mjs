@@ -1,4 +1,4 @@
-import { variable_t, buffer_size } from "../jsds/tsds.mts";
+import { variable_t, buffer_size } from "../tsds/tsds.mts";
 
 let v = null;
 
