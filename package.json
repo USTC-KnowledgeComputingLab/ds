@@ -1,5 +1,15 @@
 {
     "name": "tsds",
+    "module": "dist/tsds.mjs",
+    "types": "dist/tsds.d.mts",
+    "files": [
+        "dist/ds.mjs",
+        "dist/ds.d.mts",
+        "dist/ds.wasm",
+        "dist/ds.wasm.map",
+        "dist/tsds.mjs",
+        "dist/tsds.d.mts"
+    ],
     "scripts": {
         "emcc": "emcc tsds/ds.cc src/*.cc -Iinclude -lembind -o tsds/ds.mjs --emit-tsd ds.d.mts -gsource-map=inline -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1",
         "rollup": "rollup --config rollup.config.mjs",
