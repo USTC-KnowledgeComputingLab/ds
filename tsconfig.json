@@ -5,7 +5,9 @@
         "strict": true,
         "esModuleInterop": true,
         "isolatedModules": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "declaration": true,
+        "outDir": "dist"
     },
     "include": ["jsds/*"]
 }
