@@ -1,5 +1,6 @@
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
+import { copy } from "@web/rollup-plugin-copy";
 
 export default {
     input: {
@@ -18,6 +19,10 @@ export default {
         terser(),
         typescript({
             target: "esnext",
+        }),
+        copy({
+            patterns: ["**/*.wasm", "**/*.wasm.map"],
+            rootDir: "jsds",
         }),
     ],
 };
