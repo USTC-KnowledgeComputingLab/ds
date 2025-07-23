@@ -14,5 +14,5 @@ export default {
             entryFileNames: "[name].mjs",
         },
     ],
-    plugins: [terser(), typescript({ compilerOptions: { target: "esnext" } })],
+    plugins: [terser(), typescript({ target: "esnext" })],
 };
