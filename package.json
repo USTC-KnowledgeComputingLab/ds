@@ -1,7 +1,7 @@
 {
     "name": "jsds",
     "scripts": {
-        "emcc": "emcc jsds/ds.cc src/*.cc -Iinclude -lembind -o jsds/ds.mjs --emit-tsd ds.d.mts -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1 -s SINGLE_FILE=1",
+        "emcc": "emcc jsds/ds.cc src/*.cc -Iinclude -lembind -o jsds/ds.mjs --emit-tsd ds.d.mts -gsource-map=inline -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1",
         "rollup": "rollup --config rollup.config.mjs",
         "build": "run-s emcc rollup",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.mjs",
