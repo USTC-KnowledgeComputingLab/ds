@@ -25,12 +25,14 @@ interface StaticCommon<T extends Common> {
     to_string(value: T, size: number): string;
 }
 
+type InitialArgument<T extends Common> = _common_t<T> | T | string | dst.Buffer | null;
+
 class _common_t<T extends Common> {
     type: StaticCommon<T>;
     value: T;
     capacity: number;
 
-    constructor(type: StaticCommon<T>, value: _common_t<T> | T | string | dst.Buffer, size: number = 0) {
+    constructor(type: StaticCommon<T>, value: InitialArgument<T>, size: number = 0) {
         this.type = type;
         if (value instanceof _common_t) {
             this.value = value.value;
@@ -85,13 +87,13 @@ class _common_t<T extends Common> {
 }
 
 export class string_t extends _common_t<dst.String> {
-    constructor(value: string_t | dst.String | string | dst.Buffer, size: number = 0) {
+    constructor(value: InitialArgument<dst.String>, size: number = 0) {
         super(ds.String, value, size);
     }
 }
 
 export class variable_t extends _common_t<dst.Variable> {
-    constructor(value: variable_t | dst.Variable | string | dst.Buffer, size: number = 0) {
+    constructor(value: InitialArgument<dst.Variable>, size: number = 0) {
         super(ds.Variable, value, size);
     }
 
@@ -101,7 +103,7 @@ export class variable_t extends _common_t<dst.Variable> {
 }
 
 export class item_t extends _common_t<dst.Item> {
-    constructor(value: item_t | dst.Item | string | dst.Buffer, size: number = 0) {
+    constructor(value: InitialArgument<dst.Item>, size: number = 0) {
         super(ds.Item, value, size);
     }
 
@@ -111,7 +113,7 @@ export class item_t extends _common_t<dst.Item> {
 }
 
 export class list_t extends _common_t<dst.List> {
-    constructor(value: list_t | dst.List | string | dst.Buffer, size: number = 0) {
+    constructor(value: InitialArgument<dst.List>, size: number = 0) {
         super(ds.List, value, size);
     }
 
@@ -125,7 +127,7 @@ export class list_t extends _common_t<dst.List> {
 }
 
 export class term_t extends _common_t<dst.Term> {
-    constructor(value: term_t | dst.Term | string | dst.Buffer, size: number = 0) {
+    constructor(value: InitialArgument<dst.Term>, size: number = 0) {
         super(ds.Term, value, size);
     }
 
@@ -153,7 +155,7 @@ export class term_t extends _common_t<dst.Term> {
 }
 
 export class rule_t extends _common_t<dst.Rule> {
-    constructor(value: rule_t | dst.Rule | string | dst.Buffer, size: number = 0) {
+    constructor(value: InitialArgument<dst.Rule>, size: number = 0) {
         super(ds.Rule, value, size);
     }
 
