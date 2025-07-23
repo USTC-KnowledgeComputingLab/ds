@@ -1,16 +1,28 @@
 {
+    "name": "tsds",
+    "module": "dist/tsds.mjs",
+    "types": "dist/tsds.d.mts",
+    "files": [
+        "dist/ds.mjs",
+        "dist/ds.d.mts",
+        "dist/ds.wasm",
+        "dist/ds.wasm.map",
+        "dist/tsds.mjs",
+        "dist/tsds.d.mts",
+        "dist/tsds.mjs.map"
+    ],
     "scripts": {
-        "emcc": "emcc jsds/ds.cc src/*.cc -Iinclude -lembind -o jsds/ds.mjs --emit-tsd ds.d.mts -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1 -s SINGLE_FILE=1",
-        "prepare": "run-p emcc",
+        "emcc": "emcc tsds/ds.cc src/*.cc -Iinclude -lembind -o tsds/ds.mjs --emit-tsd ds.d.mts -gsource-map=inline -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1",
         "rollup": "rollup --config rollup.config.mjs",
-        "build": "run-p rollup",
+        "build": "run-s emcc rollup",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.mjs",
-        "all": "run-s prepare build test"
+        "all": "run-s build test"
     },
     "devDependencies": {
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^12.1.4",
         "@types/jest": "^30.0.0",
+        "@web/rollup-plugin-copy": "^0.5.1",
         "cross-env": "^7.0.3",
         "ejs": "^3.1.10",
         "jest": "^30.0.5",

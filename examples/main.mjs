@@ -1,4 +1,4 @@
-import { buffer_size, rule_t } from "../jsds/tsds.mts";
+import { buffer_size, rule_t } from "../tsds/tsds.mts";
 
 buffer_size(1000);
 
