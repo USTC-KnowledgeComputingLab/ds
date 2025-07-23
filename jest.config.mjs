@@ -3,18 +3,6 @@ export default {
     collectCoverage: true,
     extensionsToTreatAsEsm: [".mts"],
     transform: {
-        "^.+\\.m?tsx?$": [
-            "ts-jest",
-            {
-                tsconfig: {
-                    target: "esnext",
-                    module: "esnext",
-                    strict: true,
-                    esModuleInterop: true,
-                    isolatedModules: true,
-                },
-                useESM: true,
-            },
-        ],
+        "^.+\\.m?tsx?$": ["ts-jest", {}],
     },
 };

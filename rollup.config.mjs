@@ -17,9 +17,7 @@ export default {
     },
     plugins: [
         terser(),
-        typescript({
-            target: "esnext",
-        }),
+        typescript(),
         copy({
             patterns: ["**/*.wasm", "**/*.wasm.map"],
             rootDir: "jsds",
