@@ -3,6 +3,7 @@ import typescript from "@rollup/plugin-typescript";
 
 export default {
     input: {
+        ds: "jsds/ds.mjs",
         jsds: "jsds/tsds.mts",
         example: "examples/main.mjs",
         engine: "examples/engine.mjs",
