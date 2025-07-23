@@ -8,13 +8,16 @@ export default {
         example: "examples/main.mjs",
         engine: "examples/engine.mjs",
     },
-    output: [
-        {
-            dir: "dist",
-            format: "es",
-            sourcemap: true,
-            entryFileNames: "[name].mjs",
-        },
+    output: {
+        dir: "dist",
+        format: "es",
+        sourcemap: true,
+        entryFileNames: "[name].mjs",
+    },
+    plugins: [
+        terser(),
+        typescript({
+            target: "esnext",
+        }),
     ],
-    plugins: [terser(), typescript({ target: "esnext" })],
 };
