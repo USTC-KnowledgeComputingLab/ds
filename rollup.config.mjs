@@ -8,6 +8,7 @@ export default {
         ds: "tsds/ds.mjs",
         tsds: "tsds/tsds.mts",
         example: "examples/main.mjs",
+        search: "examples/search.mjs",
         engine: "examples/engine.mjs",
     },
     output: {
