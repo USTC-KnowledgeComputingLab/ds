@@ -7,9 +7,10 @@ import { search } from "./search.mjs";
 
 async function read_file_to_string_array(file_path) {
     const content = await readFile(file_path, "utf-8");
-    const sections = content.split(/\n\n/);
-    const results = sections.filter((section) => section.trim().length > 0).map((section) => section.trim());
-    return results;
+    return content
+        .split("\n\n")
+        .map((x) => x.trim())
+        .filter((x) => x.length > 0);
 }
 
 function default_callback(candidate) {
