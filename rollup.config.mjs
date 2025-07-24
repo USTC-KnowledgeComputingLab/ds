@@ -1,5 +1,6 @@
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
+import nodeResolve from "@rollup/plugin-node-resolve";
 import { copy } from "@web/rollup-plugin-copy";
 
 export default {
@@ -18,6 +19,7 @@ export default {
     plugins: [
         terser(),
         typescript(),
+        nodeResolve(),
         copy({
             patterns: ["**/*.wasm", "**/*.wasm.map"],
             rootDir: "tsds",
