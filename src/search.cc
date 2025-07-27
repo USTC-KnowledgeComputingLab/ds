@@ -109,6 +109,7 @@ namespace ds {
             done_cycle = current_cycle;
         }
         ++current_cycle;
+        length_t count = temp_rules.size() + temp_facts.size();
         for (auto it = temp_rules.begin(); it != temp_rules.end();) {
             auto node = temp_rules.extract(it++);
             rules.emplace(std::move(node.value()), current_cycle);
@@ -117,6 +118,6 @@ namespace ds {
             auto node = temp_facts.extract(it++);
             facts.emplace(std::move(node.value()), current_cycle);
         }
-        return temp_rules.size() + temp_facts.size();
+        return count;
     }
 } // namespace ds
