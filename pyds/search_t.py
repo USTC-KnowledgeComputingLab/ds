@@ -21,11 +21,8 @@ class Search:
     def reset(self) -> None:
         self._search.reset()
 
-    def add(self, text: str, sep: str | None = None) -> int:
-        if sep is not None:
-            return self._search.add_multiple(text, sep)
-        else:
-            return int(self._search.add_single(text))
+    def add(self, text: str) -> bool:
+        return self._search.add(text)
 
     def execute(self, callback: typing.Callable[[Rule], bool]) -> int:
         return self._search.execute(lambda candidate: callback(Rule(candidate.clone())))

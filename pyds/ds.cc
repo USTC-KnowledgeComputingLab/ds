@@ -136,7 +136,6 @@ PYBIND11_MODULE(ds, m) {
     search_t.def("set_limit_size", &ds::search_t::set_limit_size);
     search_t.def("set_buffer_size", &ds::search_t::set_buffer_size);
     search_t.def("reset", &ds::search_t::reset);
-    search_t.def("add_single", py::overload_cast<std::string_view>(&ds::search_t::add));
-    search_t.def("add_multiple", py::overload_cast<std::string_view, std::string_view>(&ds::search_t::add));
+    search_t.def("add", &ds::search_t::add);
     search_t.def("execute", &ds::search_t::execute);
 }

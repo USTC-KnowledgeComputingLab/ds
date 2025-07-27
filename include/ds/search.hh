@@ -60,12 +60,6 @@ namespace ds {
         /// @return 如果添加成功则返回true，否则返回false。
         bool add(std::string_view text);
 
-        /// @brief 向本搜索对象添加一些rule或fact，使用指定的分隔符。
-        /// @param text 描述rule或fact的文本，他们之间使用分隔符分隔。
-        /// @param sep 在text中用于分隔不同rule或fact的分隔符。
-        /// @return 成功添加的rule或fact的数量。
-        length_t add(std::string_view text, std::string_view sep);
-
         /// @brief 执行一轮搜索操作，遍历所有规则和事实，并对每个匹配的规则执行回调函数。
         /// @param callback 回调函数，每个新中找到的结果都会调用此函数。
         /// @return 搜索到新的结果的数量。

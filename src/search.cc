@@ -1,5 +1,4 @@
 #include <cstring>
-#include <ranges>
 #include <set>
 
 #include <ds/search.hh>
@@ -60,17 +59,6 @@ namespace ds {
         } else {
             return false;
         }
-    }
-
-    length_t search_t::add(std::string_view text, std::string_view sep) {
-        length_t success_count = 0;
-        for (const auto candidate : std::views::split(text, sep)) {
-            bool success = add(std::string_view(candidate.data(), candidate.size()));
-            if (success) {
-                ++success_count;
-            }
-        }
-        return success_count;
     }
 
     length_t search_t::execute(const std::function<bool(rule_t*)>& callback) {

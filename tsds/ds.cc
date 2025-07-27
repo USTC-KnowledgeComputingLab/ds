@@ -97,12 +97,8 @@ auto rule_match(ds::rule_t* rule_1, ds::rule_t* rule_2, int length) -> std::uniq
     return std::unique_ptr<ds::rule_t>(result);
 }
 
-auto search_add_single(ds::search_t* search, const std::string& text) -> bool {
+auto search_add(ds::search_t* search, const std::string& text) -> bool {
     return search->add(text);
-}
-
-auto search_add_multiple(ds::search_t* search, const std::string& text, const std::string& sep) -> ds::length_t {
-    return search->add(text, sep);
 }
 
 auto search_execute(ds::search_t* search, const em::val& callback) -> ds::length_t {
@@ -157,7 +153,6 @@ EMSCRIPTEN_BINDINGS(ds) {
     search_t.function("set_buffer_size", &ds::search_t::set_buffer_size);
     search_t.function("reset", &ds::search_t::reset);
     // 因为embind的限制，这里无法使用string_view和function。
-    search_t.function("add_single", &search_add_single, em::allow_raw_pointers());
-    search_t.function("add_multiple", &search_add_multiple, em::allow_raw_pointers());
+    search_t.function("add", &search_add, em::allow_raw_pointers());
     search_t.function("execute", &search_execute, em::allow_raw_pointers());
 }

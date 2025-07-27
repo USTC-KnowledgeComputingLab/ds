@@ -209,12 +209,8 @@ export class search_t {
         this._search.reset();
     }
 
-    add(text: string, sep: string | null = null): number {
-        if (sep !== null) {
-            return this._search.add_multiple(text, sep);
-        } else {
-            return Number(this._search.add_single(text));
-        }
+    add(text: string): boolean {
+        return this._search.add(text);
     }
 
     execute(callback: (candidate: rule_t) => boolean): number {
