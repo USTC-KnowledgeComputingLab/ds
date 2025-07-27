@@ -7,6 +7,7 @@ __all__ = [
     "List",
     "Term",
     "Rule",
+    "Search",
     "__version__",
 ]
 
