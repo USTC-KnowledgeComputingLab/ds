@@ -4,6 +4,9 @@ on:
   - pull_request
   - push
 
+env:
+  EM_CACHE_FOLDER: 'emsdk-cache'
+
 jobs:
   cxx:
     runs-on: ubuntu-latest
@@ -64,9 +67,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.EM_CACHE_FOLDER }}
+          key: example-em-cache-${{ runner.os }}-${{ matrix.node-version }}
+
       - uses: pyodide/setup-emsdk@v15
         with:
-          actions-cache-folder: 'emsdk-cache'
+          actions-cache-folder: ${{ env.EM_CACHE_FOLDER }}
 
       - name: dependencies
         run: npm ci
