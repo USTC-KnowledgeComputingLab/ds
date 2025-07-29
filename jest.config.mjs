@@ -1,5 +1,5 @@
 export default {
-    testMatch: ["**/test_*.mjs"],
+    testMatch: ["<rootDir>/tests/test_*.mjs"],
     collectCoverage: true,
     extensionsToTreatAsEsm: [".mts"],
     transform: {
