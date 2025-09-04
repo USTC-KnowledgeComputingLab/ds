@@ -8,7 +8,6 @@ from .rule_t import Rule
 
 
 class Search:
-
     def __init__(self, limit_size: int = 1000, buffer_size: int = 10000):
         self._search: ds.Search = ds.Search(limit_size, buffer_size)
 

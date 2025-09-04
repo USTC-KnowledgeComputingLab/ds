@@ -13,7 +13,6 @@ if typing.TYPE_CHECKING:
 
 
 class List(Common[ds.List]):
-
     _base = ds.List
 
     def __len__(self) -> int:
@@ -21,4 +20,5 @@ class List(Common[ds.List]):
 
     def __getitem__(self, index: int) -> Term:
         from .term_t import Term
+
         return Term(self.value[index])

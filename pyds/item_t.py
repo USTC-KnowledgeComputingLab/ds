@@ -8,7 +8,6 @@ from .string_t import String
 
 
 class Item(Common[ds.Item]):
-
     _base = ds.Item
 
     @property

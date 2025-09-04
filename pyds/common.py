@@ -11,7 +11,6 @@ T = typing.TypeVar("T")
 
 
 class Common(typing.Generic[T]):
-
     _base: type[T]
 
     def __init__(self, value: Common[T] | T | str | bytes, size: int | None = None) -> None:

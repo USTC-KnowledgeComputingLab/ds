@@ -8,7 +8,6 @@ from .string_t import String
 
 
 class Variable(Common[ds.Variable]):
-
     _base = ds.Variable
 
     @property

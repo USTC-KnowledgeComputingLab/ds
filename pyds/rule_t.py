@@ -11,7 +11,6 @@ from .buffer_size import buffer_size
 
 
 class Rule(Common[ds.Rule]):
-
     _base = ds.Rule
 
     def __len__(self) -> int:

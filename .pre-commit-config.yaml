@@ -6,10 +6,12 @@ repos:
   - id: clang-format
     types_or: [c++, c, cuda]
 
-- repo: https://github.com/google/yapf
-  rev: v0.40.2
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.12.11
   hooks:
-  - id: yapf
+  - id: ruff-check
+    args: [--fix]
+  - id: ruff-format
 
 - repo: https://github.com/biomejs/pre-commit
   rev: v2.1.2

@@ -13,7 +13,6 @@ from .buffer_size import buffer_size
 
 
 class Term(Common[ds.Term]):
-
     _base = ds.Term
 
     @property
