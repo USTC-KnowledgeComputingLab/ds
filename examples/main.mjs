@@ -9,7 +9,7 @@ function main() {
     const search = new search_t(temp_data_size, single_result_size);
 
     // P -> Q, P |- Q
-    search.add("(`P -> `Q) `P `Q\n");
+    search.add("(`P -> `Q) `P `Q");
     // p -> (q -> p)
     search.add("(`p -> (`q -> `p))");
     // (p -> (q -> r)) -> ((p -> q) -> (p -> r))
