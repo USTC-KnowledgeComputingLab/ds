@@ -20,7 +20,7 @@ export default {
         typescript(),
         nodeResolve(),
         copy({
-            patterns: ["**/*.wasm", "**/*.wasm.map", "**/ds.d.mts"],
+            patterns: ["ds.wasm", "ds.wasm.map", "ds.d.mts"],
             rootDir: "tsds",
         }),
     ],
