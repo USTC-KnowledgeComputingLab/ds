@@ -142,7 +142,7 @@ namespace ds {
         /// @note dictionary中每个tuple可以是下面的形式：
         /// 1. key, value (视为对所有scope有效)；
         /// 2. scope, key, value (key和value的scope相同)；
-        /// 2. scope_key, scope_value, key, value。
+        /// 3. scope_key, scope_value, key, value。
         /// @note 如果dictionary格式不正确，则行为未定义。
         term_t* ground(term_t* term, term_t* dictionary, const char* scope, std::byte* check_tail = nullptr);
 
