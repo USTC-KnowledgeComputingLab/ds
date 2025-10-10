@@ -1,6 +1,7 @@
 {
     "name": "tsds",
-    "module": "dist/tsds.mjs",
+    "type": "module",
+    "main": "dist/tsds.mjs",
     "types": "dist/tsds.d.mts",
     "files": [
         "dist/ds.mjs",
