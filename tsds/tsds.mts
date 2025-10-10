@@ -215,8 +215,7 @@ export class search_t {
 
     execute(callback: (candidate: rule_t) => boolean): number {
         return this._search.execute((candidate: dst.Rule): boolean => {
-            // 由于embind的限制，这里的candidate已经在c++端被复制过一次，在此不需要再次复制。
-            return callback(new rule_t(candidate));
+            return callback(new rule_t(candidate).copy());
         });
     }
 }

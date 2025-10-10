@@ -102,7 +102,7 @@ auto search_add(ds::search_t* search, const std::string& text) -> bool {
 }
 
 auto search_execute(ds::search_t* search, const em::val& callback) -> ds::length_t {
-    return search->execute([&callback](ds::rule_t* candidate) -> bool { return callback(clone(candidate)).as<bool>(); });
+    return search->execute([&callback](ds::rule_t* candidate) -> bool { return callback(candidate, em::allow_raw_pointers()).as<bool>(); });
 }
 
 EMSCRIPTEN_BINDINGS(ds) {
