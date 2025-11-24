@@ -6,6 +6,7 @@
     "files": [
         "dist/ds.mjs",
         "dist/ds.d.mts",
+        "dist/ds.mjs.map",
         "dist/ds.wasm",
         "dist/ds.wasm.map",
         "dist/tsds.mjs",
