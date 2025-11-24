@@ -68,6 +68,8 @@ jobs:
     needs: wheels
 
     environment: pypi
+    permissions:
+      id-token: write
 
     steps:
       - uses: actions/download-artifact@v6
