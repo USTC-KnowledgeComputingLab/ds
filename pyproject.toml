@@ -7,7 +7,7 @@ requires = [
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "pyds"
+name = "apyds"
 dynamic = ["version"]
 dependencies = []
 requires-python = ">=3.10, <3.14"
@@ -22,6 +22,7 @@ version_scheme = "no-guess-dev"
 fallback_version = "0.0.0"
 
 [tool.scikit-build]
+wheel.packages = ["pyds"]
 metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 build.verbose = true
 
