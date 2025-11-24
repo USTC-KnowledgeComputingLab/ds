@@ -46,14 +46,15 @@ jobs:
           python-version: '3.13'
 
       - name: install cibuildwheel
-        run: python -m pip install cibuildwheel
+        run: pip install cibuildwheel
 
       - name: build wheels
         run: python -m cibuildwheel
 
       - uses: actions/upload-artifact@v5
         with:
-          path: ./wheelhouse/*.whl
+          name: wheels-${{ matrix.os }}
+          path: wheelhouse/*.whl
 
   upload:
     runs-on: ubuntu-latest
@@ -64,11 +65,10 @@ jobs:
 
     steps:
       - uses: actions/download-artifact@v3
-
-      - uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          pattern: wheels-*
+          path: dist
 
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: artifact
+          packages-dir: dist
