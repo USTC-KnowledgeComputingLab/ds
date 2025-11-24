@@ -186,8 +186,8 @@ export class string_t extends _common_t<dst.String> {
  *
  * @example
  * ```typescript
- * const var1 = new variable_t("X");
- * console.log(var1.name().toString()); // "X"
+ * const var1 = new variable_t("`X");
+ * console.log(var1.name().toString()); // "`X"
  * ```
  */
 export class variable_t extends _common_t<dst.Variable> {
@@ -293,7 +293,7 @@ export class list_t extends _common_t<dst.List> {
  *
  * @example
  * ```typescript
- * const term = new term_t("(f X a)");
+ * const term = new term_t("(f `x a)");
  * const innerTerm = term.term(); // Get the underlying term type
  * ```
  */
@@ -352,8 +352,8 @@ export class term_t extends _common_t<dst.Term> {
  *
  * @example
  * ```typescript
- * const rule = new rule_t("(father X Y)\n----------\n(parent X Y)\n");
- * console.log(rule.conclusion().toString()); // "(parent X Y)"
+ * const rule = new rule_t("(father `X `Y)\n----------\n(parent `X `Y)\n");
+ * console.log(rule.conclusion().toString()); // "(parent `X `Y)"
  * console.log(rule.length()); // 1 (number of premises)
  * ```
  */
@@ -439,7 +439,7 @@ export class rule_t extends _common_t<dst.Rule> {
  * ```typescript
  * const search = new search_t();
  * search.add("(parent john mary)");
- * search.add("(father X Y)\n----------\n(parent X Y)\n");
+ * search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
  * search.execute((rule) => {
  *   console.log(rule.toString());
  *   return true; // Continue search
