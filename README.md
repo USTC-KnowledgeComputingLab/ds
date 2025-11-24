@@ -1,6 +1,6 @@
 # DS - A Deductive System
 
-A deductive system for logical inference, implemented in C++ with bindings for Python and TypeScript/JavaScript. The core library is written in C++, with Python bindings via pybind11 and TypeScript/JavaScript bindings via Emscripten (WebAssembly).
+A deductive system for logical inference, implemented in C++. The library provides bindings for Python (via pybind11) and TypeScript/JavaScript (via Emscripten/WebAssembly).
 
 ## Architecture
 
