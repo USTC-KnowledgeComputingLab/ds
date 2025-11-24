@@ -1,3 +1,8 @@
+"""Python wrapper for a deductive system implemented in C++.
+
+Provides classes and functions for working with logical terms, rules, and inference.
+"""
+
 __all__ = [
     "buffer_size",
     "scoped_buffer_size",
