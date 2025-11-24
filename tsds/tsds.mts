@@ -11,7 +11,8 @@ const ds: dst.EmbindModule = await create_ds();
 let _buffer_size: number = 1024;
 
 /**
- * Get or set the default buffer size used for string conversions.
+ * Gets the current buffer size, or sets a new buffer size and returns the previous value.
+ * The buffer size is used for string conversions in the deductive system.
  *
  * @param size - The new buffer size to set. If 0 (default), the current size is returned without modification.
  * @returns The previous buffer size value.
@@ -308,7 +309,7 @@ export class term_t extends _common_t<dst.Term> {
     }
 
     /**
-     * Get the underlying term as its specific type (variable, item, or list).
+     * Extracts the underlying term and returns it as its concrete type (variable_t, item_t, or list_t).
      *
      * @returns The term as a variable_t, item_t, or list_t.
      * @throws {Error} If the term type is unexpected.
@@ -327,7 +328,7 @@ export class term_t extends _common_t<dst.Term> {
     }
 
     /**
-     * Ground this term with another term using unification.
+     * Ground this term with another term using unification (substitute variables with concrete values).
      *
      * @param other - The term to unify with.
      * @param scope - Optional scope string for variable naming.
@@ -395,7 +396,7 @@ export class rule_t extends _common_t<dst.Rule> {
     }
 
     /**
-     * Ground this rule with another rule using unification.
+     * Ground this rule with another rule using unification (substitute variables with concrete values).
      *
      * @param other - The rule to unify with.
      * @param scope - Optional scope string for variable naming.
