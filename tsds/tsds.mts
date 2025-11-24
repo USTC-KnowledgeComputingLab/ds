@@ -73,7 +73,7 @@ class _common_t<T extends Common> {
      * @param type - The static type interface for this common type.
      * @param value - Initial value (can be another instance, base value, string, or buffer).
      * @param size - Optional buffer capacity for the internal storage.
-     * @throws {Error} If initialization fails or invalid arguments provided.
+     * @throws {Error} If initialization fails or invalid arguments are provided.
      */
     constructor(type: StaticCommon<T>, value: InitialArgument<T>, size: number = 0) {
         this.type = type;
@@ -172,7 +172,7 @@ export class string_t extends _common_t<dst.String> {
      * Creates a new string instance.
      *
      * @param value - Initial value (string, buffer, or another string_t).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
     constructor(value: InitialArgument<dst.String>, size: number = 0) {
@@ -195,7 +195,7 @@ export class variable_t extends _common_t<dst.Variable> {
      * Creates a new variable instance.
      *
      * @param value - Initial value (string, buffer, or another variable_t).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
     constructor(value: InitialArgument<dst.Variable>, size: number = 0) {
@@ -227,7 +227,7 @@ export class item_t extends _common_t<dst.Item> {
      * Creates a new item instance.
      *
      * @param value - Initial value (string, buffer, or another item_t).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
     constructor(value: InitialArgument<dst.Item>, size: number = 0) {
@@ -260,7 +260,7 @@ export class list_t extends _common_t<dst.List> {
      * Creates a new list instance.
      *
      * @param value - Initial value (string, buffer, or another list_t).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
     constructor(value: InitialArgument<dst.List>, size: number = 0) {
@@ -302,7 +302,7 @@ export class term_t extends _common_t<dst.Term> {
      * Creates a new term instance.
      *
      * @param value - Initial value (string, buffer, or another term_t).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
     constructor(value: InitialArgument<dst.Term>, size: number = 0) {
@@ -374,7 +374,7 @@ export class rule_t extends _common_t<dst.Rule> {
      * Creates a new rule instance.
      *
      * @param value - Initial value (string, buffer, or another rule_t).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
     constructor(value: InitialArgument<dst.Rule>, size: number = 0) {
