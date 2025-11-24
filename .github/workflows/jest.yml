@@ -69,7 +69,7 @@ jobs:
           actions-cache-folder: ${{ env.EM_CACHE_FOLDER }}
 
       - name: version
-        run: npm version from-git
+        run: npm version from-git --no-git-tag-version
 
       - name: dependencies
         run: npm ci
