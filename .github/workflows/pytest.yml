@@ -34,8 +34,6 @@ jobs:
 
       - name: build wheels
         run: python -m cibuildwheel
-        env:
-          CIBW_ENVIRONMENT_WINDOWS: SKBUILD_CMAKE_ARGS=-GNinja
 
       - uses: actions/upload-artifact@v5
         with:
