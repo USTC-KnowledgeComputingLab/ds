@@ -483,17 +483,17 @@ export class search_t {
     /**
      * Creates a new search engine instance.
      *
-     * @param limit_size - Maximum number of rules/facts in the knowledge base (default: 1000).
-     * @param buffer_size - Buffer size for internal operations (default: 10000).
+     * @param limit_size - Size of the buffer for storing the final objects (rules/facts) in the knowledge base (default: 1000).
+     * @param buffer_size - Size of the buffer for internal operations like conversions and transformations (default: 10000).
      */
     constructor(limit_size: number = 1000, buffer_size: number = 10000) {
         this._search = new ds.Search(limit_size, buffer_size);
     }
 
     /**
-     * Set the maximum number of rules/facts the search engine can hold.
+     * Set the size of the buffer for storing final objects.
      *
-     * @param limit_size - The new limit size.
+     * @param limit_size - The new limit size for storing rules/facts.
      */
     set_limit_size(limit_size: number): void {
         this._search.set_limit_size(limit_size);
@@ -528,7 +528,7 @@ export class search_t {
     /**
      * Execute the search engine with a callback for each inferred rule.
      *
-     * @param callback - Function called for each candidate rule. Return true to continue, false to stop.
+     * @param callback - Function called for each candidate rule. Return false to continue, true to stop.
      * @returns The number of rules processed.
      */
     execute(callback: (candidate: rule_t) => boolean): number {
