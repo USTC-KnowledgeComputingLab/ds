@@ -28,6 +28,12 @@ The package includes WebAssembly binaries and TypeScript type definitions.
 pip install apyds
 ```
 
+Then import as `pyds`:
+
+```python
+import pyds
+```
+
 Requires Python 3.10-3.13.
 
 ### C++ (from source)
@@ -142,7 +148,7 @@ int main() {
 
 Terms are the basic building blocks of the deductive system:
 
-- **Variables**: Prefixed with backtick `` `X ``, e.g., `` `P ``, `` `Q ``
+- **Variables**: Prefixed with backtick, e.g., `` `X``, `` `P``, `` `Q``
 - **Items**: Constants or functors, e.g., `a`, `father`, `!`
 - **Lists**: Ordered sequences enclosed in parentheses, e.g., `(a b c)`, `(father john mary)`
 
