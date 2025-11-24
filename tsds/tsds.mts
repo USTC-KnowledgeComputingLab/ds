@@ -187,7 +187,7 @@ export class string_t extends _common_t<dst.String> {
  * @example
  * ```typescript
  * const var1 = new variable_t("`X");
- * console.log(var1.name().toString()); // "`X"
+ * console.log(var1.name().toString()); // "X"
  * ```
  */
 export class variable_t extends _common_t<dst.Variable> {
