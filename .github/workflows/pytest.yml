@@ -43,6 +43,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: recovery tag information
+        run: git fetch --tags --force
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.13'
