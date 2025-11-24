@@ -71,6 +71,12 @@ jobs:
       - name: version
         run: npm version from-git --no-git-tag-version
 
+      - name: extract tag
+        run: |
+          GIT_TAG=${GITHUB_REF#refs/tags/}
+          TAG=$(echo $GIT_TAG | sed -E 's/^v//' | sed -E 's/[0-9\.-]//g' | sed -E 's/^$/latest/g')
+          echo TAG=$TAG >> $GITHUB_ENV
+
       - name: dependencies
         run: npm ci
 
@@ -78,4 +84,4 @@ jobs:
         run: npm run build
 
       - name: publish
-        run: npm publish
+        run: npm publish --tag $TAG
