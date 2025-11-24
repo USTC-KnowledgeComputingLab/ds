@@ -335,6 +335,18 @@ export class term_t extends _common_t<dst.Term> {
      *                Example: "((`a b))" means substitute variable `a with value b.
      * @param scope - Optional scope string for variable scoping.
      * @returns The grounded term, or null if grounding fails.
+     *
+     * @example
+     * ```typescript
+     * const a = new term_t("`a");
+     * const b = new term_t("((`a b))");
+     * console.log(a.ground(b).toString()); // "b"
+     *
+     * // With scope
+     * const c = new term_t("`a");
+     * const d = new term_t("((x y `a `b) (y x `b `c))");
+     * console.log(c.ground(d, "x").toString()); // "`c"
+     * ```
      */
     ground(other: term_t, scope: string = ""): term_t | null {
         const capacity = buffer_size();
@@ -404,6 +416,18 @@ export class rule_t extends _common_t<dst.Rule> {
      *                Example: new rule_t("((`a b))") means substitute variable `a with value b.
      * @param scope - Optional scope string for variable scoping.
      * @returns The grounded rule, or null if grounding fails.
+     *
+     * @example
+     * ```typescript
+     * const a = new rule_t("`a");
+     * const b = new rule_t("((`a b))");
+     * console.log(a.ground(b).toString()); // "----\nb\n"
+     *
+     * // With scope
+     * const c = new rule_t("`a");
+     * const d = new rule_t("((x y `a `b) (y x `b `c))");
+     * console.log(c.ground(d, "x").toString()); // "----\n`c\n"
+     * ```
      */
     ground(other: rule_t, scope: string = ""): rule_t | null {
         const capacity = buffer_size();
@@ -420,6 +444,13 @@ export class rule_t extends _common_t<dst.Rule> {
      *
      * @param other - The rule to match against.
      * @returns The matched rule, or null if matching fails.
+     *
+     * @example
+     * ```typescript
+     * const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
+     * const pq = new rule_t("((! (! `x)) -> `x)");
+     * console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
+     * ```
      */
     match(other: rule_t): rule_t | null {
         const capacity = buffer_size();
@@ -442,7 +473,7 @@ export class rule_t extends _common_t<dst.Rule> {
  * search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
  * search.execute((rule) => {
  *   console.log(rule.toString());
- *   return true; // Continue search
+ *   return false; // Return false to continue, true to stop
  * });
  * ```
  */
