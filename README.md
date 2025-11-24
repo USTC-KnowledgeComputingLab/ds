@@ -140,9 +140,10 @@ while True:
 ### C++ Example
 
 ```cpp
+#include <cstring>
 #include <ds/ds.hh>
 #include <ds/search.hh>
-#include <iostream>
+#include <ds/utility.hh>
 
 int main() {
     ds::search_t search(1000, 10000);
@@ -159,11 +160,23 @@ int main() {
     // Premise: !!X
     search.add("(! (! X))");
     
-    // Execute search
-    search.execute([](ds::rule_t* candidate) {
-        // Process each derived rule
-        return false; // Continue searching
-    });
+    // Target: X (double negation elimination)
+    auto target = ds::text_to_rule("X", 1000);
+    
+    // Execute search until target is found
+    while (true) {
+        bool found = false;
+        search.execute([&](ds::rule_t* candidate) {
+            if (candidate->data_size() == target->data_size() &&
+                memcmp(candidate->head(), target->head(), candidate->data_size()) == 0) {
+                printf("Found: %s", ds::rule_to_text(candidate, 1000).get());
+                found = true;
+                return true; // Stop search
+            }
+            return false; // Continue searching
+        });
+        if (found) break;
+    }
     
     return 0;
 }
