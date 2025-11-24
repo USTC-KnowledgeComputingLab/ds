@@ -1,20 +1,28 @@
 # DS - A Deductive System
 
-A multi-language implementation of a deductive system for logical inference and automated reasoning. This library provides implementations in C++, Python, and TypeScript/JavaScript (via WebAssembly), allowing you to work with logical terms, rules, and perform automated deduction across different platforms.
+A deductive system for logical inference, implemented in C++ with bindings for Python and TypeScript/JavaScript. The core library is written in C++, with Python bindings via pybind11 and TypeScript/JavaScript bindings via Emscripten (WebAssembly).
+
+## Architecture
+
+- **C++ Core**: The core implementation in `src/` and `include/ds/` provides the fundamental data structures and algorithms
+- **Python Bindings**: Built with pybind11, wrapping the C++ core (see `pyds/`)
+- **TypeScript/JavaScript Bindings**: Built with Emscripten, compiling C++ to WebAssembly (see `tsds/`)
 
 ## Features
 
 - **Multi-Language Support**: Use the same deductive system in C++, Python, or TypeScript/JavaScript
 - **Logical Terms**: Work with variables, items (constants/functors), and lists
 - **Rule-Based Inference**: Define rules and facts, perform logical deduction
-- **Unification and Matching**: Unify terms and match rules automatically
-- **Search Engine**: Built-in search mechanism for automated theorem proving
-- **WebAssembly**: Run deductive reasoning in the browser or Node.js environments
+- **Unification and Matching**: Unify terms and match rules
+- **Search Engine**: Built-in search mechanism for iterative inference
+- **WebAssembly**: Run inference in the browser or Node.js environments
 - **Type-Safe**: Strong typing support in TypeScript and Python
 
 ## Installation
 
 ### TypeScript/JavaScript (npm)
+
+The TypeScript/JavaScript package wraps the C++ core via WebAssembly.
 
 ```bash
 npm install atsds
@@ -23,6 +31,8 @@ npm install atsds
 The package includes WebAssembly binaries and TypeScript type definitions.
 
 ### Python (pip)
+
+The Python package wraps the C++ core via pybind11.
 
 ```bash
 pip install apyds
@@ -36,7 +46,9 @@ import pyds
 
 Requires Python 3.10-3.13.
 
-### C++ (from source)
+### C++ (Core Library)
+
+The C++ library is the core implementation. Both Python and TypeScript bindings are built on top of it.
 
 ```bash
 git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
@@ -210,7 +222,7 @@ Matching unifies two terms or rules to find variable substitutions.
 - `Rule`: Logical rule class
 - `Search`: Search engine for inference
 
-### C++
+### C++ (Core)
 
 All classes are in the `ds` namespace:
 
@@ -220,9 +232,9 @@ All classes are in the `ds` namespace:
 - `list_t`: Lists
 - `term_t`: General terms
 - `rule_t`: Logical rules
-- `search_t`: Search engine
+- `search_t`: Search engine (in `<ds/search.hh>`)
 
-See header files in `include/ds/` for detailed API documentation (comments in Chinese).
+See header files in `include/ds/` for detailed API documentation.
 
 ## Building from Source
 
@@ -273,7 +285,7 @@ Example programs are provided in the `examples/` directory:
 - `examples/main.py`: Python example
 - `examples/main.cc`: C++ example
 
-Each example demonstrates automated theorem proving using propositional logic axioms to derive results.
+Each example demonstrates logical inference using propositional logic axioms.
 
 ## Development
 
