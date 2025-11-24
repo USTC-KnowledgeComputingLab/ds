@@ -332,6 +332,7 @@ export class term_t extends _common_t<dst.Term> {
      * Ground this term using a dictionary to substitute variables with values.
      *
      * @param other - A term representing a dictionary (list of pairs). Each pair contains a variable and its substitution value.
+     *                Example: "((`a b))" means substitute variable `a with value b.
      * @param scope - Optional scope string for variable scoping.
      * @returns The grounded term, or null if grounding fails.
      */
@@ -347,13 +348,13 @@ export class term_t extends _common_t<dst.Term> {
 
 /**
  * Wrapper class for logical rules in the deductive system.
- * A rule consists of a conclusion and zero or more premises.
+ * A rule consists of zero or more premises (above the line) and a conclusion (below the line).
  *
  * @example
  * ```typescript
  * const rule = new rule_t("(father X Y)\n----------\n(parent X Y)\n");
  * console.log(rule.conclusion().toString()); // "(parent X Y)"
- * console.log(rule.length()); // Number of premises
+ * console.log(rule.length()); // 1 (number of premises)
  * ```
  */
 export class rule_t extends _common_t<dst.Rule> {
@@ -400,6 +401,7 @@ export class rule_t extends _common_t<dst.Rule> {
      * Ground this rule using a dictionary to substitute variables with values.
      *
      * @param other - A rule representing a dictionary (list of pairs). Each pair contains a variable and its substitution value.
+     *                Example: new rule_t("((`a b))") means substitute variable `a with value b.
      * @param scope - Optional scope string for variable scoping.
      * @returns The grounded rule, or null if grounding fails.
      */
