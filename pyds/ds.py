@@ -10,4 +10,4 @@ __all__ = [
     "Search",
 ]
 
-from _ds import String, Variable, Item, List, Term, Rule, Search
+from ._ds import String, Variable, Item, List, Term, Rule, Search
