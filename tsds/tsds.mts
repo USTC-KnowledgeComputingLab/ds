@@ -12,7 +12,7 @@ let _buffer_size: number = 1024;
 
 /**
  * Gets the current buffer size, or sets a new buffer size and returns the previous value.
- * The buffer size is used for string conversions and internal storage of terms, rules, and other objects.
+ * The buffer size is used for internal operations like conversions and transformations.
  *
  * @param size - The new buffer size to set. If 0 (default), the current size is returned without modification.
  * @returns The previous buffer size value.
@@ -401,7 +401,7 @@ export class rule_t extends _common_t<dst.Rule> {
     }
 
     /**
-     * Get the conclusion (head) of the rule.
+     * Get the conclusion of the rule.
      *
      * @returns The conclusion term.
      */
@@ -440,9 +440,10 @@ export class rule_t extends _common_t<dst.Rule> {
 
     /**
      * Match this rule with another rule using unification.
-     * This performs pattern matching and unification between the two rules.
+     * This unifies the first premise of this rule with the other rule.
+     * The other rule must be a fact (a rule without premises).
      *
-     * @param other - The rule to match against.
+     * @param other - The rule to match against (must be a fact without premises).
      * @returns The matched rule, or null if matching fails.
      *
      * @example
