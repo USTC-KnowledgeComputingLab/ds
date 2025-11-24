@@ -90,12 +90,20 @@ class Rule(Common[ds.Rule]):
         """Match this rule with another rule using unification.
 
         This is the operator form of the match method, using the @ operator.
+        This unifies the first premise of this rule with the other rule.
+        The other rule must be a fact (a rule without premises).
 
         Args:
             other: The rule to match against (must be a fact without premises).
 
         Returns:
             The matched rule, or None if matching fails.
+
+        Example:
+            >>> mp = Rule("(`p -> `q)\\n`p\\n----------\\n`q\\n")
+            >>> pq = Rule("((! (! `x)) -> `x)")
+            >>> str(mp @ pq)
+            '(! (! `x))\\n----------\\n`x\\n'
         """
         capacity = buffer_size()
         rule = ds.Rule.match(self.value, other.value, capacity)
