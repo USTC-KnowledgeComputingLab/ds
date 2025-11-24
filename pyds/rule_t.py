@@ -100,7 +100,7 @@ class Rule(Common[ds.Rule]):
             The matched rule, or None if matching fails.
 
         Example:
-            >>> mp = Rule("(`p -> `q)\\n`p\\n----------\\n`q\\n")
+            >>> mp = Rule("(`p -> `q)\\n`p\\n`q\\n")
             >>> pq = Rule("((! (! `x)) -> `x)")
             >>> str(mp @ pq)
             '(! (! `x))\\n----------\\n`x\\n'
