@@ -18,7 +18,7 @@ endforeach()
 
 find_package(pybind11)
 if(pybind11_FOUND)
-  pybind11_add_module(pyds ${CMAKE_CURRENT_SOURCE_DIR}/pyds/_ds.cc)
+  pybind11_add_module(pyds ${CMAKE_CURRENT_SOURCE_DIR}/pyds/ds.cc)
   target_link_libraries(pyds PRIVATE ${PROJECT_NAME})
   set_property(TARGET pyds PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
   set_target_properties(pyds PROPERTIES OUTPUT_NAME ds)
