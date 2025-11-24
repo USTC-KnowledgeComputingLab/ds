@@ -16,6 +16,9 @@ description = "A deductive system"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 
+[project.urls]
+Repository = "https://github.com/USTC-KnowledgeComputingLab/ds.git"
+
 [tool.setuptools_scm]
 version_file = "pyds/_version.py"
 version_scheme = "no-guess-dev"
