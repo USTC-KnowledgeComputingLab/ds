@@ -1,5 +1,6 @@
 {
-    "name": "tsds",
+    "name": "atsds",
+    "version": "v0.0.1-alpha20",
     "type": "module",
     "main": "dist/tsds.mjs",
     "types": "dist/tsds.d.mts",
