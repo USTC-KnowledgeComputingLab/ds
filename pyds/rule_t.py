@@ -71,12 +71,14 @@ class Rule(Common[ds.Rule]):
         Example:
             >>> a = Rule("`a")
             >>> b = Rule("((`a b))")
-            >>> print(a.ground(b))  # "----\\nb\\n"
+            >>> str(a.ground(b))
+            '----\\nb\\n'
             >>>
             >>> # With scope
             >>> c = Rule("`a")
             >>> d = Rule("((x y `a `b) (y x `b `c))")
-            >>> print(c.ground(d, "x"))  # "----\\n`c\\n"
+            >>> str(c.ground(d, "x"))
+            '----\\n`c\\n'
         """
         capacity = buffer_size()
         rule = ds.Rule.ground(self.value, other.value, scope, capacity)

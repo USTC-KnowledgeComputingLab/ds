@@ -24,7 +24,7 @@ class Common(typing.Generic[T]):
         """Creates a new instance.
 
         Args:
-            value: Initial value (can be another instance, base value, string, or buffer).
+            value: Initial value (can be another instance, base value, string, or memoryview).
             size: Optional buffer capacity for the internal storage.
 
         Raises:

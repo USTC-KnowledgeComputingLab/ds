@@ -64,12 +64,12 @@ class Term(Common[ds.Term]):
         Example:
             >>> a = Term("`a")
             >>> b = Term("((`a b))")
-            >>> print(a.ground(b))  # "b"
+            >>> str(a.ground(b))  # "b"
             >>>
             >>> # With scope
             >>> c = Term("`a")
             >>> d = Term("((x y `a `b) (y x `b `c))")
-            >>> print(c.ground(d, "x"))  # "`c"
+            >>> str(c.ground(d, "x"))  # "`c"
         """
         capacity = buffer_size()
         term = ds.Term.ground(self.value, other.value, scope, capacity)
