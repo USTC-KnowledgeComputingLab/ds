@@ -64,34 +64,39 @@ Include the headers from `include/ds/` in your C++ project.
 ### TypeScript/JavaScript Example
 
 ```typescript
-import { rule_t, search_t, buffer_size } from "atsds";
-
-// Set buffer size for internal operations
-buffer_size(1000);
+import { rule_t, search_t } from "atsds";
 
 // Create a search engine
 const search = new search_t(1000, 10000);
 
-// Add logical rules (modus ponens)
+// Modus ponens: P -> Q, P |- Q
 search.add("(`P -> `Q) `P `Q");
-
-// Add axioms
+// Axiom schema 1: p -> (q -> p)
 search.add("(`p -> (`q -> `p))");
+// Axiom schema 2: (p -> (q -> r)) -> ((p -> q) -> (p -> r))
+search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))");
+// Axiom schema 3: (!p -> !q) -> (q -> p)
+search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
 
-// Add a premise
+// Premise: !!X
 search.add("(! (! X))");
 
-// Define target
+// Target: X (double negation elimination)
 const target = new rule_t("X");
 
-// Execute search
-search.execute((candidate) => {
-    if (candidate.key() === target.key()) {
-        console.log("Found:", candidate.toString());
-        return true; // Stop search
-    }
-    return false; // Continue searching
-});
+// Execute search until target is found
+while (true) {
+    let found = false;
+    search.execute((candidate) => {
+        if (candidate.key() === target.key()) {
+            console.log("Found:", candidate.toString());
+            found = true;
+            return true; // Stop search
+        }
+        return false; // Continue searching
+    });
+    if (found) break;
+}
 ```
 
 ### Python Example
@@ -99,54 +104,64 @@ search.execute((candidate) => {
 ```python
 import pyds
 
-# Set buffer size for internal operations
-pyds.buffer_size(1000)
-
 # Create a search engine
 search = pyds.Search(1000, 10000)
 
-# Add logical rules (modus ponens)
+# Modus ponens: P -> Q, P |- Q
 search.add("(`P -> `Q) `P `Q")
-
-# Add axioms
+# Axiom schema 1: p -> (q -> p)
 search.add("(`p -> (`q -> `p))")
+# Axiom schema 2: (p -> (q -> r)) -> ((p -> q) -> (p -> r))
+search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")
+# Axiom schema 3: (!p -> !q) -> (q -> p)
+search.add("(((! `p) -> (! `q)) -> (`q -> `p))")
 
-# Add a premise
+# Premise: !!X
 search.add("(! (! X))")
 
-# Define target
+# Target: X (double negation elimination)
 target = pyds.Rule("X")
 
-# Execute search
-def callback(candidate):
-    if candidate == target:
-        print("Found:", candidate)
-        return True  # Stop search
-    return False  # Continue searching
-
-search.execute(callback)
+# Execute search until target is found
+while True:
+    found = False
+    def callback(candidate):
+        global found
+        if candidate == target:
+            print("Found:", candidate)
+            found = True
+            return True  # Stop search
+        return False  # Continue searching
+    search.execute(callback)
+    if found:
+        break
 ```
 
 ### C++ Example
 
 ```cpp
 #include <ds/ds.hh>
+#include <ds/search.hh>
 #include <iostream>
 
 int main() {
-    const size_t temp_data_size = 1000;
-    const size_t buffer_size = 10000;
+    ds::search_t search(1000, 10000);
     
-    ds::search_t search(temp_data_size, buffer_size);
-    
-    // Add logical rules
+    // Modus ponens: P -> Q, P |- Q
     search.add("(`P -> `Q) `P `Q");
+    // Axiom schema 1: p -> (q -> p)
     search.add("(`p -> (`q -> `p))");
+    // Axiom schema 2: (p -> (q -> r)) -> ((p -> q) -> (p -> r))
+    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))");
+    // Axiom schema 3: (!p -> !q) -> (q -> p)
+    search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
+    
+    // Premise: !!X
     search.add("(! (! X))");
     
     // Execute search
     search.execute([](ds::rule_t* candidate) {
-        std::cout << "Found rule" << std::endl;
+        // Process each derived rule
         return false; // Continue searching
     });
     
@@ -195,7 +210,16 @@ console.log(result.toString()); // "b"
 
 ### Matching
 
-Matching unifies two terms or rules to find variable substitutions.
+Matching unifies the first premise of a rule with a fact to produce a new rule. For example, applying modus ponens to double negation elimination:
+
+```typescript
+// Modus ponens rule: (p -> q), p |- q
+const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
+// Double negation elimination axiom: !!x -> x
+const pq = new rule_t("((! (! `x)) -> `x)");
+// Match produces: !!x |- x
+console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
+```
 
 ## API Overview
 
