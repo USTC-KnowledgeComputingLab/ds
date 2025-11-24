@@ -12,7 +12,7 @@ let _buffer_size: number = 1024;
 
 /**
  * Gets the current buffer size, or sets a new buffer size and returns the previous value.
- * The buffer size is used for string conversions in the deductive system.
+ * The buffer size is used for string conversions and internal storage of terms, rules, and other objects.
  *
  * @param size - The new buffer size to set. If 0 (default), the current size is returned without modification.
  * @returns The previous buffer size value.
@@ -72,7 +72,7 @@ class _common_t<T extends Common> {
      *
      * @param type - The static type interface for this common type.
      * @param value - Initial value (can be another instance, base value, string, or buffer).
-     * @param size - Optional buffer size for string initialization.
+     * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails or invalid arguments provided.
      */
     constructor(type: StaticCommon<T>, value: InitialArgument<T>, size: number = 0) {
@@ -146,7 +146,8 @@ class _common_t<T extends Common> {
     }
 
     /**
-     * Get a key representation for this value (same as toString).
+     * Get a key representation for this value.
+     * The key equality is consistent with object equality.
      *
      * @returns The string key.
      */
@@ -249,7 +250,7 @@ export class item_t extends _common_t<dst.Item> {
  *
  * @example
  * ```typescript
- * const list = new list_t("[a, b, c]");
+ * const list = new list_t("(a b c)");
  * console.log(list.length()); // 3
  * console.log(list.getitem(0).toString()); // "a"
  * ```
@@ -292,7 +293,7 @@ export class list_t extends _common_t<dst.List> {
  *
  * @example
  * ```typescript
- * const term = new term_t("f(X, a)");
+ * const term = new term_t("(f X a)");
  * const innerTerm = term.term(); // Get the underlying term type
  * ```
  */
@@ -328,11 +329,11 @@ export class term_t extends _common_t<dst.Term> {
     }
 
     /**
-     * Ground this term with another term using unification (substitute variables with concrete values).
+     * Ground this term using a dictionary to substitute variables with values.
      *
-     * @param other - The term to unify with.
-     * @param scope - Optional scope string for variable naming.
-     * @returns The grounded term, or null if unification fails.
+     * @param other - A term representing a dictionary (list of pairs). Each pair contains a variable and its substitution value.
+     * @param scope - Optional scope string for variable scoping.
+     * @returns The grounded term, or null if grounding fails.
      */
     ground(other: term_t, scope: string = ""): term_t | null {
         const capacity = buffer_size();
@@ -350,8 +351,8 @@ export class term_t extends _common_t<dst.Term> {
  *
  * @example
  * ```typescript
- * const rule = new rule_t("parent(X, Y) :- father(X, Y)");
- * console.log(rule.conclusion().toString()); // "parent(X, Y)"
+ * const rule = new rule_t("(father X Y)\n----------\n(parent X Y)\n");
+ * console.log(rule.conclusion().toString()); // "(parent X Y)"
  * console.log(rule.length()); // Number of premises
  * ```
  */
@@ -396,11 +397,11 @@ export class rule_t extends _common_t<dst.Rule> {
     }
 
     /**
-     * Ground this rule with another rule using unification (substitute variables with concrete values).
+     * Ground this rule using a dictionary to substitute variables with values.
      *
-     * @param other - The rule to unify with.
-     * @param scope - Optional scope string for variable naming.
-     * @returns The grounded rule, or null if unification fails.
+     * @param other - A rule representing a dictionary (list of pairs). Each pair contains a variable and its substitution value.
+     * @param scope - Optional scope string for variable scoping.
+     * @returns The grounded rule, or null if grounding fails.
      */
     ground(other: rule_t, scope: string = ""): rule_t | null {
         const capacity = buffer_size();
@@ -412,7 +413,8 @@ export class rule_t extends _common_t<dst.Rule> {
     }
 
     /**
-     * Match this rule with another rule.
+     * Match this rule with another rule using unification.
+     * This performs pattern matching and unification between the two rules.
      *
      * @param other - The rule to match against.
      * @returns The matched rule, or null if matching fails.
@@ -434,8 +436,8 @@ export class rule_t extends _common_t<dst.Rule> {
  * @example
  * ```typescript
  * const search = new search_t();
- * search.add("parent(john, mary)");
- * search.add("parent(X, Y) :- father(X, Y)");
+ * search.add("(parent john mary)");
+ * search.add("(father X Y)\n----------\n(parent X Y)\n");
  * search.execute((rule) => {
  *   console.log(rule.toString());
  *   return true; // Continue search
