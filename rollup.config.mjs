@@ -5,8 +5,8 @@ import { copy } from "@web/rollup-plugin-copy";
 
 export default {
     input: {
-        ds: "tsds/ds.mjs",
-        tsds: "tsds/tsds.mts",
+        ds: "atsds/ds.mjs",
+        tsds: "atsds/tsds.mts",
         example: "examples/main.mjs",
     },
     output: {
@@ -21,7 +21,7 @@ export default {
         nodeResolve(),
         copy({
             patterns: ["ds.wasm", "ds.wasm.map", "ds.d.mts"],
-            rootDir: "tsds",
+            rootDir: "atsds",
         }),
     ],
 };
