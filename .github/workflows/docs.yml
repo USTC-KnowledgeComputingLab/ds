@@ -1,0 +1,32 @@
+name: docs
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: recovery tag information
+        run: git fetch --tags --force
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: 'pip'
+
+      - name: install dependencies
+        run: pip install '.[docs]'
+
+      - name: build docs
+        run: mike deploy --push ${GITHUB_REF#refs/tags/} latest
+
+      - name: set default
+        run: mike set-default --push latest
