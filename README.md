@@ -44,7 +44,7 @@ Then import as `pyds`:
 import pyds
 ```
 
-Requires Python 3.10-3.13.
+Requires Python 3.10-3.14.
 
 ### C++ (Core Library)
 
@@ -281,7 +281,7 @@ See header files in `include/ds/` for detailed API documentation.
 - C++20 compatible compiler
 - CMake 3.15+
 - For TypeScript: Emscripten SDK
-- For Python: Python 3.10-3.13, scikit-build-core, pybind11
+- For Python: Python 3.10-3.14, scikit-build-core, pybind11
 
 ### Build All Components
 
