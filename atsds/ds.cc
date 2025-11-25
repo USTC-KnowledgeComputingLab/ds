@@ -80,7 +80,7 @@ auto term_ground(ds::term_t* term, ds::term_t* dictionary, const std::string& sc
 
 auto rule_ground(ds::rule_t* rule, ds::rule_t* dictionary, const std::string& scope, int length) -> std::unique_ptr<ds::rule_t> {
     const char* scope_ptr = scope.size() != 0 ? scope.data() : nullptr;
-    ds::rule_t* result = reinterpret_cast<ds::rule_t*>(operator new(length));
+    auto result = reinterpret_cast<ds::rule_t*>(operator new(length));
     if (result->ground(rule, dictionary, scope_ptr, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
         operator delete(result);
         return std::unique_ptr<ds::rule_t>(nullptr);
@@ -89,7 +89,7 @@ auto rule_ground(ds::rule_t* rule, ds::rule_t* dictionary, const std::string& sc
 }
 
 auto rule_match(ds::rule_t* rule_1, ds::rule_t* rule_2, int length) -> std::unique_ptr<ds::rule_t> {
-    ds::rule_t* result = reinterpret_cast<ds::rule_t*>(operator new(length));
+    auto result = reinterpret_cast<ds::rule_t*>(operator new(length));
     if (result->match(rule_1, rule_2, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
         operator delete(result);
         return std::unique_ptr<ds::rule_t>(nullptr);
