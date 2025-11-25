@@ -9,20 +9,19 @@
 
 namespace ds {
     namespace {
+        /// @brief 存储prefix和suffix字符串信息的结构体。
+        struct prefix_suffix_t {
+            char* prefix_str;   // prefix字符串指针，如果prefix为空则为nullptr
+            length_t prefix_len; // prefix字符串长度
+            char* suffix_str;   // suffix字符串指针，如果suffix为空则为nullptr
+            length_t suffix_len; // suffix字符串长度
+        };
+
         /// @brief 从prefix_and_suffix中提取prefix和suffix字符串。
         /// @param prefix_and_suffix 格式为((prefix) (suffix))的term，每个内部list包含0或1个item。
-        /// @param prefix_str 输出参数，prefix字符串指针，如果prefix为空则为nullptr。
-        /// @param prefix_len 输出参数，prefix字符串长度。
-        /// @param suffix_str 输出参数，suffix字符串指针，如果suffix为空则为nullptr。
-        /// @param suffix_len 输出参数，suffix字符串长度。
+        /// @param ps 输出参数，存储提取的prefix和suffix信息。
         /// @return 成功返回true，格式错误返回false。
-        bool extract_prefix_suffix(
-            term_t* prefix_and_suffix,
-            char*& prefix_str,
-            length_t& prefix_len,
-            char*& suffix_str,
-            length_t& suffix_len
-        ) {
+        bool extract_prefix_suffix(term_t* prefix_and_suffix, prefix_suffix_t* ps) {
             list_t* ps_list = prefix_and_suffix->list();
             if (ps_list == nullptr || ps_list->get_list_size() != 2) [[unlikely]] {
                 return false;
@@ -34,30 +33,30 @@ namespace ds {
                 return false;
             }
             // 获取prefix字符串（如果list为空则为nullptr）
-            prefix_str = nullptr;
-            prefix_len = 0;
+            ps->prefix_str = nullptr;
+            ps->prefix_len = 0;
             if (prefix_list->get_list_size() == 1) {
                 item_t* prefix_item = prefix_list->term(0)->item();
                 if (prefix_item == nullptr) [[unlikely]] {
                     return false;
                 }
-                prefix_str = prefix_item->name()->get_string();
+                ps->prefix_str = prefix_item->name()->get_string();
                 // get_length()返回的是包含末尾\0的长度，所以需要减1
-                prefix_len = prefix_item->name()->get_length() - 1;
+                ps->prefix_len = prefix_item->name()->get_length() - 1;
             } else if (prefix_list->get_list_size() != 0) [[unlikely]] {
                 return false;
             }
             // 获取suffix字符串（如果list为空则为nullptr）
-            suffix_str = nullptr;
-            suffix_len = 0;
+            ps->suffix_str = nullptr;
+            ps->suffix_len = 0;
             if (suffix_list->get_list_size() == 1) {
                 item_t* suffix_item = suffix_list->term(0)->item();
                 if (suffix_item == nullptr) [[unlikely]] {
                     return false;
                 }
-                suffix_str = suffix_item->name()->get_string();
+                ps->suffix_str = suffix_item->name()->get_string();
                 // get_length()返回的是包含末尾\0的长度，所以需要减1
-                suffix_len = suffix_item->name()->get_length() - 1;
+                ps->suffix_len = suffix_item->name()->get_length() - 1;
             } else if (suffix_list->get_list_size() != 0) [[unlikely]] {
                 return false;
             }
@@ -67,26 +66,20 @@ namespace ds {
         /// @brief 内部递归函数，使用已提取的prefix和suffix字符串对term进行重命名。
         /// @param result 存放结果的term指针。
         /// @param term 待被重命名的term。
-        /// @param prefix_str prefix字符串指针，可以为nullptr。
-        /// @param prefix_len prefix字符串长度。
-        /// @param suffix_str suffix字符串指针，可以为nullptr。
-        /// @param suffix_len suffix字符串长度。
+        /// @param ps 包含prefix和suffix信息的结构体指针。
         /// @param check_tail 可选的尾指针检查。
         /// @return 成功返回result，失败返回nullptr。
         term_t* rename_with_strings(
             term_t* result,
             term_t* term,
-            char* prefix_str,
-            length_t prefix_len,
-            char* suffix_str,
-            length_t suffix_len,
+            prefix_suffix_t* ps,
             std::byte* check_tail
         ) {
             switch (term->get_type()) {
             case term_type_t::variable: {
                 // get_length()返回的是包含末尾\0的长度，所以需要减1
                 length_t name_len = term->variable()->name()->get_length() - 1;
-                length_t new_len = prefix_len + name_len + suffix_len + 1;
+                length_t new_len = ps->prefix_len + name_len + ps->suffix_len + 1;
                 if (result->set_variable(check_tail) == nullptr) [[unlikely]] {
                     return nullptr;
                 }
@@ -95,14 +88,14 @@ namespace ds {
                 }
                 char* name_str = term->variable()->name()->get_string();
                 char* dst = result->variable()->name()->get_string();
-                if (prefix_len > 0) {
-                    memcpy(dst, prefix_str, prefix_len);
+                if (ps->prefix_len > 0) {
+                    memcpy(dst, ps->prefix_str, ps->prefix_len);
                 }
-                memcpy(dst + prefix_len, name_str, name_len);
-                if (suffix_len > 0) {
-                    memcpy(dst + prefix_len + name_len, suffix_str, suffix_len);
+                memcpy(dst + ps->prefix_len, name_str, name_len);
+                if (ps->suffix_len > 0) {
+                    memcpy(dst + ps->prefix_len + name_len, ps->suffix_str, ps->suffix_len);
                 }
-                dst[new_len - 1] = '\0';
+                dst[new_len - 1] = 0;
                 return result;
             }
             case term_type_t::item: {
@@ -122,7 +115,7 @@ namespace ds {
                     return nullptr;
                 }
                 for (length_t index = 0; index < dst->get_list_size(); ++index) {
-                    if (rename_with_strings(dst->term(index), src->term(index), prefix_str, prefix_len, suffix_str, suffix_len, check_tail) == nullptr) [[unlikely]] {
+                    if (rename_with_strings(dst->term(index), src->term(index), ps, check_tail) == nullptr) [[unlikely]] {
                         return nullptr;
                     }
                     dst->update_term_size(index);
@@ -137,14 +130,11 @@ namespace ds {
 
     term_t* term_t::rename(term_t* term, term_t* prefix_and_suffix, std::byte* check_tail) {
         // 在开头提取prefix和suffix字符串，避免每次递归时重复解析
-        char* prefix_str;
-        length_t prefix_len;
-        char* suffix_str;
-        length_t suffix_len;
-        if (!extract_prefix_suffix(prefix_and_suffix, prefix_str, prefix_len, suffix_str, suffix_len)) [[unlikely]] {
+        prefix_suffix_t ps;
+        if (!extract_prefix_suffix(prefix_and_suffix, &ps)) [[unlikely]] {
             return nullptr;
         }
-        return rename_with_strings(this, term, prefix_str, prefix_len, suffix_str, suffix_len, check_tail);
+        return rename_with_strings(this, term, &ps, check_tail);
     }
 
     rule_t* rule_t::rename(rule_t* rule, rule_t* prefix_and_suffix, std::byte* check_tail) {
@@ -153,11 +143,8 @@ namespace ds {
             return nullptr;
         }
         // 在开头提取prefix和suffix字符串，避免每次递归时重复解析
-        char* prefix_str;
-        length_t prefix_len;
-        char* suffix_str;
-        length_t suffix_len;
-        if (!extract_prefix_suffix(ps_term, prefix_str, prefix_len, suffix_str, suffix_len)) [[unlikely]] {
+        prefix_suffix_t ps;
+        if (!extract_prefix_suffix(ps_term, &ps)) [[unlikely]] {
             return nullptr;
         }
         list_t* dst = this;
@@ -166,7 +153,7 @@ namespace ds {
             return nullptr;
         }
         for (length_t index = 0; index < dst->get_list_size(); ++index) {
-            if (rename_with_strings(dst->term(index), src->term(index), prefix_str, prefix_len, suffix_str, suffix_len, check_tail) == nullptr) [[unlikely]] {
+            if (rename_with_strings(dst->term(index), src->term(index), &ps, check_tail) == nullptr) [[unlikely]] {
                 return nullptr;
             }
             dst->update_term_size(index);
