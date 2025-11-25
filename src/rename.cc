@@ -11,9 +11,9 @@ namespace ds {
     namespace {
         /// @brief 存储prefix和suffix字符串信息的结构体。
         struct prefix_suffix_t {
-            char* prefix_str;   // prefix字符串指针，如果prefix为空则为nullptr
+            char* prefix_str; // prefix字符串指针，如果prefix为空则为nullptr
             length_t prefix_len; // prefix字符串长度
-            char* suffix_str;   // suffix字符串指针，如果suffix为空则为nullptr
+            char* suffix_str; // suffix字符串指针，如果suffix为空则为nullptr
             length_t suffix_len; // suffix字符串长度
         };
 
@@ -69,12 +69,7 @@ namespace ds {
         /// @param ps 包含prefix和suffix信息的结构体指针。
         /// @param check_tail 可选的尾指针检查。
         /// @return 成功返回result，失败返回nullptr。
-        term_t* rename_with_strings(
-            term_t* result,
-            term_t* term,
-            prefix_suffix_t* ps,
-            std::byte* check_tail
-        ) {
+        term_t* rename_with_strings(term_t* result, term_t* term, prefix_suffix_t* ps, std::byte* check_tail) {
             switch (term->get_type()) {
             case term_type_t::variable: {
                 // get_length()返回的是包含末尾\0的长度，所以需要减1
