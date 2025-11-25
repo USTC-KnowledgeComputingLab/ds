@@ -11,3 +11,5 @@ dist
 node_modules
 coverage
 compile_commands.json
+_codeql_build_dir
+_codeql_detected_source_root
