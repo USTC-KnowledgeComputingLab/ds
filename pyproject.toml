@@ -1,7 +1,7 @@
 [build-system]
 requires = [
   "scikit-build-core~=0.11.6",
-  "pybind11~=3.0.1",
+  "nanobind~=2.9.2"
   "setuptools-scm~=9.2.2",
 ]
 build-backend = "scikit_build_core.build"
