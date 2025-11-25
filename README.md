@@ -278,10 +278,9 @@ See header files in `include/ds/` for detailed API documentation.
 
 ### Prerequisites
 
-- C++20 compatible compiler
-- CMake 3.30+
 - For TypeScript: Emscripten SDK
-- For Python: Python 3.10-3.14, scikit-build-core, pybind11
+- For Python: Python 3.10-3.14, C++20 compatible compiler, CMake 3.30+
+- For C++: C++20 compatible compiler, CMake 3.30+
 
 ### Build All Components
 
@@ -290,16 +289,16 @@ See header files in `include/ds/` for detailed API documentation.
 git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
 cd ds
 
-# Build C++ library
-cmake -B build
-cmake --build build
-
 # Build TypeScript/JavaScript (requires Emscripten)
 npm install
 npm run build
 
 # Build Python package
 pip install -e ".[dev]"
+
+# Build C++ library
+cmake -B build
+cmake --build build
 ```
 
 ### Running Tests
