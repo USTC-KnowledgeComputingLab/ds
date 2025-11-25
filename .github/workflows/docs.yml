@@ -25,6 +25,11 @@ jobs:
       - name: install dependencies
         run: pip install '.[docs]'
 
+      - name: configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: build docs
         run: mike deploy --push ${GITHUB_REF#refs/tags/} latest
 
