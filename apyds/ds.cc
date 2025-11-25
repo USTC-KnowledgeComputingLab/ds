@@ -100,7 +100,7 @@ auto term_rename(ds::term_t* term, ds::term_t* prefix_and_suffix, int length) ->
 }
 
 auto rule_rename(ds::rule_t* rule, ds::rule_t* prefix_and_suffix, int length) -> std::unique_ptr<ds::rule_t> {
-    ds::rule_t* result = reinterpret_cast<ds::rule_t*>(operator new(length));
+    auto result = reinterpret_cast<ds::rule_t*>(operator new(length));
     if (result->rename(rule, prefix_and_suffix, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
         operator delete(result);
         return std::unique_ptr<ds::rule_t>(nullptr);
