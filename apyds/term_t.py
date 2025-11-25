@@ -76,3 +76,30 @@ class Term(Common[ds.Term]):
         if term is None:
             return None
         return Term(term, capacity)
+
+    def rename(self, prefix_and_suffix: Term) -> Term | None:
+        """Rename all variables in this term by adding prefix and suffix.
+
+        Args:
+            prefix_and_suffix: A term representing a list with two inner lists.
+                Each inner list contains 0 or 1 item representing the prefix and suffix.
+                Example: Term("((pre_) (_suf))") adds "pre_" as prefix and "_suf" as suffix.
+
+        Returns:
+            The renamed term, or None if renaming fails.
+
+        Example:
+            >>> a = Term("`x")
+            >>> b = Term("((pre_) (_suf))")
+            >>> str(a.rename(b))  # "`pre_x_suf"
+            >>>
+            >>> # With empty prefix (only suffix)
+            >>> c = Term("`x")
+            >>> d = Term("(() (_suf))")
+            >>> str(c.rename(d))  # "`x_suf"
+        """
+        capacity = buffer_size()
+        term = ds.Term.rename(self.value, prefix_and_suffix.value, capacity)
+        if term is None:
+            return None
+        return Term(term, capacity)

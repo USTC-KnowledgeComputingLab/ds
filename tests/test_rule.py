@@ -103,3 +103,33 @@ def test_match() -> None:
 
     fail = apyds.Rule("`q <- `p")
     assert mp @ fail is None
+
+
+def test_rename_simple() -> None:
+    a = apyds.Rule("`x")
+    b = apyds.Rule("((pre_) (_suf))")
+    assert str(a.rename(b)) == "----\n`pre_x_suf\n"
+
+
+def test_rename_empty_prefix() -> None:
+    a = apyds.Rule("`x")
+    b = apyds.Rule("(() (_suf))")
+    assert str(a.rename(b)) == "----\n`x_suf\n"
+
+
+def test_rename_empty_suffix() -> None:
+    a = apyds.Rule("`x")
+    b = apyds.Rule("((pre_) ())")
+    assert str(a.rename(b)) == "----\n`pre_x\n"
+
+
+def test_rename_with_premises() -> None:
+    a = apyds.Rule("`p\n`q\n----------\n`r\n")
+    b = apyds.Rule("((pre_) (_suf))")
+    assert str(a.rename(b)) == "`pre_p_suf\n`pre_q_suf\n----------\n`pre_r_suf\n"
+
+
+def test_rename_invalid() -> None:
+    a = apyds.Rule("`x")
+    b = apyds.Rule("item")
+    assert a.rename(b) is None

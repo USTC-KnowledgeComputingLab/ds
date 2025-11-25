@@ -80,3 +80,33 @@ def test_ground_scope() -> None:
     a = apyds.Term("`a")
     b = apyds.Term("((x y `a `b) (y x `b `c))")
     assert str(a.ground(b, "x")) == "`c"
+
+
+def test_rename_simple() -> None:
+    a = apyds.Term("`x")
+    b = apyds.Term("((pre_) (_suf))")
+    assert str(a.rename(b)) == "`pre_x_suf"
+
+
+def test_rename_empty_prefix() -> None:
+    a = apyds.Term("`x")
+    b = apyds.Term("(() (_suf))")
+    assert str(a.rename(b)) == "`x_suf"
+
+
+def test_rename_empty_suffix() -> None:
+    a = apyds.Term("`x")
+    b = apyds.Term("((pre_) ())")
+    assert str(a.rename(b)) == "`pre_x"
+
+
+def test_rename_list() -> None:
+    a = apyds.Term("(`x `y)")
+    b = apyds.Term("((p_) (_s))")
+    assert str(a.rename(b)) == "(`p_x_s `p_y_s)"
+
+
+def test_rename_invalid() -> None:
+    a = apyds.Term("`x")
+    b = apyds.Term("item")
+    assert a.rename(b) is None

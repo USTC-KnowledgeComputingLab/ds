@@ -356,6 +356,35 @@ export class term_t extends _common_t<dst.Term> {
         }
         return new term_t(term, capacity);
     }
+
+    /**
+     * Rename all variables in this term by adding prefix and suffix.
+     *
+     * @param prefix_and_suffix - A term representing a list with two inner lists.
+     *                            Each inner list contains 0 or 1 item representing the prefix and suffix.
+     *                            Example: "((pre_) (_suf))" adds "pre_" as prefix and "_suf" as suffix.
+     * @returns The renamed term, or null if renaming fails.
+     *
+     * @example
+     * ```typescript
+     * const a = new term_t("`x");
+     * const b = new term_t("((pre_) (_suf))");
+     * console.log(a.rename(b).toString()); // "`pre_x_suf"
+     *
+     * // With empty prefix (only suffix)
+     * const c = new term_t("`x");
+     * const d = new term_t("(() (_suf))");
+     * console.log(c.rename(d).toString()); // "`x_suf"
+     * ```
+     */
+    rename(prefix_and_suffix: term_t): term_t | null {
+        const capacity = buffer_size();
+        const term = ds.Term.rename(this.value, prefix_and_suffix.value, capacity);
+        if (term === null) {
+            return null;
+        }
+        return new term_t(term, capacity);
+    }
 }
 
 /**
@@ -456,6 +485,35 @@ export class rule_t extends _common_t<dst.Rule> {
     match(other: rule_t): rule_t | null {
         const capacity = buffer_size();
         const rule = ds.Rule.match(this.value, other.value, capacity);
+        if (rule === null) {
+            return null;
+        }
+        return new rule_t(rule, capacity);
+    }
+
+    /**
+     * Rename all variables in this rule by adding prefix and suffix.
+     *
+     * @param prefix_and_suffix - A rule with only a conclusion that is a list with two inner lists.
+     *                            Each inner list contains 0 or 1 item representing the prefix and suffix.
+     *                            Example: "((pre_) (_suf))" adds "pre_" as prefix and "_suf" as suffix.
+     * @returns The renamed rule, or null if renaming fails.
+     *
+     * @example
+     * ```typescript
+     * const a = new rule_t("`x");
+     * const b = new rule_t("((pre_) (_suf))");
+     * console.log(a.rename(b).toString()); // "----\n`pre_x_suf\n"
+     *
+     * // With empty prefix (only suffix)
+     * const c = new rule_t("`x");
+     * const d = new rule_t("(() (_suf))");
+     * console.log(c.rename(d).toString()); // "----\n`x_suf\n"
+     * ```
+     */
+    rename(prefix_and_suffix: rule_t): rule_t | null {
+        const capacity = buffer_size();
+        const rule = ds.Rule.rename(this.value, prefix_and_suffix.value, capacity);
         if (rule === null) {
             return null;
         }
