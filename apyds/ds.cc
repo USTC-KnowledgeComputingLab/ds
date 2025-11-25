@@ -90,6 +90,24 @@ auto rule_match(ds::rule_t* rule_1, ds::rule_t* rule_2, int length) -> std::uniq
     return std::unique_ptr<ds::rule_t>(result);
 }
 
+auto term_rename(ds::term_t* term, ds::term_t* prefix_and_suffix, int length) -> std::unique_ptr<ds::term_t> {
+    auto result = reinterpret_cast<ds::term_t*>(operator new(length));
+    if (result->rename(term, prefix_and_suffix, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+        operator delete(result);
+        return std::unique_ptr<ds::term_t>(nullptr);
+    }
+    return std::unique_ptr<ds::term_t>(result);
+}
+
+auto rule_rename(ds::rule_t* rule, ds::rule_t* prefix_and_suffix, int length) -> std::unique_ptr<ds::rule_t> {
+    ds::rule_t* result = reinterpret_cast<ds::rule_t*>(operator new(length));
+    if (result->rename(rule, prefix_and_suffix, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+        operator delete(result);
+        return std::unique_ptr<ds::rule_t>(nullptr);
+    }
+    return std::unique_ptr<ds::rule_t>(result);
+}
+
 PYBIND11_MODULE(_ds, m) {
     auto string_t = py::class_<ds::string_t>(m, "String");
     auto item_t = py::class_<ds::item_t>(m, "Item");
@@ -130,6 +148,8 @@ PYBIND11_MODULE(_ds, m) {
     term_t.def_static("ground", term_ground);
     rule_t.def_static("ground", rule_ground);
     rule_t.def_static("match", rule_match);
+    term_t.def_static("rename", term_rename);
+    rule_t.def_static("rename", rule_rename);
 
     auto search_t = py::class_<ds::search_t>(m, "Search");
     search_t.def(py::init<ds::length_t, ds::length_t>());

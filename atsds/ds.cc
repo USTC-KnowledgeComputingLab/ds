@@ -97,6 +97,24 @@ auto rule_match(ds::rule_t* rule_1, ds::rule_t* rule_2, int length) -> std::uniq
     return std::unique_ptr<ds::rule_t>(result);
 }
 
+auto term_rename(ds::term_t* term, ds::term_t* prefix_and_suffix, int length) -> std::unique_ptr<ds::term_t> {
+    auto result = reinterpret_cast<ds::term_t*>(operator new(length));
+    if (result->rename(term, prefix_and_suffix, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+        operator delete(result);
+        return std::unique_ptr<ds::term_t>(nullptr);
+    }
+    return std::unique_ptr<ds::term_t>(result);
+}
+
+auto rule_rename(ds::rule_t* rule, ds::rule_t* prefix_and_suffix, int length) -> std::unique_ptr<ds::rule_t> {
+    ds::rule_t* result = reinterpret_cast<ds::rule_t*>(operator new(length));
+    if (result->rename(rule, prefix_and_suffix, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+        operator delete(result);
+        return std::unique_ptr<ds::rule_t>(nullptr);
+    }
+    return std::unique_ptr<ds::rule_t>(result);
+}
+
 auto search_add(ds::search_t* search, const std::string& text) -> bool {
     return search->add(text);
 }
@@ -146,6 +164,8 @@ EMSCRIPTEN_BINDINGS(ds) {
     term_t.class_function("ground", term_ground, em::return_value_policy::take_ownership());
     rule_t.class_function("ground", rule_ground, em::return_value_policy::take_ownership());
     rule_t.class_function("match", rule_match, em::return_value_policy::take_ownership());
+    term_t.class_function("rename", term_rename, em::return_value_policy::take_ownership());
+    rule_t.class_function("rename", rule_rename, em::return_value_policy::take_ownership());
 
     auto search_t = em::class_<ds::search_t>("Search");
     search_t.constructor<ds::length_t, ds::length_t>();

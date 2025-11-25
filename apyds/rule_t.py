@@ -111,5 +111,34 @@ class Rule(Common[ds.Rule]):
             return None
         return Rule(rule, capacity)
 
+    def rename(self, prefix_and_suffix: Rule) -> Rule | None:
+        """Rename all variables in this rule by adding prefix and suffix.
+
+        Args:
+            prefix_and_suffix: A rule with only a conclusion that is a list with two inner lists.
+                Each inner list contains 0 or 1 item representing the prefix and suffix.
+                Example: Rule("((pre_) (_suf))") adds "pre_" as prefix and "_suf" as suffix.
+
+        Returns:
+            The renamed rule, or None if renaming fails.
+
+        Example:
+            >>> a = Rule("`x")
+            >>> b = Rule("((pre_) (_suf))")
+            >>> str(a.rename(b))
+            '----\\n`pre_x_suf\\n'
+            >>>
+            >>> # With empty prefix (only suffix)
+            >>> c = Rule("`x")
+            >>> d = Rule("(() (_suf))")
+            >>> str(c.rename(d))
+            '----\\n`x_suf\\n'
+        """
+        capacity = buffer_size()
+        rule = ds.Rule.rename(self.value, prefix_and_suffix.value, capacity)
+        if rule is None:
+            return None
+        return Rule(rule, capacity)
+
     def __repr__(self) -> str:
         return f"Rule[\n{self}]"

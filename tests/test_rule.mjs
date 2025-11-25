@@ -91,3 +91,33 @@ test("match", () => {
     fail = new rule_t("(`q <- `p)");
     expect(mp.match(fail)).toBeNull();
 });
+
+test("rename_simple", () => {
+    const a = new rule_t("`x");
+    const b = new rule_t("((pre_) (_suf))");
+    expect(a.rename(b).toString()).toBe("----\n`pre_x_suf\n");
+});
+
+test("rename_empty_prefix", () => {
+    const a = new rule_t("`x");
+    const b = new rule_t("(() (_suf))");
+    expect(a.rename(b).toString()).toBe("----\n`x_suf\n");
+});
+
+test("rename_empty_suffix", () => {
+    const a = new rule_t("`x");
+    const b = new rule_t("((pre_) ())");
+    expect(a.rename(b).toString()).toBe("----\n`pre_x\n");
+});
+
+test("rename_with_premises", () => {
+    const a = new rule_t("`p\n`q\n----------\n`r\n");
+    const b = new rule_t("((pre_) (_suf))");
+    expect(a.rename(b).toString()).toBe("`pre_p_suf\n`pre_q_suf\n----------\n`pre_r_suf\n");
+});
+
+test("rename_invalid", () => {
+    const a = new rule_t("`x");
+    const b = new rule_t("item");
+    expect(a.rename(b)).toBeNull();
+});

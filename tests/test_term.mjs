@@ -69,3 +69,33 @@ test("ground_scope", () => {
     const b = new term_t("((x y `a `b) (y x `b `c))");
     expect(a.ground(b, "x").toString()).toBe("`c");
 });
+
+test("rename_simple", () => {
+    const a = new term_t("`x");
+    const b = new term_t("((pre_) (_suf))");
+    expect(a.rename(b).toString()).toBe("`pre_x_suf");
+});
+
+test("rename_empty_prefix", () => {
+    const a = new term_t("`x");
+    const b = new term_t("(() (_suf))");
+    expect(a.rename(b).toString()).toBe("`x_suf");
+});
+
+test("rename_empty_suffix", () => {
+    const a = new term_t("`x");
+    const b = new term_t("((pre_) ())");
+    expect(a.rename(b).toString()).toBe("`pre_x");
+});
+
+test("rename_list", () => {
+    const a = new term_t("(`x `y)");
+    const b = new term_t("((p_) (_s))");
+    expect(a.rename(b).toString()).toBe("(`p_x_s `p_y_s)");
+});
+
+test("rename_invalid", () => {
+    const a = new term_t("`x");
+    const b = new term_t("item");
+    expect(a.rename(b)).toBeNull();
+});
