@@ -1,20 +1,35 @@
 site_name: DS - A Deductive System
-site_description: A deductive system for logical inference, implemented in C++ with bindings for Python and TypeScript/JavaScript
-site_author: Hao Zhang
 repo_url: https://github.com/USTC-KnowledgeComputingLab/ds
 repo_name: USTC-KnowledgeComputingLab/ds
+site_description: A deductive system for logical inference, implemented in C++ with bindings for Python and TypeScript/JavaScript
+site_author: Hao Zhang
+copyright: GPL-3.0-or-later
 
 theme:
   name: material
   features:
-    - content.code.copy
-    - content.tabs.link
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.instant.preview
+    - navigation.tracking
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
+    - navigation.path
+    - navigation.prune
+    - navigation.indexes
+    - toc.follow
+    # - toc.integrate
     - navigation.top
+    - search
     - search.suggest
     - search.highlight
+    - search.share
+    # - header.autohide
+    - navigation.footer
+    - announce.dismiss
   palette:
     - scheme: default
       primary: indigo
@@ -47,25 +62,37 @@ nav:
 
 plugins:
   - search
+  - projects
+  # - optimize
+  - offline
 
 markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
+  - abbr
   - admonition
-  - pymdownx.details
   - attr_list
+  - def_list
+  - footnotes
   - md_in_html
   - toc:
       permalink: true
-
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/USTC-KnowledgeComputingLab/ds
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.blocks.caption
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist
