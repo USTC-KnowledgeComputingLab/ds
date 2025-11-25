@@ -154,6 +154,13 @@ namespace ds {
         /// @param check_tail 可选的尾指针检查。
         /// @return 自身，如果匹配失败则返回nullptr，如果尾指针检查失败则返回nullptr，在尾指针检查正常时，匹配失败会将本对象设置为null。
         term_t* match(term_t* term_1, term_t* term_2, const char* scope_1, const char* scope_2, std::byte* check_tail = nullptr);
+
+        /// @brief 将term中的所有variable添加prefix和suffix, 结果更新至本对象。
+        /// @param term 待被重命名的term。
+        /// @param prefix_and_suffix 含有两个list的list，每个内部list包含0或1个item，分别表示prefix和suffix。
+        /// @param check_tail 可选的尾指针检查。
+        /// @return 自身，是一个term_t对象的指针，如果尾指针检查失败则返回nullptr。
+        term_t* rename(term_t* term, term_t* prefix_and_suffix, std::byte* check_tail = nullptr);
     };
 } // namespace ds
 
