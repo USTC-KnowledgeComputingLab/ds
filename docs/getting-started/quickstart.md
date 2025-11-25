@@ -147,7 +147,7 @@ The search engine performs logical inference by matching rules with facts.
     while True:
         found = False
         def callback(candidate):
-            global found
+            nonlocal found
             if candidate == target:
                 print(f"Found: {candidate}")
                 found = True

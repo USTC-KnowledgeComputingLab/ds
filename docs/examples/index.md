@@ -40,7 +40,7 @@ Given the premise !!X (double negation of X), we can derive X.
     while True:
         found = False
         def callback(candidate):
-            global found
+            nonlocal found
             if candidate == target:
                 print("Found:", candidate)
                 found = True

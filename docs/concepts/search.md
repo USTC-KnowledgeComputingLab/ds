@@ -183,7 +183,7 @@ To search until a specific target is found:
     while True:
         found = False
         def check(candidate):
-            global found
+            nonlocal found
             if candidate == target:
                 print(f"Found: {candidate}")
                 found = True
