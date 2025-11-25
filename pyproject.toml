@@ -37,6 +37,10 @@ dev = [
   "pytest~=9.0.1",
   "pytest-cov~=7.0.0",
 ]
+docs = [
+  "mkdocs~=1.6.1",
+  "mkdocs-material~=9.6.14",
+]
 
 [tool.ruff]
 line-length = 120
