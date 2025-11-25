@@ -28,7 +28,7 @@ The Python package `apyds` wraps the C++ core via pybind11.
 pip install apyds
 ```
 
-**Requirements:**
+### Requirements
 
 - Python 3.10-3.14
 - Pre-built wheels are available for common platforms

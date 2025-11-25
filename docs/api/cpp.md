@@ -491,31 +491,65 @@ length_t execute(const std::function<bool(rule_t*)>& callback);
 
 Helper functions in `<ds/utility.hh>`.
 
-### text_to_* Functions
+### text_to_term()
 
-Parse text into objects. Returns a unique_ptr to the created object.
-
-```cpp
-std::unique_ptr<string_t> text_to_string(const char* text, length_t size);
-std::unique_ptr<variable_t> text_to_variable(const char* text, length_t size);
-std::unique_ptr<item_t> text_to_item(const char* text, length_t size);
-std::unique_ptr<list_t> text_to_list(const char* text, length_t size);
-std::unique_ptr<term_t> text_to_term(const char* text, length_t size);
-std::unique_ptr<rule_t> text_to_rule(const char* text, length_t size);
-```
-
-### *_to_text Functions
-
-Convert objects to text. Returns a unique_ptr to a char array.
+Parse text into a term object.
 
 ```cpp
-std::unique_ptr<char[]> string_to_text(string_t* string, length_t size);
-std::unique_ptr<char[]> variable_to_text(variable_t* variable, length_t size);
-std::unique_ptr<char[]> item_to_text(item_t* item, length_t size);
-std::unique_ptr<char[]> list_to_text(list_t* list, length_t size);
-std::unique_ptr<char[]> term_to_text(term_t* term, length_t size);
-std::unique_ptr<char[]> rule_to_text(rule_t* rule, length_t size);
+std::unique_ptr<term_t> text_to_term(const char* text, length_t length);
 ```
+
+**Parameters:**
+
+- `text`: The text representation of the term
+- `length`: Maximum size for the resulting binary term
+
+**Returns:** A unique_ptr to the created term, or nullptr if length exceeded.
+
+### term_to_text()
+
+Convert a term object to text.
+
+```cpp
+std::unique_ptr<char> term_to_text(term_t* term, length_t length);
+```
+
+**Parameters:**
+
+- `term`: The binary term to convert
+- `length`: Maximum size for the resulting text
+
+**Returns:** A unique_ptr to the text, or nullptr if length exceeded.
+
+### text_to_rule()
+
+Parse text into a rule object.
+
+```cpp
+std::unique_ptr<rule_t> text_to_rule(const char* text, length_t length);
+```
+
+**Parameters:**
+
+- `text`: The text representation of the rule
+- `length`: Maximum size for the resulting binary rule
+
+**Returns:** A unique_ptr to the created rule, or nullptr if length exceeded.
+
+### rule_to_text()
+
+Convert a rule object to text.
+
+```cpp
+std::unique_ptr<char> rule_to_text(rule_t* rule, length_t length);
+```
+
+**Parameters:**
+
+- `rule`: The binary rule to convert
+- `length`: Maximum size for the resulting text
+
+**Returns:** A unique_ptr to the text, or nullptr if length exceeded.
 
 ---
 
