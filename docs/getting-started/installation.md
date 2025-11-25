@@ -1,6 +1,24 @@
 # Installation
 
-DS can be installed for Python, TypeScript/JavaScript, or used directly as a C++ library.
+DS can be installed for TypeScript/JavaScript, Python, or used directly as a C++ library.
+
+## TypeScript/JavaScript
+
+The TypeScript/JavaScript package `atsds` wraps the C++ core via WebAssembly.
+
+```bash
+npm install atsds
+```
+
+The package includes:
+
+- WebAssembly binaries (`.wasm`)
+- TypeScript type definitions (`.d.mts`)
+- ES module support
+
+### Requirements
+
+- Node.js 20+ or a modern browser with WebAssembly support
 
 ## Python
 
@@ -25,31 +43,13 @@ cd ds
 pip install -e ".[dev]"
 ```
 
-## TypeScript/JavaScript
-
-The TypeScript/JavaScript package `atsds` wraps the C++ core via WebAssembly.
-
-```bash
-npm install atsds
-```
-
-The package includes:
-
-- WebAssembly binaries (`.wasm`)
-- TypeScript type definitions (`.d.mts`)
-- ES module support
-
-### Requirements
-
-- Node.js 16+ or a modern browser with WebAssembly support
-
 ## C++
 
 The C++ library is the core implementation. Both Python and TypeScript bindings are built on top of it.
 
 ### Prerequisites
 
-- C++20 compatible compiler (GCC 10+, Clang 10+, MSVC 2019+)
+- C++20 compatible compiler
 - CMake 3.30+
 
 ### Building from Source
@@ -101,6 +101,15 @@ cmake --build build
 
 ## Verifying Installation
 
+=== "TypeScript"
+
+    ```typescript
+    import { term_t } from "atsds";
+    
+    const term = new term_t("(hello world)");
+    console.log(term.toString());
+    ```
+
 === "Python"
 
     ```python
@@ -110,15 +119,6 @@ cmake --build build
     # Create a simple term
     term = apyds.Term("(hello world)")
     print(term)
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { term_t } from "atsds";
-    
-    const term = new term_t("(hello world)");
-    console.log(term.toString());
     ```
 
 === "C++"

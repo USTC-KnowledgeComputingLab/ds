@@ -15,15 +15,15 @@ A deductive system for logical inference, implemented in C++. The library provid
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Application Layer                        │
-├──────────────────┬──────────────────┬───────────────────────┤
-│   Python (apyds) │ TypeScript (atsds)│      C++ Direct       │
-│    via pybind11  │ via WebAssembly   │                       │
-├──────────────────┴──────────────────┴───────────────────────┤
-│                      C++ Core Library                        │
-│                   (include/ds/, src/)                        │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│                     Application Layer                      │
+├────────────────────┬────────────────────┬──────────────────┤
+│ TypeScript (atsds) │   Python (apyds)   │    C++ Direct    │
+│   via WebAssembly  │    via pybind11    │                  │
+├────────────────────┴────────────────────┴──────────────────┤
+│                       C++ Core Library                     │
+│                     (include/ds/, src/)                    │
+└────────────────────────────────────────────────────────────┘
 ```
 
 ## Quick Links

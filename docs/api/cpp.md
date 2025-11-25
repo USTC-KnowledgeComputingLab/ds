@@ -1,6 +1,6 @@
 # C++ API Reference
 
-The C++ API is the core implementation. Both Python and TypeScript bindings are built on top of it.
+This page documents the C++ API for the DS library. The documentation is generated from the C++ source code.
 
 All classes and functions are in the `ds` namespace.
 

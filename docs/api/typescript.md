@@ -1,6 +1,6 @@
 # TypeScript API Reference
 
-The TypeScript API is available through the `atsds` npm package.
+This page documents the TypeScript API for the `atsds` package. The documentation is generated from the TypeScript source code.
 
 ```typescript
 import { 
@@ -255,7 +255,10 @@ ground(other: term_t, scope?: string): term_t | null
 ```typescript
 const a = new term_t("`a");
 const dict = new term_t("((`a b))");
-console.log(a.ground(dict)?.toString());  // "b"
+const result = a.ground(dict);
+if (result !== null) {
+    console.log(result.toString());  // "b"
+}
 ```
 
 #### rename()
@@ -277,7 +280,10 @@ rename(prefix_and_suffix: term_t): term_t | null
 ```typescript
 const term = new term_t("`x");
 const spec = new term_t("((pre_) (_suf))");
-console.log(term.rename(spec)?.toString());  // "`pre_x_suf"
+const result = term.rename(spec);
+if (result !== null) {
+    console.log(result.toString());  // "`pre_x_suf"
+}
 ```
 
 ---
@@ -347,8 +353,11 @@ match(other: rule_t): rule_t | null
 ```typescript
 const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
 const pq = new rule_t("((! (! `x)) -> `x)");
-console.log(mp.match(pq)?.toString());
-// "(! (! `x))\n----------\n`x\n"
+const result = mp.match(pq);
+if (result !== null) {
+    console.log(result.toString());
+    // "(! (! `x))\n----------\n`x\n"
+}
 ```
 
 #### rename()

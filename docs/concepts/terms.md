@@ -158,7 +158,9 @@ Grounding substitutes variables in a term with values from a dictionary. The dic
 
     // Ground the term
     const result = term.ground(dictionary);
-    console.log(result?.toString());  // b
+    if (result !== null) {
+        console.log(result.toString());  // b
+    }
     ```
 
 ## Renaming
@@ -195,7 +197,9 @@ Renaming adds prefixes and/or suffixes to all variables in a term. This is usefu
 
     // Rename the term
     const result = term.rename(spec);
-    console.log(result?.toString());  // `pre_x_suf
+    if (result !== null) {
+        console.log(result.toString());  // `pre_x_suf
+    }
     ```
 
 ## Buffer Size

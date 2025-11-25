@@ -146,7 +146,9 @@ Grounding substitutes variables in a rule with values from a dictionary.
 
     // Ground the rule
     const result = rule.ground(dictionary);
-    console.log(result?.toString());  // ----\nb\n
+    if (result !== null) {
+        console.log(result.toString());  // ----\nb\n
+    }
     ```
 
 ### Matching
@@ -186,10 +188,12 @@ Matching unifies the first premise of a rule with a fact, producing a new rule w
 
     // Match
     const result = mp.match(axiom);
-    console.log(result?.toString());
-    // (! (! `x))
-    // ----------
-    // `x
+    if (result !== null) {
+        console.log(result.toString());
+        // (! (! `x))
+        // ----------
+        // `x
+    }
     ```
 
 ### Renaming
@@ -221,7 +225,9 @@ Renaming adds prefixes and/or suffixes to all variables in a rule.
     // Rename with prefix and suffix
     const spec = new rule_t("((pre_) (_suf))");
     const result = rule.rename(spec);
-    console.log(result?.toString());  // ----\n`pre_x_suf\n
+    if (result !== null) {
+        console.log(result.toString());  // ----\n`pre_x_suf\n
+    }
     ```
 
 ## Rule Comparison
@@ -253,50 +259,6 @@ Rules can be compared for equality. Two rules are equal if they have the same bi
     console.log(rule1.key() === rule2.key());  // true
     console.log(rule1.key() === rule3.key());  // false
     ```
-
-## Logical Systems
-
-DS can encode various logical systems using rules:
-
-### Propositional Logic
-
-```python
-import apyds
-
-search = apyds.Search(1000, 10000)
-
-# Modus ponens: P -> Q, P |- Q
-search.add("(`P -> `Q) `P `Q")
-
-# Axiom schemas for propositional logic:
-# 1. p -> (q -> p)
-search.add("(`p -> (`q -> `p))")
-
-# 2. (p -> (q -> r)) -> ((p -> q) -> (p -> r))
-search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")
-
-# 3. (!p -> !q) -> (q -> p)
-search.add("(((! `p) -> (! `q)) -> (`q -> `p))")
-```
-
-### Custom Domains
-
-You can define rules for any domain:
-
-```python
-import apyds
-
-search = apyds.Search(1000, 10000)
-
-# Family relationships
-search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
-search.add("(mother `X `Y)\n----------\n(parent `X `Y)\n")
-search.add("(parent `X `Y) (parent `Y `Z)\n----------\n(grandparent `X `Z)\n")
-
-# Facts
-search.add("(father john mary)")
-search.add("(mother mary alice)")
-```
 
 ## See Also
 
