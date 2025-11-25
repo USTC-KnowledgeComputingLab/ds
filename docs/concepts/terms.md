@@ -49,31 +49,7 @@ Lists are ordered sequences of terms enclosed in parentheses. They can contain a
 
 Lists are the primary way to build complex structures in the deductive system.
 
-## Working with Terms
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create a variable
-    var = apyds.Variable("`X")
-    print(f"Variable name: {var.name}")  # X
-
-    # Create an item
-    item = apyds.Item("hello")
-    print(f"Item name: {item.name}")  # hello
-
-    # Create a list
-    lst = apyds.List("(a b c)")
-    print(f"List length: {len(lst)}")  # 3
-    print(f"First element: {lst[0]}")  # a
-
-    # Create a generic term
-    term = apyds.Term("(f `x)")
-    # Access the underlying type
-    inner = term.term  # Returns a List
-    ```
+## Creating Terms
 
 === "TypeScript"
 
@@ -97,6 +73,30 @@ Lists are the primary way to build complex structures in the deductive system.
     const term = new term_t("(f `x)");
     // Access the underlying type
     const inner = term.term();  // Returns a list_t
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create a variable
+    var = apyds.Variable("`X")
+    print(f"Variable name: {var.name}")  # X
+
+    # Create an item
+    item = apyds.Item("hello")
+    print(f"Item name: {item.name}")  # hello
+
+    # Create a list
+    lst = apyds.List("(a b c)")
+    print(f"List length: {len(lst)}")  # 3
+    print(f"First element: {lst[0]}")  # a
+
+    # Create a generic term
+    term = apyds.Term("(f `x)")
+    # Access the underlying type
+    inner = term.term  # Returns a List
     ```
 
 === "C++"
@@ -124,26 +124,11 @@ Lists are the primary way to build complex structures in the deductive system.
     }
     ```
 
-## Grounding
+## Term Operations
+
+### Grounding
 
 Grounding substitutes variables in a term with values from a dictionary. The dictionary is a list of key-value pairs where each key is a variable and each value is its substitution.
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create a term with a variable
-    term = apyds.Term("`a")
-
-    # Create a dictionary for substitution
-    # Format: ((variable value) ...)
-    dictionary = apyds.Term("((`a b))")
-
-    # Ground the term
-    result = term.ground(dictionary)
-    print(result)  # b
-    ```
 
 === "TypeScript"
 
@@ -163,26 +148,51 @@ Grounding substitutes variables in a term with values from a dictionary. The dic
     }
     ```
 
-## Renaming
-
-Renaming adds prefixes and/or suffixes to all variables in a term. This is useful for avoiding variable name collisions during unification.
-
 === "Python"
 
     ```python
     import apyds
 
     # Create a term with a variable
-    term = apyds.Term("`x")
+    term = apyds.Term("`a")
 
-    # Create prefix and suffix specification
-    # Format: ((prefix) (suffix))
-    spec = apyds.Term("((pre_) (_suf))")
+    # Create a dictionary for substitution
+    # Format: ((variable value) ...)
+    dictionary = apyds.Term("((`a b))")
 
-    # Rename the term
-    result = term.rename(spec)
-    print(result)  # `pre_x_suf
+    # Ground the term
+    result = term.ground(dictionary)
+    print(result)  # b
     ```
+
+=== "C++"
+
+    ```cpp
+    #include <ds/ds.hh>
+    #include <ds/utility.hh>
+    #include <iostream>
+
+    int main() {
+        // Create a term with a variable
+        auto term = ds::text_to_term("`a", 1000);
+
+        // Create a dictionary for substitution
+        auto dictionary = ds::text_to_term("((`a b))", 1000);
+
+        // Ground the term
+        std::byte buffer[1000];
+        auto result = reinterpret_cast<ds::term_t*>(buffer);
+        result->ground(term.get(), dictionary.get(), nullptr, buffer + 1000);
+
+        std::cout << ds::term_to_text(result, 1000).get() << std::endl;  // b
+
+        return 0;
+    }
+    ```
+
+### Renaming
+
+Renaming adds prefixes and/or suffixes to all variables in a term. This is useful for avoiding variable name collisions during unification.
 
 === "TypeScript"
 
@@ -202,9 +212,63 @@ Renaming adds prefixes and/or suffixes to all variables in a term. This is usefu
     }
     ```
 
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create a term with a variable
+    term = apyds.Term("`x")
+
+    # Create prefix and suffix specification
+    # Format: ((prefix) (suffix))
+    spec = apyds.Term("((pre_) (_suf))")
+
+    # Rename the term
+    result = term.rename(spec)
+    print(result)  # `pre_x_suf
+    ```
+
+=== "C++"
+
+    ```cpp
+    #include <ds/ds.hh>
+    #include <ds/utility.hh>
+    #include <iostream>
+
+    int main() {
+        // Create a term with a variable
+        auto term = ds::text_to_term("`x", 1000);
+
+        // Create prefix and suffix specification
+        auto spec = ds::text_to_term("((pre_) (_suf))", 1000);
+
+        // Rename the term
+        std::byte buffer[1000];
+        auto result = reinterpret_cast<ds::term_t*>(buffer);
+        result->rename(term.get(), spec.get(), buffer + 1000);
+
+        std::cout << ds::term_to_text(result, 1000).get() << std::endl;  // `pre_x_suf
+
+        return 0;
+    }
+    ```
+
 ## Buffer Size
 
 Operations like grounding and renaming require buffer space for intermediate results. You can control this using buffer size functions.
+
+=== "TypeScript"
+
+    ```typescript
+    import { buffer_size } from "atsds";
+
+    // Get current buffer size
+    const current = buffer_size();
+
+    // Set new buffer size (returns previous value)
+    const old = buffer_size(4096);
+    ```
 
 === "Python"
 
@@ -222,18 +286,6 @@ Operations like grounding and renaming require buffer space for intermediate res
         # Operations here use buffer size of 8192
         pass
     # Buffer size restored to previous value
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { buffer_size } from "atsds";
-
-    // Get current buffer size
-    const current = buffer_size();
-
-    // Set new buffer size (returns previous value)
-    const old = buffer_size(4096);
     ```
 
 ## See Also
