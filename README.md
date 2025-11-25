@@ -5,7 +5,7 @@ A deductive system for logical inference, implemented in C++. The library provid
 ## Architecture
 
 - **C++ Core**: The core implementation in `src/` and `include/ds/` provides the fundamental data structures and algorithms
-- **Python Bindings**: Built with pybind11, wrapping the C++ core (see `pyds/`)
+- **Python Bindings**: Built with pybind11, wrapping the C++ core (see `apyds/`)
 - **TypeScript/JavaScript Bindings**: Built with Emscripten, compiling C++ to WebAssembly (see `tsds/`)
 
 ## Features
@@ -36,12 +36,6 @@ The Python package wraps the C++ core via pybind11.
 
 ```bash
 pip install apyds
-```
-
-Then import as `pyds`:
-
-```python
-import pyds
 ```
 
 Requires Python 3.10-3.14.
@@ -102,10 +96,10 @@ while (true) {
 ### Python Example
 
 ```python
-import pyds
+import apyds
 
 # Create a search engine
-search = pyds.Search(1000, 10000)
+search = apyds.Search(1000, 10000)
 
 # Modus ponens: P -> Q, P |- Q
 search.add("(`P -> `Q) `P `Q")
@@ -120,7 +114,7 @@ search.add("(((! `p) -> (! `q)) -> (`q -> `p))")
 search.add("(! (! X))")
 
 # Target: X (double negation elimination)
-target = pyds.Rule("X")
+target = apyds.Rule("X")
 
 # Execute search until target is found
 while True:

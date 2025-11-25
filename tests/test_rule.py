@@ -1,72 +1,72 @@
 import pytest
 import copy
-import pyds
+import apyds
 
 
 @pytest.fixture
-def r() -> pyds.Rule:
-    return pyds.Rule("(a b c)")
+def r() -> apyds.Rule:
+    return apyds.Rule("(a b c)")
 
 
-def test_str(r: pyds.Rule) -> None:
+def test_str(r: apyds.Rule) -> None:
     assert str(r) == "----\n(a b c)\n"
 
-    with pyds.scoped_buffer_size(4):
+    with apyds.scoped_buffer_size(4):
         with pytest.raises(ValueError):
             str(r)
 
 
-def test_repr(r: pyds.Rule) -> None:
+def test_repr(r: apyds.Rule) -> None:
     assert repr(r) == "Rule[\n----\n(a b c)\n]"
 
 
-def test_copy_hash_and_equality(r: pyds.Rule) -> None:
+def test_copy_hash_and_equality(r: apyds.Rule) -> None:
     other = copy.copy(r)
     assert other == r
     assert hash(other) == hash(r)
     assert 1 != r
 
 
-def test_create_from_same(r: pyds.Rule) -> None:
-    rule = pyds.Rule(r)
+def test_create_from_same(r: apyds.Rule) -> None:
+    rule = apyds.Rule(r)
     assert str(rule) == "----\n(a b c)\n"
 
     with pytest.raises(ValueError):
-        rule = pyds.Rule(r, 100)
+        rule = apyds.Rule(r, 100)
 
 
-def test_create_from_base(r: pyds.Rule) -> None:
-    rule = pyds.Rule(r.value)
+def test_create_from_base(r: apyds.Rule) -> None:
+    rule = apyds.Rule(r.value)
     assert str(rule) == "----\n(a b c)\n"
 
 
 def test_create_from_text() -> None:
-    rule = pyds.Rule("(a b c)")
+    rule = apyds.Rule("(a b c)")
     assert str(rule) == "----\n(a b c)\n"
 
     # rule never fails
 
 
-def test_create_from_bytes(r: pyds.Rule) -> None:
-    rule = pyds.Rule(r.data())
+def test_create_from_bytes(r: apyds.Rule) -> None:
+    rule = apyds.Rule(r.data())
     assert str(rule) == "----\n(a b c)\n"
 
     with pytest.raises(ValueError):
-        rule = pyds.Rule(r.data(), 100)
+        rule = apyds.Rule(r.data(), 100)
 
 
 def test_create_fail() -> None:
     with pytest.raises(TypeError):
-        rule = pyds.Rule(100)
+        rule = apyds.Rule(100)
 
 
 def test_len() -> None:
-    r = pyds.Rule("(p -> q)\np\nq\n")
+    r = apyds.Rule("(p -> q)\np\nq\n")
     assert len(r) == 2
 
 
 def test_getitem() -> None:
-    r = pyds.Rule("(p -> q)\np\nq\n")
+    r = apyds.Rule("(p -> q)\np\nq\n")
     assert str(r[0]) == "(p -> q)"
     assert str(r[1]) == "p"
 
@@ -78,28 +78,28 @@ def test_getitem() -> None:
 
 
 def test_conclusion() -> None:
-    r = pyds.Rule("(p -> q)\np\nq\n")
+    r = apyds.Rule("(p -> q)\np\nq\n")
     assert str(r.conclusion) == "q"
 
 
 def test_ground_simple() -> None:
-    a = pyds.Rule("`a")
-    b = pyds.Rule("((`a b))")
+    a = apyds.Rule("`a")
+    b = apyds.Rule("((`a b))")
     assert str(a // b) == "----\nb\n"
 
-    assert a // pyds.Rule("((`a b c d e))") is None
+    assert a // apyds.Rule("((`a b c d e))") is None
 
 
 def test_ground_scope() -> None:
-    a = pyds.Rule("`a")
-    b = pyds.Rule("((x y `a `b) (y x `b `c))")
+    a = apyds.Rule("`a")
+    b = apyds.Rule("((x y `a `b) (y x `b `c))")
     assert str(a.ground(b, "x")) == "----\n`c\n"
 
 
 def test_match() -> None:
-    mp = pyds.Rule("(`p -> `q)\n`p\n`q\n")
-    pq = pyds.Rule("((! (! `x)) -> `x)")
+    mp = apyds.Rule("(`p -> `q)\n`p\n`q\n")
+    pq = apyds.Rule("((! (! `x)) -> `x)")
     assert str(mp @ pq) == "(! (! `x))\n----------\n`x\n"
 
-    fail = pyds.Rule("`q <- `p")
+    fail = apyds.Rule("`q <- `p")
     assert mp @ fail is None
