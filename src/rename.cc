@@ -13,15 +13,38 @@ namespace ds {
         if (ps_list == nullptr || ps_list->get_list_size() != 2) [[unlikely]] {
             return nullptr;
         }
-        item_t* prefix = ps_list->term(0)->item();
-        item_t* suffix = ps_list->term(1)->item();
-        if (prefix == nullptr || suffix == nullptr) [[unlikely]] {
+        // prefix_and_suffix is ((prefix) (suffix)), each element is a list of 0 or 1 items
+        list_t* prefix_list = ps_list->term(0)->list();
+        list_t* suffix_list = ps_list->term(1)->list();
+        if (prefix_list == nullptr || suffix_list == nullptr) [[unlikely]] {
             return nullptr;
         }
-        char* prefix_str = prefix->name()->get_string();
-        char* suffix_str = suffix->name()->get_string();
-        length_t prefix_len = strlen(prefix_str);
-        length_t suffix_len = strlen(suffix_str);
+        // Get prefix string (empty if list is empty)
+        char* prefix_str = nullptr;
+        length_t prefix_len = 0;
+        if (prefix_list->get_list_size() == 1) {
+            item_t* prefix_item = prefix_list->term(0)->item();
+            if (prefix_item == nullptr) [[unlikely]] {
+                return nullptr;
+            }
+            prefix_str = prefix_item->name()->get_string();
+            prefix_len = strlen(prefix_str);
+        } else if (prefix_list->get_list_size() != 0) [[unlikely]] {
+            return nullptr;
+        }
+        // Get suffix string (empty if list is empty)
+        char* suffix_str = nullptr;
+        length_t suffix_len = 0;
+        if (suffix_list->get_list_size() == 1) {
+            item_t* suffix_item = suffix_list->term(0)->item();
+            if (suffix_item == nullptr) [[unlikely]] {
+                return nullptr;
+            }
+            suffix_str = suffix_item->name()->get_string();
+            suffix_len = strlen(suffix_str);
+        } else if (suffix_list->get_list_size() != 0) [[unlikely]] {
+            return nullptr;
+        }
 
         switch (term->get_type()) {
         case term_type_t::variable: {
@@ -35,9 +58,13 @@ namespace ds {
                 return nullptr;
             }
             char* dst = variable()->name()->get_string();
-            memcpy(dst, prefix_str, prefix_len);
+            if (prefix_len > 0) {
+                memcpy(dst, prefix_str, prefix_len);
+            }
             memcpy(dst + prefix_len, name_str, name_len);
-            memcpy(dst + prefix_len + name_len, suffix_str, suffix_len);
+            if (suffix_len > 0) {
+                memcpy(dst + prefix_len + name_len, suffix_str, suffix_len);
+            }
             dst[new_len - 1] = '\0';
             return this;
         }

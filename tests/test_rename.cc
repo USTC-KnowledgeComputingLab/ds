@@ -48,34 +48,38 @@ class TestRename : public ::testing::Test {
 };
 
 TEST_F(TestRename, rename_term_variable) {
-    // Test basic variable renaming
-    rename_term_check("`x", "(pre_ _suf)", "`pre_x_suf");
-    rename_term_check("`abc", "(a_ _z)", "`a_abc_z");
-    // Test with empty prefix/suffix (using _ as empty string representation in item)
-    rename_term_check("`x", "(_ _)", "`_x_");
-    rename_term_check("`var", "(prefix _)", "`prefixvar_");
-    rename_term_check("`var", "(_ suffix)", "`_varsuffix");
+    // Test basic variable renaming with new interface ((prefix) (suffix))
+    rename_term_check("`x", "((pre_) (_suf))", "`pre_x_suf");
+    rename_term_check("`abc", "((a_) (_z))", "`a_abc_z");
+    // Test with empty prefix (only suffix)
+    rename_term_check("`x", "(() (_suf))", "`x_suf");
+    rename_term_check("`var", "(() (suffix))", "`varsuffix");
+    // Test with empty suffix (only prefix)
+    rename_term_check("`x", "((pre_) ())", "`pre_x");
+    rename_term_check("`var", "((prefix) ())", "`prefixvar");
+    // Test with both empty (no change to variable name)
+    rename_term_check("`x", "(() ())", "`x");
 }
 
 TEST_F(TestRename, rename_term_item) {
     // Items should not be renamed
-    rename_term_check("item", "(pre_ _suf)", "item");
-    rename_term_check("abc", "(a_ _z)", "abc");
+    rename_term_check("item", "((pre_) (_suf))", "item");
+    rename_term_check("abc", "((a_) (_z))", "abc");
 }
 
 TEST_F(TestRename, rename_term_list) {
     // List with variables should have all variables renamed
-    rename_term_check("(`x `y)", "(p_ _s)", "(`p_x_s `p_y_s)");
-    rename_term_check("(a `x b `y)", "(pre_ _suf)", "(a `pre_x_suf b `pre_y_suf)");
+    rename_term_check("(`x `y)", "((p_) (_s))", "(`p_x_s `p_y_s)");
+    rename_term_check("(a `x b `y)", "((pre_) (_suf))", "(a `pre_x_suf b `pre_y_suf)");
     // Nested lists
-    rename_term_check("((`x))", "(p_ _s)", "((`p_x_s))");
-    rename_term_check("((`x `y) `z)", "(a_ _b)", "((`a_x_b `a_y_b) `a_z_b)");
+    rename_term_check("((`x))", "((p_) (_s))", "((`p_x_s))");
+    rename_term_check("((`x `y) `z)", "((a_) (_b))", "((`a_x_b `a_y_b) `a_z_b)");
 }
 
 TEST_F(TestRename, rename_term_mixed) {
     // Mixed term with item and variable
-    rename_term_check("(item `var)", "(pre _suf)", "(item `prevar_suf)");
-    rename_term_check("(f `a `b c)", "(x y)", "(f `xay `xby c)");
+    rename_term_check("(item `var)", "((pre) (_suf))", "(item `prevar_suf)");
+    rename_term_check("(f `a `b c)", "((x) (y))", "(f `xay `xby c)");
 }
 
 TEST_F(TestRename, rename_term_invalid) {
@@ -85,28 +89,36 @@ TEST_F(TestRename, rename_term_invalid) {
     EXPECT_EQ(result_t->rename(term.get(), invalid_ps.get(), nullptr), nullptr);
 
     // Invalid prefix_and_suffix (list size != 2)
-    auto invalid_ps_size = ds::text_to_term("(a)", buffer_size);
+    auto invalid_ps_size = ds::text_to_term("((a))", buffer_size);
     EXPECT_EQ(result_t->rename(term.get(), invalid_ps_size.get(), nullptr), nullptr);
 
-    auto invalid_ps_size3 = ds::text_to_term("(a b c)", buffer_size);
+    auto invalid_ps_size3 = ds::text_to_term("((a) (b) (c))", buffer_size);
     EXPECT_EQ(result_t->rename(term.get(), invalid_ps_size3.get(), nullptr), nullptr);
 
-    // Invalid prefix_and_suffix (elements are not items)
-    auto invalid_ps_elem = ds::text_to_term("(`a b)", buffer_size);
+    // Invalid prefix_and_suffix (elements are not lists)
+    auto invalid_ps_elem = ds::text_to_term("(a b)", buffer_size);
     EXPECT_EQ(result_t->rename(term.get(), invalid_ps_elem.get(), nullptr), nullptr);
+
+    // Invalid prefix_and_suffix (inner list element is variable, not item)
+    auto invalid_ps_var = ds::text_to_term("((`a) (b))", buffer_size);
+    EXPECT_EQ(result_t->rename(term.get(), invalid_ps_var.get(), nullptr), nullptr);
+
+    // Invalid prefix_and_suffix (inner list has more than 1 element)
+    auto invalid_ps_multi = ds::text_to_term("((a b) (c))", buffer_size);
+    EXPECT_EQ(result_t->rename(term.get(), invalid_ps_multi.get(), nullptr), nullptr);
 
     // Null term
     ds::term_t* null_term = reinterpret_cast<ds::term_t*>(operator new(buffer_size));
     null_term->set_null(nullptr);
-    auto valid_ps = ds::text_to_term("(a b)", buffer_size);
+    auto valid_ps = ds::text_to_term("((a) (b))", buffer_size);
     EXPECT_EQ(result_t->rename(null_term, valid_ps.get(), nullptr), nullptr);
     operator delete(null_term);
 }
 
 TEST_F(TestRename, rename_rule_basic) {
-    rename_rule_check("`x", "(pre_ _suf)", "----\n`pre_x_suf\n");
-    rename_rule_check("item", "(pre_ _suf)", "----\nitem\n");
-    rename_rule_check("(`x `y)", "(a b)", "----\n(`axb `ayb)\n");
+    rename_rule_check("`x", "((pre_) (_suf))", "----\n`pre_x_suf\n");
+    rename_rule_check("item", "((pre_) (_suf))", "----\nitem\n");
+    rename_rule_check("(`x `y)", "((a) (b))", "----\n(`axb `ayb)\n");
 }
 
 TEST_F(TestRename, rename_rule_with_premises) {
@@ -115,7 +127,7 @@ TEST_F(TestRename, rename_rule_with_premises) {
         "`q\n"
         "----------\n"
         "`r\n",
-        "(pre_ _suf)",
+        "((pre_) (_suf))",
         "`pre_p_suf\n"
         "`pre_q_suf\n"
         "----------\n"
@@ -127,7 +139,7 @@ TEST_F(TestRename, rename_rule_with_premises) {
         "`p\n"
         "----------\n"
         "`q\n",
-        "(x y)",
+        "((x) (y))",
         "(`xpy -> `xqy)\n"
         "`xpy\n"
         "--------------\n"

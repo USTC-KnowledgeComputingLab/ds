@@ -118,7 +118,7 @@ namespace ds {
 
         /// @brief 将rule中的所有variable添加prefix和suffix, 结果更新至本对象。
         /// @param rule 待被重命名的rule。
-        /// @param prefix_and_suffix 只有一个conclusion的rule，conclusion是含有两个item的list，分别表示prefix和suffix。
+        /// @param prefix_and_suffix 只有一个conclusion的rule，conclusion是含有两个list的list，每个内部list包含0或1个item，分别表示prefix和suffix。例如 ((prefix_) (_suffix)), ((prefix_) ()), (() (_suffix)), (() ())。
         /// @param check_tail 可选的尾指针检查。
         /// @return 自身，是一个rule_t对象的指针，如果尾指针检查失败则返回nullptr。
         rule_t* rename(rule_t* rule, rule_t* prefix_and_suffix, std::byte* check_tail = nullptr);
