@@ -140,6 +140,7 @@ while True:
 ### C++ Example
 
 ```cpp
+#include <cstdio>
 #include <cstring>
 #include <ds/ds.hh>
 #include <ds/search.hh>
