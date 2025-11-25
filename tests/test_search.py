@@ -1,35 +1,35 @@
 import pytest
-import pyds
+import apyds
 
 
 @pytest.fixture
-def search() -> pyds.Search:
-    return pyds.Search(100, 1000)
+def search() -> apyds.Search:
+    return apyds.Search(100, 1000)
 
 
-def test_reset_parameters(search: pyds.Search) -> None:
+def test_reset_parameters(search: apyds.Search) -> None:
     search.set_limit_size(50)
     search.set_buffer_size(500)
     search.reset()
 
 
-def test_add_rule_and_fact(search: pyds.Search) -> None:
+def test_add_rule_and_fact(search: apyds.Search) -> None:
     assert search.add("test rule")
     assert search.add("fact")
 
 
-def test_add_fail(search: pyds.Search) -> None:
+def test_add_fail(search: apyds.Search) -> None:
     search.set_limit_size(10)
     assert not search.add("a-long-facts-that-exceeds-limit")
 
 
-def test_execute_single(search: pyds.Search) -> None:
+def test_execute_single(search: apyds.Search) -> None:
     search.add("p q")
     search.add("p")
-    target = pyds.Rule("q")
+    target = apyds.Rule("q")
     success = False
 
-    def callback(rule: pyds.Rule) -> bool:
+    def callback(rule: apyds.Rule) -> bool:
         nonlocal success
         if rule == target:
             success = True
@@ -41,22 +41,22 @@ def test_execute_single(search: pyds.Search) -> None:
     assert success
 
 
-def test_execute_long(search: pyds.Search) -> None:
+def test_execute_long(search: apyds.Search) -> None:
     search.add("p q r")
     search.add("p")
     search.add("q")
-    target1 = pyds.Rule("q r")
-    target2 = pyds.Rule("r")
+    target1 = apyds.Rule("q r")
+    target2 = apyds.Rule("r")
     success1 = False
     success2 = False
 
-    def callback1(rule: pyds.Rule) -> bool:
+    def callback1(rule: apyds.Rule) -> bool:
         if rule == target1:
             nonlocal success1
             success1 = True
         return False
 
-    def callback2(rule: pyds.Rule) -> bool:
+    def callback2(rule: apyds.Rule) -> bool:
         if rule == target2:
             nonlocal success2
             success2 = True
@@ -70,7 +70,7 @@ def test_execute_long(search: pyds.Search) -> None:
     assert success2
 
 
-def test_execute_duplicated_fact(search: pyds.Search) -> None:
+def test_execute_duplicated_fact(search: apyds.Search) -> None:
     search.add("p r")
     search.add("q r")
     search.add("p")
@@ -79,7 +79,7 @@ def test_execute_duplicated_fact(search: pyds.Search) -> None:
     assert count == 1
 
 
-def test_execute_duplicate_rule(search: pyds.Search) -> None:
+def test_execute_duplicate_rule(search: apyds.Search) -> None:
     search.add("p r s")
     search.add("p r s")
     search.add("p")
@@ -88,7 +88,7 @@ def test_execute_duplicate_rule(search: pyds.Search) -> None:
     assert count == 1
 
 
-def test_execute_exceed(search: pyds.Search) -> None:
+def test_execute_exceed(search: apyds.Search) -> None:
     search.set_limit_size(100)
     assert search.add("(2 `x) (`x `x`)")
     assert search.add("(2 a-very-long-fact-that-exceeds-half-of-the-limit-size)")

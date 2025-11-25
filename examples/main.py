@@ -1,5 +1,5 @@
 import time
-import pyds
+import apyds
 
 
 def main():
@@ -7,8 +7,8 @@ def main():
     temp_text_size = 1000
     single_result_size = 10000
 
-    pyds.buffer_size(temp_text_size)
-    search = pyds.Search(temp_data_size, single_result_size)
+    apyds.buffer_size(temp_text_size)
+    search = apyds.Search(temp_data_size, single_result_size)
 
     # P -> Q, P |- Q
     search.add("(`P -> `Q) `P `Q")
@@ -22,12 +22,12 @@ def main():
     # premise
     search.add("(! (! X))")
 
-    target = pyds.Rule("X")
+    target = apyds.Rule("X")
 
     while True:
         success = False
 
-        def callback(candidate: pyds.Rule) -> bool:
+        def callback(candidate: apyds.Rule) -> bool:
             if candidate == target:
                 print("Found!")
                 print(candidate)
