@@ -447,3 +447,79 @@ search.execute((candidate) => {
     return false;  // Continue searching
 });
 ```
+
+---
+
+## Complete Example
+
+Here's a complete example demonstrating most of the TypeScript API:
+
+```typescript
+import { 
+    buffer_size, 
+    string_t, 
+    variable_t, 
+    item_t, 
+    list_t, 
+    term_t, 
+    rule_t, 
+    search_t 
+} from "atsds";
+
+// Configure buffer size
+buffer_size(2048);
+
+// Create terms
+const varX = new variable_t("`X");
+const item = new item_t("hello");
+const lst = new list_t("(a b c)");
+const term = new term_t("(f `x `y)");
+
+console.log(`Variable: ${varX.toString()}, name: ${varX.name().toString()}`);
+console.log(`Item: ${item.toString()}, name: ${item.name().toString()}`);
+console.log(`List: ${lst.toString()}, length: ${lst.length()}`);
+console.log(`Term: ${term.toString()}`);
+
+// Work with rules
+const fact = new rule_t("(parent john mary)");
+const rule = new rule_t("(father `X `Y)\n----------\n(parent `X `Y)\n");
+
+console.log(`\nFact: ${fact.toString()}`);
+console.log(`Rule premises: ${rule.length()}, conclusion: ${rule.conclusion().toString()}`);
+
+// Grounding
+const termA = new term_t("`a");
+const dictionary = new term_t("((`a hello))");
+const grounded = termA.ground(dictionary);
+if (grounded) {
+    console.log(`\nGrounding \`a with ((\`a hello)): ${grounded.toString()}`);
+}
+
+// Matching
+const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
+const axiom = new rule_t("((A) -> B)");
+const matched = mp.match(axiom);
+if (matched) {
+    console.log(`\nMatching modus ponens with (A -> B):\n${matched.toString()}`);
+}
+
+// Search engine
+const search = new search_t(1000, 10000);
+search.add("p q");  // p implies q
+search.add("q r");  // q implies r
+search.add("p");    // fact: p
+
+console.log("\nRunning inference:");
+for (let i = 0; i < 3; i++) {
+    const count = search.execute((r) => {
+        console.log(`  Derived: ${r.toString()}`);
+        return false;
+    });
+    if (count === 0) break;
+}
+
+// Copying and comparison
+const rule1 = new rule_t("(a b c)");
+const rule2 = rule1.copy();
+console.log(`\nRule comparison: ${rule1.key() === rule2.key()}`);  // true
+```

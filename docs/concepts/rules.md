@@ -11,7 +11,7 @@ A rule consists of:
 
 ### Text Representation
 
-Rules are written with premises and conclusion separated by dashes:
+Rules are written with premises and conclusion separated by dashes (at least four dashes):
 
 ```
 premise1
@@ -32,6 +32,31 @@ Or explicitly:
 ----------
 (parent john mary)
 ```
+
+!!! info "Rule Format Details"
+    - Premises are separated by newlines
+    - The separator line must contain at least 4 dashes (`----`) between premises and conclusion
+    - Whitespace around premises and conclusion is trimmed
+    - A rule without an premises is a fact
+
+### Compact Rule Format
+
+For rules with multiple premises, you can use space-separated terms on a single line:
+
+```
+(`P -> `Q) `P `Q
+```
+
+This is equivalent to:
+
+```
+(`P -> `Q)
+`P
+----------
+`Q
+```
+
+The last term is the conclusion, and all preceding terms are premises.
 
 ### Examples
 

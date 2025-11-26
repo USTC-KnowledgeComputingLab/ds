@@ -12,54 +12,49 @@ A deductive system for logical inference, implemented in C++. The library provid
 - **WebAssembly**: Run inference in the browser or Node.js environments
 - **Type-Safe**: Strong typing support in TypeScript and Python
 
-## Quick Links
-
-- **[Installation](getting-started/installation.md)** - Install DS for your preferred language
-- **[Quick Start](getting-started/quickstart.md)** - Get up and running in minutes
-- **[Core Concepts](concepts/terms.md)** - Learn about terms, rules, and inference
-- **[API Reference](api/python.md)** - Complete API documentation
-
 ## Supported Languages
+
+=== "TypeScript"
+
+    ```typescript
+    import { term_t } from "atsds";
+    
+    const term = new term_t("(hello world)");
+    console.log(term.toString());
+    // Output: (hello world)
+    ```
 
 === "Python"
 
     ```python
     import apyds
-
-    search = apyds.Search(1000, 10000)
-    search.add("(`P -> `Q) `P `Q")  # Modus ponens
-    search.add("(! (! X))")  # Premise: !!X
-
-    target = apyds.Rule("X")
-    # ... execute search
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { rule_t, search_t } from "atsds";
-
-    const search = new search_t(1000, 10000);
-    search.add("(`P -> `Q) `P `Q");  // Modus ponens
-    search.add("(! (! X))");  // Premise: !!X
-
-    const target = new rule_t("X");
-    // ... execute search
+    print(f"Version: {apyds.__version__}")
+    
+    term = apyds.Term("(hello world)")
+    print(term)  # (hello world)
     ```
 
 === "C++"
 
     ```cpp
     #include <ds/ds.hh>
-    #include <ds/search.hh>
-
-    ds::search_t search(1000, 10000);
-    search.add("(`P -> `Q) `P `Q");  // Modus ponens
-    search.add("(! (! X))");  // Premise: !!X
-
-    auto target = ds::text_to_rule("X", 1000);
-    // ... execute search
+    #include <ds/utility.hh>
+    #include <iostream>
+    
+    int main() {
+        auto term = ds::text_to_term("(hello world)", 1000);
+        std::cout << ds::term_to_text(term.get(), 1000).get() << std::endl;
+        return 0;
+    }
     ```
+
+## Quick Links
+
+- **[Installation](getting-started/installation.md)** - Install DS for your preferred language
+- **[Quick Start](getting-started/quickstart.md)** - Get up and running in minutes
+- **[Core Concepts](concepts/terms.md)** - Learn about terms, rules, and inference
+- **[API Reference](api/python.md)** - Complete API documentation
+- **[Examples](examples/basic.md)** - Working code examples
 
 ## License
 

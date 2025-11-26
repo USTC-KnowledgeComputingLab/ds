@@ -452,3 +452,63 @@ def callback(candidate):
 
 search.execute(callback)
 ```
+
+---
+
+## Complete Example
+
+Here's a complete example demonstrating most of the API:
+
+```python
+import apyds
+
+# Configure buffer size for operations
+apyds.buffer_size(2048)
+
+# Create terms
+var = apyds.Variable("`X")
+item = apyds.Item("hello")
+lst = apyds.List("(a b c)")
+term = apyds.Term("(f `x `y)")
+
+print(f"Variable: {var}, name: {var.name}")
+print(f"Item: {item}, name: {item.name}")
+print(f"List: {lst}, length: {len(lst)}")
+print(f"Term: {term}, type: {type(term.term)}")
+
+# Work with rules
+fact = apyds.Rule("(parent john mary)")
+rule = apyds.Rule("(father `X `Y)\n----------\n(parent `X `Y)\n")
+
+print(f"\nFact: {fact}")
+print(f"Rule premises: {len(rule)}, conclusion: {rule.conclusion}")
+
+# Grounding
+term_a = apyds.Term("`a")
+dictionary = apyds.Term("((`a hello))")
+grounded = term_a // dictionary
+print(f"\nGrounding `a with ((` hello)): {grounded}")
+
+# Matching
+mp = apyds.Rule("(`p -> `q)\n`p\n`q\n")
+axiom = apyds.Rule("((A) -> B)")
+matched = mp @ axiom
+print(f"\nMatching modus ponens with (A -> B):\n{matched}")
+
+# Search engine
+search = apyds.Search(1000, 10000)
+search.add("p q")  # p implies q
+search.add("q r")  # q implies r
+search.add("p")    # fact: p
+
+print("\nRunning inference:")
+for i in range(3):
+    count = search.execute(lambda r: print(f"  Derived: {r}") or False)
+    if count == 0:
+        break
+
+# Using context manager for buffer size
+with apyds.scoped_buffer_size(4096):
+    big_term = apyds.Term("(a b c d e f g h i j)")
+    print(f"\nBig term: {big_term}")
+```

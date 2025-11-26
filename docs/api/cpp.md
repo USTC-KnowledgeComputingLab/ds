@@ -550,3 +550,73 @@ std::unique_ptr<char> rule_to_text(rule_t* rule, length_t length);
 - `length`: Maximum size for the resulting text
 
 **Returns:** A unique_ptr to the text, or nullptr if length exceeded.
+
+---
+
+## Complete Example
+
+Here's a complete example demonstrating the C++ API:
+
+```cpp
+#include <ds/ds.hh>
+#include <ds/search.hh>
+#include <ds/utility.hh>
+#include <cstring>
+#include <iostream>
+
+int main() {
+    const int buffer_size = 1000;
+    
+    // Create terms using utility functions
+    auto term = ds::text_to_term("(f `x `y)", buffer_size);
+    
+    std::cout << "Term: " << ds::term_to_text(term.get(), buffer_size).get() << std::endl;
+    
+    // Work with rules
+    auto fact = ds::text_to_rule("(parent john mary)", buffer_size);
+    auto rule = ds::text_to_rule("(father `X `Y)\n----------\n(parent `X `Y)\n", buffer_size);
+    
+    std::cout << "\nFact:\n" << ds::rule_to_text(fact.get(), buffer_size).get();
+    std::cout << "Rule premises: " << rule->premises_count() << std::endl;
+    std::cout << "Rule conclusion: " << ds::term_to_text(rule->conclusion(), buffer_size).get() << std::endl;
+    
+    // Search engine
+    ds::search_t search(1000, 10000);
+    
+    // Add rules and facts
+    search.add("p q");  // p implies q
+    search.add("q r");  // q implies r
+    search.add("p");    // fact: p
+    
+    std::cout << "\nRunning inference:" << std::endl;
+    
+    // Execute search
+    auto target = ds::text_to_rule("r", buffer_size);
+    bool found = false;
+    
+    while (!found) {
+        auto count = search.execute([&](ds::rule_t* candidate) {
+            std::cout << "  Derived: " << ds::rule_to_text(candidate, buffer_size).get();
+            
+            // Check if this is our target
+            if (candidate->data_size() == target->data_size() &&
+                memcmp(candidate->head(), target->head(), candidate->data_size()) == 0) {
+                found = true;
+                return true;  // Stop
+            }
+            return false;  // Continue
+        });
+        
+        if (count == 0) {
+            std::cout << "  (no more inferences)" << std::endl;
+            break;
+        }
+    }
+    
+    if (found) {
+        std::cout << "Target found!" << std::endl;
+    }
+    
+    return 0;
+}
+```

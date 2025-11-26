@@ -20,6 +20,19 @@ The package includes:
 
 - Node.js 20+ or a modern browser with WebAssembly support
 
+### Browser Usage
+
+The package works in browsers that support WebAssembly:
+
+```html
+<script type="module">
+  import { term_t } from "https://unpkg.com/atsds/dist/tsds.mjs";
+  
+  const term = new term_t("(hello world)");
+  console.log(term.toString());
+</script>
+```
+
 ## Python
 
 The Python package `apyds` wraps the C++ core via pybind11.
@@ -31,7 +44,17 @@ pip install apyds
 ### Requirements
 
 - Python 3.10-3.14
-- Pre-built wheels are available for common platforms
+- Pre-built wheels are available for common platforms (Linux, macOS, Windows)
+
+### Virtual Environment (Recommended)
+
+It's recommended to use a virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install apyds
+```
 
 ### Development Installation
 
@@ -49,7 +72,7 @@ The C++ library is the core implementation. Both Python and TypeScript bindings 
 
 ### Prerequisites
 
-- C++20 compatible compiler
+- C++20 compatible compiler (GCC 10+, Clang 10+, MSVC 2019+)
 - CMake 3.30+
 
 ### Building from Source
@@ -99,6 +122,30 @@ cmake -B build
 cmake --build build
 ```
 
+## Running Tests
+
+After installation, you can verify everything works by running the tests:
+
+### TypeScript/JavaScript Tests
+
+```bash
+npm test
+```
+
+### Python Tests
+
+```bash
+pip install pytest
+pytest
+```
+
+### C++ Tests
+
+```bash
+cd build
+ctest
+```
+
 ## Verifying Installation
 
 === "TypeScript"
@@ -108,17 +155,17 @@ cmake --build build
     
     const term = new term_t("(hello world)");
     console.log(term.toString());
+    // Output: (hello world)
     ```
 
 === "Python"
 
     ```python
     import apyds
-    print(apyds.__version__)
+    print(f"Version: {apyds.__version__}")
     
-    # Create a simple term
     term = apyds.Term("(hello world)")
-    print(term)
+    print(term)  # (hello world)
     ```
 
 === "C++"

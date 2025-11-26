@@ -9,6 +9,16 @@ The search engine:
 1. Maintains a collection of rules and facts
 2. Iteratively applies rules to generate new facts
 3. Notifies you of each new inference via a callback
+4. Automatically prevents duplicate inferences
+
+!!! info "How It Works"
+    The search engine uses a forward-chaining inference approach:
+    
+    1. When you call `execute()`, the engine tries to match the first premise of each rule with existing facts
+    2. When a match is found, variables in the rule are substituted and a new rule (with one fewer premise) is created
+    3. If the new rule has no premises, it becomes a new fact
+    4. The callback is invoked for each newly derived rule
+    5. Duplicate rules are automatically filtered out
 
 ## Creating a Search Engine
 
@@ -21,7 +31,7 @@ The search engine:
     search = apyds.Search()
 
     # Create with custom sizes
-    search = apyds.Search(limit_size=2000, buffer_size=20000)
+    search = apyds.Search(limit_size=1000, buffer_size=10000)
     ```
 
 === "TypeScript"
@@ -33,7 +43,7 @@ The search engine:
     const search = new search_t();
 
     // Create with custom sizes
-    const search2 = new search_t(2000, 20000);
+    const search2 = new search_t(1000, 10000);
     ```
 
 === "C++"
@@ -47,8 +57,8 @@ The search engine:
 
 ### Parameters
 
-- **limit_size**: Maximum size (in bytes) for each stored rule/fact (default: 1000)
-- **buffer_size**: Size of the internal buffer for intermediate operations (default: 10000)
+- **limit_size**: Maximum size (in bytes) for each stored rule/fact (default: 1000). Rules or facts larger than this are rejected.
+- **buffer_size**: Size of the internal buffer for intermediate operations (default: 10000). Increase this if you work with complex rules.
 
 ## Adding Rules and Facts
 
@@ -66,11 +76,6 @@ Use the `add()` method to add rules and facts to the knowledge base.
 
     # Add a rule with premises
     search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
-
-    # Add multiple facts and rules
-    search.add("(father john mary)")
-    search.add("(father john bob)")
-    search.add("(mother mary alice)")
     ```
 
 === "TypeScript"
@@ -298,6 +303,7 @@ Clears all rules and facts:
 2. **Limit Size**: Restricts maximum rule/fact complexity - too small may reject valid rules
 3. **Iterative Execution**: Call `execute()` in a loop to continue inference until convergence
 4. **Early Termination**: Return `true` from callback to stop as soon as target is found
+5. **Deduplication**: The engine automatically deduplicates facts, avoiding redundant computation
 
 ## See Also
 

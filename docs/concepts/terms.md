@@ -17,7 +17,10 @@ Variables are placeholders that can be unified with other terms during inference
 `Q
 ```
 
-Variables are used in rules to represent any term that can match during unification.
+Variables are used in rules to represent any term that can match during unification. During the inference process, variables can be bound to specific terms through unification.
+
+!!! tip "Variable Naming"
+    Variable names can contain any characters except backtick, whitespace and parentheses. By convention, single uppercase letters like `` `X``, `` `P``, `` `Q`` are often used for simple logic, while descriptive names like `` `person`` or `` `result`` improve readability in complex rules.
 
 ### Items
 
@@ -35,6 +38,10 @@ Items can represent:
 
 - **Constants**: Atomic values like `john`, `mary`, `42`
 - **Functors**: Symbols that combine other terms, like `father`, `->`, `!`
+- **Operators**: Special symbols used in logical expressions, like `->` for implication or `!` for negation
+
+!!! note "Item Characters"
+    Items can contain any characters except backtick, whitespace and parentheses. Special symbols like `->`, `!`, `<-`, `&&`, `||` are commonly used as logical operators.
 
 ### Lists
 
@@ -47,7 +54,19 @@ Lists are ordered sequences of terms enclosed in parentheses. They can contain a
 (! (! X))
 ```
 
-Lists are the primary way to build complex structures in the deductive system.
+Lists are the primary way to build complex structures in the deductive system. They can represent:
+
+- **Relations**: `(father john mary)` - "John is the father of Mary"
+- **Logical expressions**: `(P -> Q)` - "P implies Q"
+- **Nested structures**: `(! (! X))` - "not not X" (double negation)
+- **Data collections**: `(1 2 3 4 5)` - a list of numbers
+
+!!! example "List Nesting"
+    Lists can be nested to any depth:
+    ```
+    ((a b) (c d) (e f))
+    (if (> `x 0) (positive `x) (non-positive `x))
+    ```
 
 ## Creating Terms
 
@@ -107,19 +126,12 @@ Lists are the primary way to build complex structures in the deductive system.
     #include <iostream>
 
     int main() {
-        // Create a variable
-        auto var = ds::text_to_variable("`X", 1000);
-
-        // Create an item
-        auto item = ds::text_to_item("hello", 1000);
-
-        // Create a list
-        auto lst = ds::text_to_list("(a b c)", 1000);
-        std::cout << "List length: " << lst->length() << std::endl;
-
         // Create a generic term
         auto term = ds::text_to_term("(f `x)", 1000);
-
+        // Access the underlying type
+        auto list = term->list();
+        auto item = list->term(0)->item();
+        auto variable = list->term(1)->variable();
         return 0;
     }
     ```
@@ -256,7 +268,7 @@ Renaming adds prefixes and/or suffixes to all variables in a term. This is usefu
 
 ## Buffer Size
 
-Operations like grounding and renaming require buffer space for intermediate results. You can control this using buffer size functions.
+Operations like grounding and renaming require buffer space for intermediate results in TypeScript/Javascript and Python. You can control this using buffer size functions.
 
 === "TypeScript"
 

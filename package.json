@@ -8,7 +8,10 @@
         "url": "https://github.com/USTC-KnowledgeComputingLab/ds.git"
     },
     "type": "module",
+    "exports": "./dist/tsds.mjs",
     "main": "dist/tsds.mjs",
+    "module": "dist/tsds.mjs",
+    "browser": "dist/tsds.mjs",
     "types": "dist/tsds.d.mts",
     "files": [
         "dist/ds.mjs",
