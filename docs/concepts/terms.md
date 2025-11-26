@@ -41,7 +41,7 @@ Items can represent:
 - **Operators**: Special symbols used in logical expressions, like `->` for implication or `!` for negation
 
 !!! note "Item Characters"
-    Items can contain any characters except whitespace and parentheses. Special symbols like `->`, `!`, `<-`, `&&`, `||` are commonly used as logical operators.
+    Items can contain any characters except backtick, whitespace and parentheses. Special symbols like `->`, `!`, `<-`, `&&`, `||` are commonly used as logical operators.
 
 ### Lists
 
@@ -57,7 +57,7 @@ Lists are ordered sequences of terms enclosed in parentheses. They can contain a
 Lists are the primary way to build complex structures in the deductive system. They can represent:
 
 - **Relations**: `(father john mary)` - "John is the father of Mary"
-- **Logical expressions**: `(-> P Q)` - "P implies Q"
+- **Logical expressions**: `(P -> Q)` - "P implies Q"
 - **Nested structures**: `(! (! X))` - "not not X" (double negation)
 - **Data collections**: `(1 2 3 4 5)` - a list of numbers
 
@@ -126,19 +126,12 @@ Lists are the primary way to build complex structures in the deductive system. T
     #include <iostream>
 
     int main() {
-        // Create a variable
-        auto var = ds::text_to_variable("`X", 1000);
-
-        // Create an item
-        auto item = ds::text_to_item("hello", 1000);
-
-        // Create a list
-        auto lst = ds::text_to_list("(a b c)", 1000);
-        std::cout << "List length: " << lst->length() << std::endl;
-
         // Create a generic term
         auto term = ds::text_to_term("(f `x)", 1000);
-
+        // Access the underlying type
+        auto list = term->list();
+        auto item = list->term(0)->item();
+        auto variable = list->term(1)->variable();
         return 0;
     }
     ```
@@ -275,7 +268,7 @@ Renaming adds prefixes and/or suffixes to all variables in a term. This is usefu
 
 ## Buffer Size
 
-Operations like grounding and renaming require buffer space for intermediate results. You can control this using buffer size functions.
+Operations like grounding and renaming require buffer space for intermediate results in TypeScript/Javascript and Python. You can control this using buffer size functions.
 
 === "TypeScript"
 
@@ -305,140 +298,6 @@ Operations like grounding and renaming require buffer space for intermediate res
         # Operations here use buffer size of 8192
         pass
     # Buffer size restored to previous value
-    ```
-
-## Practical Examples
-
-### Building Logical Expressions
-
-Here's how to build common logical expressions using terms:
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Implication: P -> Q
-    implication = apyds.Term("(-> P Q)")
-    print(f"Implication: {implication}")
-
-    # Negation: !P
-    negation = apyds.Term("(! P)")
-    print(f"Negation: {negation}")
-
-    # Double negation: !!X
-    double_neg = apyds.Term("(! (! X))")
-    print(f"Double negation: {double_neg}")
-
-    # Complex formula: (P -> Q) -> ((Q -> R) -> (P -> R))
-    # This is the hypothetical syllogism
-    syllogism = apyds.Term("(-> (-> P Q) (-> (-> Q R) (-> P R)))")
-    print(f"Hypothetical syllogism: {syllogism}")
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { term_t } from "atsds";
-
-    // Implication: P -> Q
-    const implication = new term_t("(-> P Q)");
-    console.log(`Implication: ${implication.toString()}`);
-
-    // Negation: !P
-    const negation = new term_t("(! P)");
-    console.log(`Negation: ${negation.toString()}`);
-
-    // Double negation: !!X
-    const doubleNeg = new term_t("(! (! X))");
-    console.log(`Double negation: ${doubleNeg.toString()}`);
-    ```
-
-### Working with Scoped Grounding
-
-Scoped grounding is an advanced feature that allows controlling variable substitution based on scope prefixes. The dictionary entries contain scope information that determines when a substitution applies. This is useful when working with rules that have variables from different contexts that need to be kept separate.
-
-The dictionary format for scoped grounding is `((scope_from scope_to variable value) ...)`, where the substitution only happens when transitioning from `scope_from` to `scope_to`.
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create a term with a variable
-    term = apyds.Term("`a")
-
-    # Create a dictionary with scoped entries
-    # Format: ((scope_from scope_to variable value) ...)
-    # Entry 1: from scope "x" to "y", substitute `a with `b
-    # Entry 2: from scope "y" to "x", substitute `b with `c
-    dictionary = apyds.Term("((x y `a `b) (y x `b `c))")
-
-    # Ground with scope "x" - the grounding follows the chain: `a -> `b -> `c
-    result = term.ground(dictionary, "x")
-    print(f"Result with scope 'x': {result}")  # `c
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { term_t } from "atsds";
-
-    const term = new term_t("`a");
-    const dictionary = new term_t("((x y `a `b) (y x `b `c))");
-
-    const result = term.ground(dictionary, "x");
-    if (result !== null) {
-        console.log(`Result with scope 'x': ${result.toString()}`);  // `c
-    }
-    ```
-
-### Checking Term Types
-
-You can inspect the type of a term and access its underlying value:
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create terms of different types
-    var_term = apyds.Term("`variable")
-    item_term = apyds.Term("constant")
-    list_term = apyds.Term("(a b c)")
-
-    # Check types using the term property
-    print(f"Variable type: {type(var_term.term)}")   # Variable
-    print(f"Item type: {type(item_term.term)}")      # Item
-    print(f"List type: {type(list_term.term)}")      # List
-
-    # Access type-specific properties
-    if isinstance(var_term.term, apyds.Variable):
-        print(f"Variable name: {var_term.term.name}")
-
-    if isinstance(list_term.term, apyds.List):
-        print(f"List length: {len(list_term.term)}")
-        for i in range(len(list_term.term)):
-            print(f"  Element {i}: {list_term.term[i]}")
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { term_t, variable_t, item_t, list_t } from "atsds";
-
-    const varTerm = new term_t("`variable");
-    const itemTerm = new term_t("constant");
-    const listTerm = new term_t("(a b c)");
-
-    // Access underlying types
-    const inner = listTerm.term();
-    if (inner instanceof list_t) {
-        console.log(`List length: ${inner.length()}`);
-        for (let i = 0; i < inner.length(); i++) {
-            console.log(`  Element ${i}: ${inner.getitem(i).toString()}`);
-        }
-    }
     ```
 
 ## See Also
