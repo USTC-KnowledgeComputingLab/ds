@@ -38,6 +38,7 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  background-color: #f0f2f5;
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -116,7 +117,8 @@ h1 {
 /* 浅色背景宫 */
 .sudoku-grid > div:nth-child(-n + 3) span:nth-child(-n + 3),
 .sudoku-grid > div:nth-child(-n + 3) span:nth-child(n + 7),
-.sudoku-grid > div:nth-child(n + 4):nth-child(-n + 6)
+.sudoku-grid
+  > div:nth-child(n + 4):nth-child(-n + 6)
   span:nth-child(n + 4):nth-child(-n + 6),
 .sudoku-grid > div:nth-child(n + 7) span:nth-child(-n + 3),
 .sudoku-grid > div:nth-child(n + 7) span:nth-child(n + 7) {
@@ -159,7 +161,9 @@ button {
   margin: 0 10px 20px;
   font-size: 1.1em;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -174,14 +178,26 @@ button:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button:nth-of-type(1) { background-color: #2ecc71; }
-button:nth-of-type(1):hover { background-color: #27ae60; }
+button:nth-of-type(1) {
+  background-color: #2ecc71;
+}
+button:nth-of-type(1):hover {
+  background-color: #27ae60;
+}
 
-button:nth-of-type(2) { background-color: #f39c12; }
-button:nth-of-type(2):hover { background-color: #e67e22; }
+button:nth-of-type(2) {
+  background-color: #f39c12;
+}
+button:nth-of-type(2):hover {
+  background-color: #e67e22;
+}
 
-button:nth-of-type(3) { background-color: #e74c3c; }
-button:nth-of-type(3):hover { background-color: #c0392b; }
+button:nth-of-type(3) {
+  background-color: #e74c3c;
+}
+button:nth-of-type(3):hover {
+  background-color: #c0392b;
+}
 
 /* ----------------------------------------------
    Log 区域
@@ -196,7 +212,7 @@ h3 {
 textarea {
   width: 80%;
   max-width: 1000px;
-  height: 150px;
+  height: 450px;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;

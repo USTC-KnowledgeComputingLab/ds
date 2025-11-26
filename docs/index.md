@@ -12,20 +12,6 @@ A deductive system for logical inference, implemented in C++. The library provid
 - **WebAssembly**: Run inference in the browser or Node.js environments
 - **Type-Safe**: Strong typing support in TypeScript and Python
 
-## Architecture
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                     Application Layer                      │
-├────────────────────┬────────────────────┬──────────────────┤
-│ TypeScript (atsds) │   Python (apyds)   │    C++ Direct    │
-│   via WebAssembly  │    via pybind11    │                  │
-├────────────────────┴────────────────────┴──────────────────┤
-│                       C++ Core Library                     │
-│                     (include/ds/, src/)                    │
-└────────────────────────────────────────────────────────────┘
-```
-
 ## Quick Links
 
 - **[Installation](getting-started/installation.md)** - Install DS for your preferred language

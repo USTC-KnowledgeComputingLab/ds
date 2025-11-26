@@ -11,7 +11,7 @@ The classic example demonstrates double negation elimination using propositional
 - **Axiom 2**: (P → (Q → R)) → ((P → Q) → (P → R))
 - **Axiom 3**: (¬P → ¬Q) → (Q → P)
 
-Given the premise !!X (double negation of X), we can derive X.
+Given the premise ¬¬X (double negation of X), we can derive X.
 
 === "Python"
 
