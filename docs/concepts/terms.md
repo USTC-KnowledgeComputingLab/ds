@@ -20,7 +20,7 @@ Variables are placeholders that can be unified with other terms during inference
 Variables are used in rules to represent any term that can match during unification. During the inference process, variables can be bound to specific terms through unification.
 
 !!! tip "Variable Naming"
-    Variable names can contain any characters except whitespace and parentheses. By convention, single uppercase letters like `` `X``, `` `P``, `` `Q`` are often used for simple logic, while descriptive names like `` `person`` or `` `result`` improve readability in complex rules.
+    Variable names can contain any characters except backtick, whitespace and parentheses. By convention, single uppercase letters like `` `X``, `` `P``, `` `Q`` are often used for simple logic, while descriptive names like `` `person`` or `` `result`` improve readability in complex rules.
 
 ### Items
 
