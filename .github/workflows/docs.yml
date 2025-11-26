@@ -31,7 +31,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: build docs
-        run: mike deploy --push ${GITHUB_REF#refs/tags/} latest
+        run: mike deploy --push --update-aliases ${GITHUB_REF#refs/tags/} latest
 
       - name: set default
         run: mike set-default --push latest
