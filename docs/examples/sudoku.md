@@ -5,7 +5,7 @@
 <script>
 (async () => {
   const vue = await import("https://unpkg.com/vue@3.5.25/dist/vue.esm-browser.prod.js");
-  const atsds = await import("https://unpkg.com/atsds@0.0.2-alpha6/dist/tsds.mjs");
+  const atsds = await import("https://unpkg.com/atsds@0.0.2/dist/tsds.mjs");
   const { loadModule } = await import("https://unpkg.com/vue3-sfc-loader@0.9.5/dist/vue3-sfc-loader.esm.js");
 
   const options = {
