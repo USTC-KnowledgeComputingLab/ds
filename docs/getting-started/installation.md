@@ -95,15 +95,6 @@ Include the headers from `include/ds/` in your C++ project:
 
 Link against the `ds` static library produced by the build.
 
-### CMake Integration
-
-You can add DS as a subdirectory in your CMake project:
-
-```cmake
-add_subdirectory(path/to/ds)
-target_link_libraries(your_target PRIVATE ds)
-```
-
 ## Building All Components
 
 To build all language bindings from source:
