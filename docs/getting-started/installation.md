@@ -164,15 +164,8 @@ ctest
     import apyds
     print(f"Version: {apyds.__version__}")
     
-    # Create a simple term
     term = apyds.Term("(hello world)")
     print(term)  # (hello world)
-    
-    # Try a simple inference
-    search = apyds.Search()
-    search.add("p q")
-    search.add("p")
-    search.execute(lambda r: print(f"Derived: {r}") or False)
     ```
 
 === "C++"
@@ -188,32 +181,3 @@ ctest
         return 0;
     }
     ```
-
-## Troubleshooting
-
-### Python: "Could not find pybind11"
-
-Install pybind11 first:
-
-```bash
-pip install pybind11
-```
-
-### TypeScript: WebAssembly errors
-
-Ensure your environment supports WebAssembly. In Node.js, this should work out of the box. In browsers, ensure you're using HTTPS or localhost.
-
-### C++: CMake version too old
-
-Update CMake to version 3.30 or newer:
-
-```bash
-# On Ubuntu/Debian
-sudo apt-get update && sudo apt-get install cmake
-
-# Or download from official website:
-# https://cmake.org/download/
-
-# On macOS
-brew install cmake
-```
