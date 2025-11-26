@@ -31,7 +31,21 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: build docs
-        run: mike deploy --push ${GITHUB_REF#refs/tags/} latest
+        run: |
+          set -e
+          VERSION=${GITHUB_REF#refs/tags/}
+          TMP_OUT=$(mktemp)
+          trap 'rm -f "$TMP_OUT"' EXIT
+          if mike deploy --push "$VERSION" latest >"$TMP_OUT" 2>&1; then
+            echo "mike deploy succeeded"
+          else
+            if grep -q "alias 'latest' already exists" "$TMP_OUT"; then
+              echo "alias 'latest' already exists for this version; continuing"
+            else
+              cat "$TMP_OUT"
+              exit 1
+            fi
+          fi
 
       - name: set default
         run: mike set-default --push latest
