@@ -20,6 +20,19 @@ The package includes:
 
 - Node.js 20+ or a modern browser with WebAssembly support
 
+### Browser Usage
+
+The package works in browsers that support WebAssembly:
+
+```html
+<script type="module">
+  import { term_t, search_t } from "https://unpkg.com/atsds/dist/tsds.mjs";
+  
+  const term = new term_t("(hello world)");
+  console.log(term.toString());
+</script>
+```
+
 ## Python
 
 The Python package `apyds` wraps the C++ core via pybind11.
@@ -31,7 +44,17 @@ pip install apyds
 ### Requirements
 
 - Python 3.10-3.14
-- Pre-built wheels are available for common platforms
+- Pre-built wheels are available for common platforms (Linux, macOS, Windows)
+
+### Virtual Environment (Recommended)
+
+It's recommended to use a virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install apyds
+```
 
 ### Development Installation
 
@@ -49,7 +72,7 @@ The C++ library is the core implementation. Both Python and TypeScript bindings 
 
 ### Prerequisites
 
-- C++20 compatible compiler
+- C++20 compatible compiler (GCC 10+, Clang 10+, MSVC 2019+)
 - CMake 3.30+
 
 ### Building from Source
@@ -71,6 +94,15 @@ Include the headers from `include/ds/` in your C++ project:
 ```
 
 Link against the `ds` static library produced by the build.
+
+### CMake Integration
+
+You can add DS as a subdirectory in your CMake project:
+
+```cmake
+add_subdirectory(path/to/ds)
+target_link_libraries(your_target PRIVATE ds)
+```
 
 ## Building All Components
 
@@ -99,6 +131,30 @@ cmake -B build
 cmake --build build
 ```
 
+## Running Tests
+
+After installation, you can verify everything works by running the tests:
+
+### Python Tests
+
+```bash
+pip install pytest
+pytest
+```
+
+### TypeScript/JavaScript Tests
+
+```bash
+npm test
+```
+
+### C++ Tests
+
+```bash
+cd build
+ctest
+```
+
 ## Verifying Installation
 
 === "TypeScript"
@@ -108,17 +164,24 @@ cmake --build build
     
     const term = new term_t("(hello world)");
     console.log(term.toString());
+    // Output: (hello world)
     ```
 
 === "Python"
 
     ```python
     import apyds
-    print(apyds.__version__)
+    print(f"Version: {apyds.__version__}")
     
     # Create a simple term
     term = apyds.Term("(hello world)")
-    print(term)
+    print(term)  # (hello world)
+    
+    # Try a simple inference
+    search = apyds.Search()
+    search.add("p q")
+    search.add("p")
+    search.execute(lambda r: print(f"Derived: {r}") or False)
     ```
 
 === "C++"
@@ -134,3 +197,29 @@ cmake --build build
         return 0;
     }
     ```
+
+## Troubleshooting
+
+### Python: "Could not find pybind11"
+
+Install pybind11 first:
+
+```bash
+pip install pybind11
+```
+
+### TypeScript: WebAssembly errors
+
+Ensure your environment supports WebAssembly. In Node.js, this should work out of the box. In browsers, ensure you're using HTTPS or localhost.
+
+### C++: CMake version too old
+
+Update CMake to version 3.30 or newer:
+
+```bash
+# On Ubuntu/Debian
+pip install cmake --upgrade
+
+# On macOS
+brew install cmake
+```

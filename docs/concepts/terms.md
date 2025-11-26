@@ -17,7 +17,10 @@ Variables are placeholders that can be unified with other terms during inference
 `Q
 ```
 
-Variables are used in rules to represent any term that can match during unification.
+Variables are used in rules to represent any term that can match during unification. During the inference process, variables can be bound to specific terms through unification.
+
+!!! tip "Variable Naming"
+    Variable names can contain any characters except whitespace and parentheses. By convention, single uppercase letters like `` `X``, `` `P``, `` `Q`` are often used for simple logic, while descriptive names like `` `person`` or `` `result`` improve readability in complex rules.
 
 ### Items
 
@@ -35,6 +38,10 @@ Items can represent:
 
 - **Constants**: Atomic values like `john`, `mary`, `42`
 - **Functors**: Symbols that combine other terms, like `father`, `->`, `!`
+- **Operators**: Special symbols used in logical expressions, like `->` for implication or `!` for negation
+
+!!! note "Item Characters"
+    Items can contain any characters except whitespace and parentheses. Special symbols like `->`, `!`, `<-`, `&&`, `||` are commonly used as logical operators.
 
 ### Lists
 
@@ -47,7 +54,19 @@ Lists are ordered sequences of terms enclosed in parentheses. They can contain a
 (! (! X))
 ```
 
-Lists are the primary way to build complex structures in the deductive system.
+Lists are the primary way to build complex structures in the deductive system. They can represent:
+
+- **Relations**: `(father john mary)` - "John is the father of Mary"
+- **Logical expressions**: `(-> P Q)` - "P implies Q"
+- **Nested structures**: `(! (! X))` - "not not X" (double negation)
+- **Data collections**: `(1 2 3 4 5)` - a list of numbers
+
+!!! example "List Nesting"
+    Lists can be nested to any depth:
+    ```
+    ((a b) (c d) (e f))
+    (if (> `x 0) (positive `x) (non-positive `x))
+    ```
 
 ## Creating Terms
 
@@ -286,6 +305,136 @@ Operations like grounding and renaming require buffer space for intermediate res
         # Operations here use buffer size of 8192
         pass
     # Buffer size restored to previous value
+    ```
+
+## Practical Examples
+
+### Building Logical Expressions
+
+Here's how to build common logical expressions using terms:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Implication: P -> Q
+    implication = apyds.Term("(-> P Q)")
+    print(f"Implication: {implication}")
+
+    # Negation: !P
+    negation = apyds.Term("(! P)")
+    print(f"Negation: {negation}")
+
+    # Double negation: !!X
+    double_neg = apyds.Term("(! (! X))")
+    print(f"Double negation: {double_neg}")
+
+    # Complex formula: (P -> Q) -> ((Q -> R) -> (P -> R))
+    # This is the hypothetical syllogism
+    syllogism = apyds.Term("(-> (-> P Q) (-> (-> Q R) (-> P R)))")
+    print(f"Hypothetical syllogism: {syllogism}")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { term_t } from "atsds";
+
+    // Implication: P -> Q
+    const implication = new term_t("(-> P Q)");
+    console.log(`Implication: ${implication.toString()}`);
+
+    // Negation: !P
+    const negation = new term_t("(! P)");
+    console.log(`Negation: ${negation.toString()}`);
+
+    // Double negation: !!X
+    const doubleNeg = new term_t("(! (! X))");
+    console.log(`Double negation: ${doubleNeg.toString()}`);
+    ```
+
+### Working with Scoped Grounding
+
+Scoped grounding allows you to control which variables get substituted based on a scope prefix:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create a term with a variable
+    term = apyds.Term("`a")
+
+    # Create a dictionary with scoped entries
+    # Format: ((scope1 scope2 variable value) ...)
+    dictionary = apyds.Term("((x y `a `b) (y x `b `c))")
+
+    # Ground with scope "x" - follows the chain: `a -> `b -> `c
+    result = term.ground(dictionary, "x")
+    print(f"Result with scope 'x': {result}")  # `c
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { term_t } from "atsds";
+
+    const term = new term_t("`a");
+    const dictionary = new term_t("((x y `a `b) (y x `b `c))");
+
+    const result = term.ground(dictionary, "x");
+    if (result !== null) {
+        console.log(`Result with scope 'x': ${result.toString()}`);  // `c
+    }
+    ```
+
+### Checking Term Types
+
+You can inspect the type of a term and access its underlying value:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create terms of different types
+    var_term = apyds.Term("`variable")
+    item_term = apyds.Term("constant")
+    list_term = apyds.Term("(a b c)")
+
+    # Check types using the term property
+    print(f"Variable type: {type(var_term.term)}")   # Variable
+    print(f"Item type: {type(item_term.term)}")      # Item
+    print(f"List type: {type(list_term.term)}")      # List
+
+    # Access type-specific properties
+    if isinstance(var_term.term, apyds.Variable):
+        print(f"Variable name: {var_term.term.name}")
+
+    if isinstance(list_term.term, apyds.List):
+        print(f"List length: {len(list_term.term)}")
+        for i in range(len(list_term.term)):
+            print(f"  Element {i}: {list_term.term[i]}")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { term_t, variable_t, item_t, list_t } from "atsds";
+
+    const varTerm = new term_t("`variable");
+    const itemTerm = new term_t("constant");
+    const listTerm = new term_t("(a b c)");
+
+    // Access underlying types
+    const inner = listTerm.term();
+    if (inner instanceof list_t) {
+        console.log(`List length: ${inner.length()}`);
+        for (let i = 0; i < inner.length(); i++) {
+            console.log(`  Element ${i}: ${inner.getitem(i).toString()}`);
+        }
+    }
     ```
 
 ## See Also

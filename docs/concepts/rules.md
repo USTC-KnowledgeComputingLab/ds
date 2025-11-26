@@ -11,7 +11,7 @@ A rule consists of:
 
 ### Text Representation
 
-Rules are written with premises and conclusion separated by dashes:
+Rules are written with premises and conclusion separated by dashes (at least four dashes):
 
 ```
 premise1
@@ -33,6 +33,32 @@ Or explicitly:
 (parent john mary)
 ```
 
+!!! info "Rule Format Details"
+    - Premises are separated by newlines
+    - The separator line must contain at least 4 dashes (`----`)
+    - The conclusion comes after the separator
+    - Whitespace around premises and conclusion is trimmed
+    - A rule without an explicit separator is treated as a fact (no premises)
+
+### Compact Rule Format
+
+For rules with multiple premises, you can use space-separated terms on a single line:
+
+```
+(`P -> `Q) `P `Q
+```
+
+This is equivalent to:
+
+```
+(`P -> `Q)
+`P
+----------
+`Q
+```
+
+The last term is the conclusion, and all preceding terms are premises.
+
 ### Examples
 
 **Modus Ponens** (if P implies Q and P is true, then Q is true):
@@ -51,6 +77,23 @@ Or explicitly:
 ----------
 (parent `X `Y)
 ```
+
+**Transitivity of Implication** (if P implies Q and Q implies R, then P implies R):
+
+```
+(`P -> `Q)
+(`Q -> `R)
+----------
+(`P -> `R)
+```
+
+**Propositional Logic Axiom Schemas**:
+
+| Axiom | Formula | Description |
+|-------|---------|-------------|
+| Axiom 1 | `(`p -> (`q -> `p))` | If P then (Q implies P) |
+| Axiom 2 | `((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))` | Distribution of implication |
+| Axiom 3 | `(((! `p) -> (! `q)) -> (`q -> `p))` | Contraposition |
 
 ## Creating Rules
 
@@ -358,6 +401,154 @@ Rules can be compared for equality. Two rules are equal if they have the same bi
         std::cout << eq13 << std::endl;  // false
 
         return 0;
+    }
+    ```
+
+## Practical Examples
+
+### Building a Knowledge Base
+
+Here's how to build a simple family relationship knowledge base:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Define rules for family relationships
+    rules = [
+        # If X is father of Y, then X is parent of Y
+        apyds.Rule("(father `X `Y)\n----------\n(parent `X `Y)\n"),
+        # If X is mother of Y, then X is parent of Y
+        apyds.Rule("(mother `X `Y)\n----------\n(parent `X `Y)\n"),
+        # If X is parent of Y and Y is parent of Z, then X is grandparent of Z
+        apyds.Rule("(parent `X `Y)\n(parent `Y `Z)\n----------\n(grandparent `X `Z)\n"),
+    ]
+
+    # Define facts
+    facts = [
+        apyds.Rule("(father john mary)"),
+        apyds.Rule("(mother mary alice)"),
+    ]
+
+    for rule in rules:
+        print(f"Rule with {len(rule)} premise(s):")
+        print(rule)
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { rule_t } from "atsds";
+
+    // Define rules for family relationships
+    const rules = [
+        new rule_t("(father `X `Y)\n----------\n(parent `X `Y)\n"),
+        new rule_t("(mother `X `Y)\n----------\n(parent `X `Y)\n"),
+        new rule_t("(parent `X `Y)\n(parent `Y `Z)\n----------\n(grandparent `X `Z)\n"),
+    ];
+
+    // Define facts
+    const facts = [
+        new rule_t("(father john mary)"),
+        new rule_t("(mother mary alice)"),
+    ];
+
+    for (const rule of rules) {
+        console.log(`Rule with ${rule.length()} premise(s):`);
+        console.log(rule.toString());
+    }
+    ```
+
+### Implementing Inference Steps Manually
+
+You can manually apply matching to simulate inference:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Modus ponens: (P -> Q), P |- Q
+    modus_ponens = apyds.Rule("(`P -> `Q)\n`P\n----------\n`Q\n")
+    print(f"Modus Ponens:\n{modus_ponens}")
+
+    # An implication fact: A -> B
+    implication = apyds.Rule("(A -> B)")
+    print(f"Implication:\n{implication}")
+
+    # Match to get: A |- B
+    step1 = modus_ponens @ implication
+    print(f"After matching implication:\n{step1}")
+
+    # Now we need fact A to complete the inference
+    fact_a = apyds.Rule("A")
+    print(f"Fact A:\n{fact_a}")
+
+    # Match again to derive B
+    step2 = step1 @ fact_a
+    print(f"Final result (B):\n{step2}")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { rule_t } from "atsds";
+
+    // Modus ponens: (P -> Q), P |- Q
+    const modusPonens = new rule_t("(`P -> `Q)\n`P\n----------\n`Q\n");
+    console.log("Modus Ponens:", modusPonens.toString());
+
+    // An implication fact: A -> B
+    const implication = new rule_t("(A -> B)");
+    console.log("Implication:", implication.toString());
+
+    // Match to get: A |- B
+    const step1 = modusPonens.match(implication);
+    if (step1) {
+        console.log("After matching implication:", step1.toString());
+
+        // Match with fact A to derive B
+        const factA = new rule_t("A");
+        const step2 = step1.match(factA);
+        if (step2) {
+            console.log("Final result (B):", step2.toString());
+        }
+    }
+    ```
+
+### Working with Rule Premises
+
+You can iterate over a rule's premises:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # A rule with multiple premises
+    rule = apyds.Rule("(p -> q)\n(q -> r)\n----------\n(p -> r)\n")
+
+    print(f"Number of premises: {len(rule)}")
+    print(f"Conclusion: {rule.conclusion}")
+
+    # Iterate over premises
+    for i in range(len(rule)):
+        print(f"Premise {i}: {rule[i]}")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { rule_t } from "atsds";
+
+    const rule = new rule_t("(p -> q)\n(q -> r)\n----------\n(p -> r)\n");
+
+    console.log(`Number of premises: ${rule.length()}`);
+    console.log(`Conclusion: ${rule.conclusion().toString()}`);
+
+    for (let i = 0; i < rule.length(); i++) {
+        console.log(`Premise ${i}: ${rule.getitem(i).toString()}`);
     }
     ```
 

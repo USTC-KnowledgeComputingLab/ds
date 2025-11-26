@@ -9,6 +9,16 @@ The search engine:
 1. Maintains a collection of rules and facts
 2. Iteratively applies rules to generate new facts
 3. Notifies you of each new inference via a callback
+4. Automatically prevents duplicate inferences
+
+!!! info "How It Works"
+    The search engine uses a forward-chaining inference approach:
+    
+    1. When you call `execute()`, the engine tries to match the first premise of each rule with existing facts
+    2. When a match is found, variables in the rule are substituted and a new rule (with one fewer premise) is created
+    3. If the new rule has no premises, it becomes a new fact
+    4. The callback is invoked for each newly derived fact
+    5. Duplicate facts are automatically filtered out
 
 ## Creating a Search Engine
 
@@ -47,8 +57,8 @@ The search engine:
 
 ### Parameters
 
-- **limit_size**: Maximum size (in bytes) for each stored rule/fact (default: 1000)
-- **buffer_size**: Size of the internal buffer for intermediate operations (default: 10000)
+- **limit_size**: Maximum size (in bytes) for each stored rule/fact (default: 1000). Rules or facts larger than this are rejected.
+- **buffer_size**: Size of the internal buffer for intermediate operations (default: 10000). Increase this if you work with complex rules.
 
 ## Adding Rules and Facts
 
@@ -298,6 +308,185 @@ Clears all rules and facts:
 2. **Limit Size**: Restricts maximum rule/fact complexity - too small may reject valid rules
 3. **Iterative Execution**: Call `execute()` in a loop to continue inference until convergence
 4. **Early Termination**: Return `true` from callback to stop as soon as target is found
+5. **Deduplication**: The engine automatically deduplicates facts, avoiding redundant computation
+
+!!! tip "Choosing Buffer Sizes"
+    - For simple propositional logic: `limit_size=1000`, `buffer_size=10000`
+    - For complex first-order logic: `limit_size=2000`, `buffer_size=50000`
+    - If you get truncated results, increase the buffer sizes
+
+## Practical Examples
+
+### Complete Double Negation Elimination
+
+This example demonstrates proving that from `!!X` we can derive `X`:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    search = apyds.Search(1000, 10000)
+
+    # Modus ponens: P -> Q, P |- Q
+    search.add("(`P -> `Q) `P `Q")
+    
+    # Propositional logic axioms
+    search.add("(`p -> (`q -> `p))")                                    # Axiom 1
+    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")    # Axiom 2
+    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")                    # Axiom 3
+
+    # Premise: !!X (double negation of X)
+    search.add("(! (! X))")
+
+    # Target: X
+    target = apyds.Rule("X")
+
+    # Run until we find X
+    iterations = 0
+    while True:
+        found = False
+        def callback(candidate):
+            nonlocal found
+            if candidate == target:
+                print(f"✓ Found target after {iterations + 1} iteration(s)!")
+                print(f"  Result: {candidate}")
+                found = True
+                return True  # Stop
+            return False  # Continue
+        
+        count = search.execute(callback)
+        iterations += 1
+        
+        if found:
+            break
+        if count == 0:
+            print("No more inferences possible")
+            break
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { rule_t, search_t } from "atsds";
+
+    const search = new search_t(1000, 10000);
+
+    // Modus ponens: P -> Q, P |- Q
+    search.add("(`P -> `Q) `P `Q");
+    
+    // Propositional logic axioms
+    search.add("(`p -> (`q -> `p))");
+    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))");
+    search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
+
+    // Premise: !!X
+    search.add("(! (! X))");
+
+    const target = new rule_t("X");
+
+    let iterations = 0;
+    while (true) {
+        let found = false;
+        const count = search.execute((candidate) => {
+            if (candidate.key() === target.key()) {
+                console.log(`✓ Found target after ${iterations + 1} iteration(s)!`);
+                console.log(`  Result: ${candidate.toString()}`);
+                found = true;
+                return true;
+            }
+            return false;
+        });
+        iterations++;
+
+        if (found) break;
+        if (count === 0) {
+            console.log("No more inferences possible");
+            break;
+        }
+    }
+    ```
+
+### Family Relationship Inference
+
+This example shows how to derive family relationships:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    search = apyds.Search(1000, 10000)
+
+    # Rules: father/mother implies parent
+    search.add("(father `X `Y) (parent `X `Y)")
+    search.add("(mother `X `Y) (parent `X `Y)")
+
+    # Rule: parent of parent is grandparent
+    search.add("(parent `X `Y) (parent `Y `Z) (grandparent `X `Z)")
+
+    # Facts
+    search.add("(father john mary)")
+    search.add("(mother mary alice)")
+
+    # Collect all derived facts
+    derived = []
+    
+    # Run multiple iterations
+    for i in range(5):
+        def callback(fact):
+            derived.append(str(fact))
+            return False  # Continue
+        
+        count = search.execute(callback)
+        if count == 0:
+            break
+    
+    print("Derived facts:")
+    for fact in derived:
+        print(f"  {fact}")
+    ```
+
+### Monitoring Inference Progress
+
+Track what the search engine is discovering:
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    search = apyds.Search(1000, 10000)
+
+    # Simple inference rules
+    search.add("p q")  # p implies q
+    search.add("q r")  # q implies r
+    search.add("p")    # fact: p
+
+    iteration = 0
+    total_facts = 0
+
+    while True:
+        iteration += 1
+        print(f"Iteration {iteration}:")
+        
+        new_facts = []
+        def callback(fact):
+            new_facts.append(str(fact).strip())
+            return False
+        
+        count = search.execute(callback)
+        total_facts += count
+        
+        for fact in new_facts:
+            print(f"  + {fact}")
+        
+        if count == 0:
+            print(f"  (no new facts)")
+            break
+    
+    print(f"\nTotal facts derived: {total_facts}")
+    ```
 
 ## See Also
 

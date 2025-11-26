@@ -336,9 +336,16 @@ Pre-commit hooks are configured in `.pre-commit-config.yaml`.
 
 This project is licensed under the GNU General Public License v3.0 or later. See [LICENSE.md](LICENSE.md) for details.
 
+## Documentation
+
+For comprehensive documentation including tutorials, API reference, and examples, visit:
+
+- **[DS Documentation](https://ustc-knowledgecomputinglab.github.io/ds)**
+
 ## Repository
 
 - **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds)
+- **Documentation**: [ustc-knowledgecomputinglab.github.io/ds](https://ustc-knowledgecomputinglab.github.io/ds)
 - **npm package**: [atsds](https://www.npmjs.com/package/atsds)
 - **PyPI package**: [apyds](https://pypi.org/project/apyds/)
 

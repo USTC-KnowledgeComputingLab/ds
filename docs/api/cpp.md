@@ -550,3 +550,127 @@ std::unique_ptr<char> rule_to_text(rule_t* rule, length_t length);
 - `length`: Maximum size for the resulting text
 
 **Returns:** A unique_ptr to the text, or nullptr if length exceeded.
+
+---
+
+## Complete Example
+
+Here's a complete example demonstrating the C++ API:
+
+```cpp
+#include <ds/ds.hh>
+#include <ds/search.hh>
+#include <ds/utility.hh>
+#include <cstring>
+#include <iostream>
+
+int main() {
+    const int buffer_size = 1000;
+    
+    // Create terms using utility functions
+    auto var = ds::text_to_variable("`X", buffer_size);
+    auto item = ds::text_to_item("hello", buffer_size);
+    auto list = ds::text_to_list("(a b c)", buffer_size);
+    auto term = ds::text_to_term("(f `x `y)", buffer_size);
+    
+    std::cout << "Variable: " << ds::variable_to_text(var.get(), buffer_size).get() << std::endl;
+    std::cout << "Item: " << ds::item_to_text(item.get(), buffer_size).get() << std::endl;
+    std::cout << "List: " << ds::list_to_text(list.get(), buffer_size).get() << std::endl;
+    std::cout << "Term: " << ds::term_to_text(term.get(), buffer_size).get() << std::endl;
+    
+    // Work with rules
+    auto fact = ds::text_to_rule("(parent john mary)", buffer_size);
+    auto rule = ds::text_to_rule("(father `X `Y)\n----------\n(parent `X `Y)\n", buffer_size);
+    
+    std::cout << "\nFact:\n" << ds::rule_to_text(fact.get(), buffer_size).get();
+    std::cout << "Rule premises: " << rule->premises_count() << std::endl;
+    std::cout << "Rule conclusion: " << ds::term_to_text(rule->conclusion(), buffer_size).get() << std::endl;
+    
+    // Search engine
+    ds::search_t search(1000, 10000);
+    
+    // Add rules and facts
+    search.add("p q");  // p implies q
+    search.add("q r");  // q implies r
+    search.add("p");    // fact: p
+    
+    std::cout << "\nRunning inference:" << std::endl;
+    
+    // Execute search
+    auto target = ds::text_to_rule("r", buffer_size);
+    bool found = false;
+    
+    while (!found) {
+        auto count = search.execute([&](ds::rule_t* candidate) {
+            std::cout << "  Derived: " << ds::rule_to_text(candidate, buffer_size).get();
+            
+            // Check if this is our target
+            if (candidate->data_size() == target->data_size() &&
+                memcmp(candidate->head(), target->head(), candidate->data_size()) == 0) {
+                found = true;
+                return true;  // Stop
+            }
+            return false;  // Continue
+        });
+        
+        if (count == 0) {
+            std::cout << "  (no more inferences)" << std::endl;
+            break;
+        }
+    }
+    
+    if (found) {
+        std::cout << "Target found!" << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+## Memory Management Notes
+
+The C++ API uses a unique memory model:
+
+1. **Buffer-based allocation**: Most operations require pre-allocated buffers
+2. **Utility functions**: `text_to_*` functions allocate and return `unique_ptr`
+3. **In-place operations**: Methods like `ground()` and `match()` write to provided buffers
+
+### Example: Manual Buffer Management
+
+```cpp
+#include <ds/ds.hh>
+#include <ds/utility.hh>
+
+void manual_grounding() {
+    // Source term
+    auto term = ds::text_to_term("`a", 1000);
+    
+    // Dictionary
+    auto dict = ds::text_to_term("((`a hello))", 1000);
+    
+    // Allocate result buffer
+    std::byte buffer[1000];
+    auto result = reinterpret_cast<ds::term_t*>(buffer);
+    
+    // Ground the term into the buffer
+    result->ground(term.get(), dict.get(), nullptr, buffer + 1000);
+    
+    // Print result
+    printf("Result: %s\n", ds::term_to_text(result, 1000).get());
+}
+```
+
+### Example: Rule Comparison
+
+```cpp
+#include <ds/ds.hh>
+#include <ds/utility.hh>
+#include <cstring>
+
+bool rules_equal(ds::rule_t* r1, ds::rule_t* r2) {
+    if (r1->data_size() != r2->data_size()) {
+        return false;
+    }
+    return memcmp(r1->head(), r2->head(), r1->data_size()) == 0;
+}
+```
