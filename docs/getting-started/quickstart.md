@@ -52,14 +52,7 @@ Terms are the basic building blocks of the deductive system. A term can be:
     #include <iostream>
 
     int main() {
-        auto var = ds::text_to_variable("`X", 1000);
-        auto item = ds::text_to_item("hello", 1000);
-        auto lst = ds::text_to_list("(a b c)", 1000);
         auto term = ds::text_to_term("(f `x a)", 1000);
-
-        std::cout << "Variable: " << ds::variable_to_text(var.get(), 1000).get() << std::endl;
-        std::cout << "Item: " << ds::item_to_text(item.get(), 1000).get() << std::endl;
-        std::cout << "List: " << ds::list_to_text(lst.get(), 1000).get() << std::endl;
         std::cout << "Term: " << ds::term_to_text(term.get(), 1000).get() << std::endl;
         return 0;
     }
@@ -111,8 +104,8 @@ Rules represent logical inference steps. A rule has premises (conditions) and a 
         auto fact = ds::text_to_rule("(parent john mary)", 1000);
         auto rule = ds::text_to_rule("(father `X `Y)\n----------\n(parent `X `Y)\n", 1000);
 
-        std::cout << "Fact: " << ds::rule_to_text(fact.get(), 1000).get() << std::endl;
         std::cout << "Rule premises: " << rule->premises_count() << std::endl;
+        std::cout << "Rule conclusion: " << ds::rule_to_text(fact->conclusion(), 1000).get() << std::endl;
         return 0;
     }
     ```
