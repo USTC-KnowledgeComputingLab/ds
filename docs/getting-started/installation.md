@@ -218,7 +218,10 @@ Update CMake to version 3.30 or newer:
 
 ```bash
 # On Ubuntu/Debian
-pip install cmake --upgrade
+sudo apt-get update && sudo apt-get install cmake
+
+# Or download from official website:
+# https://cmake.org/download/
 
 # On macOS
 brew install cmake

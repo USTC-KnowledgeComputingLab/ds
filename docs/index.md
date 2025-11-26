@@ -107,6 +107,7 @@ This is useful for:
         while (true) {
             bool found = false;
             search.execute([&](ds::rule_t* candidate) {
+                // Compare binary representations for equality
                 if (candidate->data_size() == target->data_size() &&
                     memcmp(candidate->head(), target->head(), 
                            candidate->data_size()) == 0) {

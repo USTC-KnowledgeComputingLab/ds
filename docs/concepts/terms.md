@@ -356,7 +356,9 @@ Here's how to build common logical expressions using terms:
 
 ### Working with Scoped Grounding
 
-Scoped grounding allows you to control which variables get substituted based on a scope prefix:
+Scoped grounding is an advanced feature that allows controlling variable substitution based on scope prefixes. The dictionary entries contain scope information that determines when a substitution applies. This is useful when working with rules that have variables from different contexts that need to be kept separate.
+
+The dictionary format for scoped grounding is `((scope_from scope_to variable value) ...)`, where the substitution only happens when transitioning from `scope_from` to `scope_to`.
 
 === "Python"
 
@@ -367,10 +369,12 @@ Scoped grounding allows you to control which variables get substituted based on 
     term = apyds.Term("`a")
 
     # Create a dictionary with scoped entries
-    # Format: ((scope1 scope2 variable value) ...)
+    # Format: ((scope_from scope_to variable value) ...)
+    # Entry 1: from scope "x" to "y", substitute `a with `b
+    # Entry 2: from scope "y" to "x", substitute `b with `c
     dictionary = apyds.Term("((x y `a `b) (y x `b `c))")
 
-    # Ground with scope "x" - follows the chain: `a -> `b -> `c
+    # Ground with scope "x" - the grounding follows the chain: `a -> `b -> `c
     result = term.ground(dictionary, "x")
     print(f"Result with scope 'x': {result}")  # `c
     ```
