@@ -512,13 +512,3 @@ with apyds.scoped_buffer_size(4096):
     big_term = apyds.Term("(a b c d e f g h i j)")
     print(f"\nBig term: {big_term}")
 ```
-
-## Operator Reference
-
-| Operator | Operation | Example |
-|----------|-----------|---------|
-| `//` | Grounding (Term/Rule) | `term // dictionary` |
-| `@` | Matching (Rule) | `rule @ fact` |
-| `==` | Equality comparison | `rule1 == rule2` |
-| `len()` | Length (List/Rule) | `len(list)` |
-| `[]` | Indexing (List/Rule) | `list[0]`, `rule[0]` |

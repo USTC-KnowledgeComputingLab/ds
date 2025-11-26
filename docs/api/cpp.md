@@ -568,14 +568,8 @@ int main() {
     const int buffer_size = 1000;
     
     // Create terms using utility functions
-    auto var = ds::text_to_variable("`X", buffer_size);
-    auto item = ds::text_to_item("hello", buffer_size);
-    auto list = ds::text_to_list("(a b c)", buffer_size);
     auto term = ds::text_to_term("(f `x `y)", buffer_size);
     
-    std::cout << "Variable: " << ds::variable_to_text(var.get(), buffer_size).get() << std::endl;
-    std::cout << "Item: " << ds::item_to_text(item.get(), buffer_size).get() << std::endl;
-    std::cout << "List: " << ds::list_to_text(list.get(), buffer_size).get() << std::endl;
     std::cout << "Term: " << ds::term_to_text(term.get(), buffer_size).get() << std::endl;
     
     // Work with rules
@@ -624,53 +618,5 @@ int main() {
     }
     
     return 0;
-}
-```
-
-## Memory Management Notes
-
-The C++ API uses a unique memory model:
-
-1. **Buffer-based allocation**: Most operations require pre-allocated buffers
-2. **Utility functions**: `text_to_*` functions allocate and return `unique_ptr`
-3. **In-place operations**: Methods like `ground()` and `match()` write to provided buffers
-
-### Example: Manual Buffer Management
-
-```cpp
-#include <ds/ds.hh>
-#include <ds/utility.hh>
-
-void manual_grounding() {
-    // Source term
-    auto term = ds::text_to_term("`a", 1000);
-    
-    // Dictionary
-    auto dict = ds::text_to_term("((`a hello))", 1000);
-    
-    // Allocate result buffer
-    std::byte buffer[1000];
-    auto result = reinterpret_cast<ds::term_t*>(buffer);
-    
-    // Ground the term into the buffer
-    result->ground(term.get(), dict.get(), nullptr, buffer + 1000);
-    
-    // Print result
-    printf("Result: %s\n", ds::term_to_text(result, 1000).get());
-}
-```
-
-### Example: Rule Comparison
-
-```cpp
-#include <ds/ds.hh>
-#include <ds/utility.hh>
-#include <cstring>
-
-bool rules_equal(ds::rule_t* r1, ds::rule_t* r2) {
-    if (r1->data_size() != r2->data_size()) {
-        return false;
-    }
-    return memcmp(r1->head(), r2->head(), r1->data_size()) == 0;
 }
 ```

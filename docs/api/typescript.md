@@ -523,21 +523,3 @@ const rule1 = new rule_t("(a b c)");
 const rule2 = rule1.copy();
 console.log(`\nRule comparison: ${rule1.key() === rule2.key()}`);  // true
 ```
-
-## Method Reference
-
-| Method | Class | Description |
-|--------|-------|-------------|
-| `toString()` | All | Convert to string representation |
-| `data()` | All | Get binary data as Buffer |
-| `size()` | All | Get data size in bytes |
-| `copy()` | All | Create a deep copy |
-| `key()` | All | Get key for equality comparison |
-| `name()` | variable_t, item_t | Get the name |
-| `length()` | list_t, rule_t | Get number of elements/premises |
-| `getitem(i)` | list_t, rule_t | Get element/premise by index |
-| `conclusion()` | rule_t | Get the rule's conclusion |
-| `ground(dict)` | term_t, rule_t | Substitute variables |
-| `rename(spec)` | term_t, rule_t | Rename variables |
-| `match(fact)` | rule_t | Match rule with a fact |
-| `term()` | term_t | Get underlying variable/item/list |
