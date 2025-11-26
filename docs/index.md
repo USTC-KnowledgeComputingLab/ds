@@ -12,6 +12,42 @@ A deductive system for logical inference, implemented in C++. The library provid
 - **WebAssembly**: Run inference in the browser or Node.js environments
 - **Type-Safe**: Strong typing support in TypeScript and Python
 
+## Supported Languages
+
+=== "TypeScript"
+
+    ```typescript
+    import { term_t } from "atsds";
+    
+    const term = new term_t("(hello world)");
+    console.log(term.toString());
+    // Output: (hello world)
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+    print(f"Version: {apyds.__version__}")
+    
+    term = apyds.Term("(hello world)")
+    print(term)  # (hello world)
+    ```
+
+=== "C++"
+
+    ```cpp
+    #include <ds/ds.hh>
+    #include <ds/utility.hh>
+    #include <iostream>
+    
+    int main() {
+        auto term = ds::text_to_term("(hello world)", 1000);
+        std::cout << ds::term_to_text(term.get(), 1000).get() << std::endl;
+        return 0;
+    }
+    ```
+
 ## Quick Links
 
 - **[Installation](getting-started/installation.md)** - Install DS for your preferred language
