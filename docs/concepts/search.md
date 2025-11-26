@@ -17,8 +17,8 @@ The search engine:
     1. When you call `execute()`, the engine tries to match the first premise of each rule with existing facts
     2. When a match is found, variables in the rule are substituted and a new rule (with one fewer premise) is created
     3. If the new rule has no premises, it becomes a new fact
-    4. The callback is invoked for each newly derived fact
-    5. Duplicate facts are automatically filtered out
+    4. The callback is invoked for each newly derived rule
+    5. Duplicate rules are automatically filtered out
 
 ## Creating a Search Engine
 
