@@ -60,7 +60,8 @@ nav:
       - Python API: api/python.md
       - C++ API: api/cpp.md
   - Examples:
-      - examples/index.md
+      - Basis Examples: examples/basic.md
+      - Sudoku: examples/sudoku.md
 
 plugins:
   - offline

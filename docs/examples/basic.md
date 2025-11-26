@@ -1,4 +1,4 @@
-# Examples
+# Basic Examples
 
 This section contains examples demonstrating the DS deductive system in various languages.
 
