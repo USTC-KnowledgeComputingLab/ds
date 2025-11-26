@@ -35,10 +35,9 @@ Or explicitly:
 
 !!! info "Rule Format Details"
     - Premises are separated by newlines
-    - The separator line must contain at least 4 dashes (`----`)
-    - The conclusion comes after the separator
+    - The separator line must contain at least 4 dashes (`----`) between premises and conclusion
     - Whitespace around premises and conclusion is trimmed
-    - A rule without an explicit separator is treated as a fact (no premises)
+    - A rule without an premises is a fact
 
 ### Compact Rule Format
 
