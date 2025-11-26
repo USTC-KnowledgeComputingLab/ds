@@ -31,7 +31,7 @@ The search engine:
     search = apyds.Search()
 
     # Create with custom sizes
-    search = apyds.Search(limit_size=2000, buffer_size=20000)
+    search = apyds.Search(limit_size=1000, buffer_size=10000)
     ```
 
 === "TypeScript"
@@ -43,7 +43,7 @@ The search engine:
     const search = new search_t();
 
     // Create with custom sizes
-    const search2 = new search_t(2000, 20000);
+    const search2 = new search_t(1000, 10000);
     ```
 
 === "C++"
