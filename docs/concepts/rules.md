@@ -77,23 +77,6 @@ The last term is the conclusion, and all preceding terms are premises.
 (parent `X `Y)
 ```
 
-**Transitivity of Implication** (if P implies Q and Q implies R, then P implies R):
-
-```
-(`P -> `Q)
-(`Q -> `R)
-----------
-(`P -> `R)
-```
-
-**Propositional Logic Axiom Schemas**:
-
-| Axiom | Formula | Description |
-|-------|---------|-------------|
-| Axiom 1 | `(`p -> (`q -> `p))` | If P then (Q implies P) |
-| Axiom 2 | `((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))` | Distribution of implication |
-| Axiom 3 | `(((! `p) -> (! `q)) -> (`q -> `p))` | Contraposition |
-
 ## Creating Rules
 
 === "TypeScript"
