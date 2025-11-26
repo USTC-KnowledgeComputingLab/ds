@@ -76,11 +76,6 @@ Use the `add()` method to add rules and facts to the knowledge base.
 
     # Add a rule with premises
     search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
-
-    # Add multiple facts and rules
-    search.add("(father john mary)")
-    search.add("(father john bob)")
-    search.add("(mother mary alice)")
     ```
 
 === "TypeScript"
