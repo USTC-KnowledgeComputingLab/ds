@@ -126,17 +126,17 @@ cmake --build build
 
 After installation, you can verify everything works by running the tests:
 
+### TypeScript/JavaScript Tests
+
+```bash
+npm test
+```
+
 ### Python Tests
 
 ```bash
 pip install pytest
 pytest
-```
-
-### TypeScript/JavaScript Tests
-
-```bash
-npm test
 ```
 
 ### C++ Tests
