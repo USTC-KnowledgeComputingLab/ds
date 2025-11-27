@@ -30,7 +30,7 @@ jobs:
         run: uv sync --locked --extra dev
 
       - name: pytest
-        run: uv run pytest --cov=pyds
+        run: uv run pytest
 
   wheels:
     runs-on: ${{ matrix.os }}
