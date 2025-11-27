@@ -48,7 +48,7 @@ jobs:
           enable-cache: true
 
       - name: build
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked
 
       - name: run
         run: uv run python examples/main.py
