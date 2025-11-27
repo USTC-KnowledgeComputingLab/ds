@@ -17,13 +17,13 @@ jobs:
       - name: recovery tag information
         run: git fetch --tags --force
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
           python-version: '3.14'
-          cache: 'pip'
+          enable-cache: true
 
       - name: install dependencies
-        run: pip install '.[docs]'
+        run: uv sync --locked --all-extras --dev
 
       - name: configure git
         run: |
@@ -31,7 +31,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: build docs
-        run: mike deploy --push --update-aliases --alias-type=redirect ${GITHUB_REF#refs/tags/} latest
+        run: uv run mike deploy --push --update-aliases --alias-type=redirect ${GITHUB_REF#refs/tags/} latest
 
       - name: set default
-        run: mike set-default --push latest
+        run: uv run mike set-default --push latest

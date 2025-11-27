@@ -38,7 +38,7 @@ The package works in browsers that support WebAssembly:
 The Python package `apyds` wraps the C++ core via pybind11.
 
 ```bash
-pip install apyds
+uv pip install apyds
 ```
 
 ### Requirements
@@ -51,9 +51,9 @@ pip install apyds
 It's recommended to use a virtual environment:
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install apyds
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install apyds
 ```
 
 ### Development Installation
@@ -63,7 +63,7 @@ To install from source with development dependencies:
 ```bash
 git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
 cd ds
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 ## C++
@@ -112,7 +112,7 @@ npm run build
 ### Python
 
 ```bash
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 ### C++
@@ -135,7 +135,7 @@ npm test
 ### Python Tests
 
 ```bash
-pip install pytest
+uv pip install pytest
 pytest
 ```
 
