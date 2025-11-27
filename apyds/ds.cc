@@ -108,7 +108,7 @@ auto rule_rename(ds::rule_t* rule, ds::rule_t* prefix_and_suffix, int length) ->
     return std::unique_ptr<ds::rule_t>(result);
 }
 
-PYBIND11_MODULE(_ds, m) {
+PYBIND11_MODULE(_ds, m, py::mod_gil_not_used()) {
     auto string_t = py::class_<ds::string_t>(m, "String");
     auto item_t = py::class_<ds::item_t>(m, "Item");
     auto variable_t = py::class_<ds::variable_t>(m, "Variable");
