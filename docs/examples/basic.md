@@ -146,7 +146,7 @@ Example files are provided in the repository under `examples/`:
 ### Python
 
 ```bash
-uv pip install apyds
+pip install apyds
 python examples/main.py
 ```
 
