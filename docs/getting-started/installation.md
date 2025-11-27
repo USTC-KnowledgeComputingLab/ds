@@ -63,7 +63,7 @@ To install from source with development dependencies:
 ```bash
 git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
 cd ds
-pip install -e ".[dev]"
+uv sync --extra dev
 ```
 
 ## C++
@@ -112,7 +112,7 @@ npm run build
 ### Python
 
 ```bash
-pip install -e ".[dev]"
+uv sync --extra dev
 ```
 
 ### C++
@@ -135,8 +135,7 @@ npm test
 ### Python Tests
 
 ```bash
-pip install pytest
-pytest
+uv run pytest
 ```
 
 ### C++ Tests

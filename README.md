@@ -288,7 +288,7 @@ npm install
 npm run build
 
 # Build Python package
-pip install -e ".[dev]"
+uv sync --extra dev
 
 # Build C++ library
 cmake -B build

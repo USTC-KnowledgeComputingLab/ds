@@ -42,16 +42,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          enable-cache: true
 
       - name: build
-        run: pip install .
+        run: uv sync --locked
 
       - name: run
-        run: python examples/main.py
+        run: uv run python examples/main.py
 
   javascript:
     runs-on: ubuntu-latest

@@ -21,16 +21,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          enable-cache: true
 
       - name: dependencies
-        run: pip install '.[dev]'
+        run: uv sync --locked --extra dev
 
       - name: pytest
-        run: pytest --cov=pyds
+        run: uv run pytest --cov=pyds
 
   wheels:
     runs-on: ${{ matrix.os }}
