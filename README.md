@@ -30,12 +30,12 @@ npm install atsds
 
 The package includes WebAssembly binaries and TypeScript type definitions.
 
-### Python (uv)
+### Python (pip)
 
 The Python package wraps the C++ core via pybind11.
 
 ```bash
-uv pip install apyds
+pip install apyds
 ```
 
 Requires Python 3.10-3.14.
@@ -288,7 +288,7 @@ npm install
 npm run build
 
 # Build Python package
-uv pip install -e ".[dev]"
+uv sync --extra dev
 
 # Build C++ library
 cmake -B build
