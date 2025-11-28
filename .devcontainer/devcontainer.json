@@ -11,8 +11,12 @@
         "ghcr.io/devcontainers/features/node:1": {
             "version": "latest"
         },
-        "ghcr.io/gvatsal60/dev-container-features/uv:0": {},
-        "ghcr.io/ebaskoro/devcontainer-features/emscripten:1": {}
+        "ghcr.io/gvatsal60/dev-container-features/uv:0": {
+            "version": "latest"
+        },
+        "ghcr.io/ebaskoro/devcontainer-features/emscripten:1": {
+            "version": "latest"
+        }
     },
     "postCreateCommand": ".devcontainer/post-create.sh",
     "customizations": {
