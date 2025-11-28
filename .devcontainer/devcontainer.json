@@ -20,7 +20,6 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.cpptools-extension-pack",
-                "ms-vscode.cmake-tools",
                 "clang-format.vscode-clang-format",
                 "ms-python.python",
                 "ms-python.vscode-pylance",
