@@ -60,5 +60,5 @@ addopts = "--cov=apyds"
 [tool.cibuildwheel]
 macos.archs = ["universal2"]
 windows.archs = ["AMD64"]
-test-requires = ["pytest"]
+test-requires = ["pytest", "pytest-cov"]
 test-command = ["python -m pytest {project}"]
