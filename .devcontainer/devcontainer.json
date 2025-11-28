@@ -2,9 +2,6 @@
     "name": "DS Development Container",
     "image": "mcr.microsoft.com/devcontainers/base:debian",
     "features": {
-        "ghcr.io/devcontainers-extra/features/cmake:1": {
-            "version": "latest"
-        },
         "ghcr.io/devcontainers/features/python:1": {
             "version": "latest"
         },
@@ -27,7 +24,6 @@
                 "clang-format.vscode-clang-format",
                 "ms-python.python",
                 "ms-python.vscode-pylance",
-                "ms-pyright.pyright",
                 "charliermarsh.ruff",
                 "biomejs.biome"
             ]
