@@ -22,7 +22,6 @@
                 "ms-vscode.cpptools-extension-pack",
                 "clang-format.vscode-clang-format",
                 "ms-python.python",
-                "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
                 "biomejs.biome"
             ]
