@@ -8,8 +8,9 @@ sudo apt-get install -y libgtest-dev clang-format
 # Install uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Add uv to PATH for this script
+# Add uv to PATH for this script and future sessions
 export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
 
 # Install Python dependencies
 uv sync --locked --extra dev
@@ -21,6 +22,8 @@ npm ci
 EMSDK_DIR="$HOME/emsdk"
 if [ ! -d "$EMSDK_DIR" ]; then
     git clone https://github.com/emscripten-core/emsdk.git "$EMSDK_DIR"
+else
+    git -C "$EMSDK_DIR" pull
 fi
 (
     cd "$EMSDK_DIR"
