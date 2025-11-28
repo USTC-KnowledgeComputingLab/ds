@@ -1,8 +1,8 @@
 {
     "name": "DS Development Container",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
     "features": {
-        "ghcr.io/devcontainers/features/cmake:1": {
+        "ghcr.io/devcontainers-extra/features/cmake:1": {
             "version": "latest"
         },
         "ghcr.io/devcontainers/features/python:1": {
@@ -10,7 +10,9 @@
         },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "latest"
-        }
+        },
+        "ghcr.io/gvatsal60/dev-container-features/uv:0": {},
+        "ghcr.io/ebaskoro/devcontainer-features/emscripten:1": {}
     },
     "postCreateCommand": ".devcontainer/post-create.sh",
     "customizations": {
