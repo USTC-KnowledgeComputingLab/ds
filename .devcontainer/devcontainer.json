@@ -11,7 +11,7 @@
         "ghcr.io/devcontainers/features/node:1": {
             "version": "latest"
         },
-        "ghcr.io/gvatsal60/dev-container-features/uv:0": {
+        "ghcr.io/devcontainers-extra/features/uv:1": {
             "version": "latest"
         },
         "ghcr.io/ebaskoro/devcontainer-features/emscripten:1": {
