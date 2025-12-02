@@ -235,7 +235,7 @@ textarea:focus {
 
 <script setup>
 import { ref, nextTick, useTemplateRef } from "vue";
-import { render } from "ejs";
+import { Eta } from "eta";
 import { search_t } from "atsds";
 
 const rule_data_url = "./Sudoku.ejs";
@@ -351,7 +351,7 @@ async function* search() {
   addLog("Loading Sudoku grid...");
   run.value = true;
   const response = await fetch(rule_data_url);
-  const text = render(await response.text());
+  const text = await new Eta().renderString(await response.text());
   const sections = text.split(/\n\n/);
   let data = sections
     .filter((section) => section.trim().length > 0)

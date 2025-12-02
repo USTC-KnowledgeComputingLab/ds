@@ -17,15 +17,15 @@ The Sudoku solver encodes Sudoku rules as logical inference rules in the DS syst
     Loading Sudoku Solver...
   </p>
 </div>
-<script src="https://unpkg.com/ejs@3.1.10/ejs.min.js"></script>
 <script>
 (async () => {
-  const vue = await import("https://unpkg.com/vue@3.5.25/dist/vue.esm-browser.prod.js");
   const atsds = await import("https://unpkg.com/atsds@0.0.2/dist/tsds.mjs");
+  const eta = await import("https://unpkg.com/eta@4.4.1/dist/index.mjs");
+  const vue = await import("https://unpkg.com/vue@3.5.25/dist/vue.esm-browser.prod.js");
   const { loadModule } = await import("https://unpkg.com/vue3-sfc-loader@0.9.5/dist/vue3-sfc-loader.esm.js");
 
   const options = {
-    moduleCache: { vue, atsds, ejs: window.ejs },
+    moduleCache: { atsds, eta, vue },
     async getFile(url) {
       const response = await fetch(url);
       return response.text();
