@@ -84,15 +84,7 @@ git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
 vcpkg install ds --overlay-ports=./ds/ports
 ```
 
-Or configure in `vcpkg-configuration.json`:
-
-```json
-{
-  "overlay-ports": ["./ds/ports"]
-}
-```
-
-Then add to your `vcpkg.json`:
+Add to your `vcpkg.json`:
 
 ```json
 {

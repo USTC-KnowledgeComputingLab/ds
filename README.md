@@ -53,20 +53,19 @@ git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
 vcpkg install ds --overlay-ports=./ds/ports
 ```
 
-Or configure in `vcpkg-configuration.json`:
-
-```json
-{
-  "overlay-ports": ["./ds/ports"]
-}
-```
-
-Then add to your `vcpkg.json`:
+Add to your `vcpkg.json`:
 
 ```json
 {
   "dependencies": ["ds"]
 }
+```
+
+In your CMakeLists.txt:
+
+```cmake
+find_package(ds CONFIG REQUIRED)
+target_link_libraries(your_target PRIVATE ds::ds)
 ```
 
 #### Building from Source
