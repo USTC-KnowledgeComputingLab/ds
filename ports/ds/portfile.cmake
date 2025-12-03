@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USTC-KnowledgeComputingLab/ds
-    REF main
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
