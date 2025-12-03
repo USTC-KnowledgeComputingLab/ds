@@ -1,8 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USTC-KnowledgeComputingLab/ds
-    REF "${VERSION}"
-    SHA512 0
+    REF main
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +12,8 @@ vcpkg_cmake_build()
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME ds CONFIG_PATH lib/cmake/ds)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
