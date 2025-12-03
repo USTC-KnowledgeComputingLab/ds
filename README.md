@@ -44,6 +44,33 @@ Requires Python 3.10-3.14.
 
 The C++ library is the core implementation. Both Python and TypeScript bindings are built on top of it.
 
+#### Using vcpkg
+
+Clone the repository and use the overlay port:
+
+```bash
+git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
+vcpkg install ds --overlay-ports=./ds/ports
+```
+
+Or configure in `vcpkg-configuration.json`:
+
+```json
+{
+  "overlay-ports": ["./ds/ports"]
+}
+```
+
+Then add to your `vcpkg.json`:
+
+```json
+{
+  "dependencies": ["ds"]
+}
+```
+
+#### Building from Source
+
 ```bash
 git clone https://github.com/USTC-KnowledgeComputingLab/ds.git
 cd ds
