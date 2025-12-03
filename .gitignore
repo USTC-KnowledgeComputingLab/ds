@@ -1,16 +1,128 @@
-*.out
-*.o
-*.egg-info
-*.so
-__pycache__
-.cache
-.coverage
-.vscode
-build
-dist
-node_modules
-coverage
+########################################
+# Global OS / Editor junk
+########################################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux editors
+*~
+*.swp
+*.swo
+*.swp
+.nfs*
+
+########################################
+# C++ (CMake / vcpkg)
+########################################
+# Build directories
+build/
+build-*/
+cmake-build-*/
+out/
+dist/
+site/           # also mkdocs, but normally safe to ignore
+CMakeFiles/
+CMakeCache.txt
+CTestTestfile.cmake
+cmake_install.cmake
+Makefile
+
+# vcpkg
+vcpkg_installed/
+vcpkg_buildtrees/
+vcpkg_packages/
+vcpkg_downloads/
+
+# Compilation DB
 compile_commands.json
-_codeql_build_dir
-_codeql_detected_source_root
-site
+
+# C++ artifacts
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.obj
+*.o
+*.lo
+*.la
+
+########################################
+# Python (uv / ruff / pytest / mypy)
+########################################
+# uv venvs
+.venv/
+.uv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# pytest
+.pytest_cache/
+
+# coverage
+.coverage
+.coverage.*
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ruff
+.ruff_cache/
+
+########################################
+# Node.js / TypeScript (npm / rollup / jest / biome)
+########################################
+# Dependencies
+node_modules/
+
+# Build outputs (rollup, ts, etc.)
+dist/
+build/
+*.tsbuildinfo
+
+# jest
+coverage/
+.jest/
+
+# biome
+biome.jsonc-backup/
+
+########################################
+# MkDocs
+########################################
+site/
+
+########################################
+# IDE: VSCode / JetBrains / Vim / Emacs
+########################################
+# VSCode
+.vscode/
+.vscode-test/
+
+# JetBrains (PyCharm/CLion)
+.idea/
+*.iml
+
+# Emacs
+# backup files are already handled above (*~)
+\#*\#
+.dir-locals.el
+
+# Vim
+*.spl
+tags
