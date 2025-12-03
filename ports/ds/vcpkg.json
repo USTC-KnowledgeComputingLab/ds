@@ -1,7 +1,7 @@
 {
     "name": "ds",
     "version-string": "0.0.0",
-    "description": "A deductive system for logical inference",
+    "description": "A deductive system",
     "homepage": "https://github.com/USTC-KnowledgeComputingLab/ds",
     "license": "AGPL-3.0-or-later",
     "dependencies": []
