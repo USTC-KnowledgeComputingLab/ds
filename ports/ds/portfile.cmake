@@ -1,3 +1,6 @@
+# Note: When submitting to the official vcpkg registry, update the REF
+# to the git tag and calculate the SHA512 hash of the source archive.
+# For local overlay ports testing, SHA512 can be set to 0.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USTC-KnowledgeComputingLab/ds
