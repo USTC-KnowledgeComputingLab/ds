@@ -9,7 +9,28 @@ __all__ = [
 import typing
 from .buffer_size import buffer_size
 
-T = typing.TypeVar("T")
+
+class DsProto(typing.Protocol):
+    """Protocol for deductive system base types."""
+
+    @classmethod
+    def from_string(cls, string: str, capacity: int) -> typing.Self: ...
+
+    @classmethod
+    def from_binary(cls, binary: memoryview) -> typing.Self: ...
+
+    @classmethod
+    def to_string(cls, value: typing.Self, capacity: int) -> str: ...
+
+    @classmethod
+    def to_binary(cls, value: typing.Self) -> bytes: ...
+
+    def data_size(self) -> int: ...
+
+    def clone(self) -> typing.Self: ...
+
+
+T = typing.TypeVar("T", bound=DsProto)
 
 
 class Common(typing.Generic[T]):
