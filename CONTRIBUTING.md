@@ -1,6 +1,8 @@
 # Contributing to DS
 
-Thank you for your interest in contributing to DS! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to DS! We welcome issues and pull requests from everyone.
+
+This document provides guidelines and instructions for contributing to the project.
 
 ## Table of Contents
 
@@ -133,25 +135,11 @@ ctest
 
 ## Submitting Pull Requests
 
-1. Create a new branch for your feature or bug fix:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+1. Create a new branch for your changes
 
-2. Make your changes, ensuring:
-   - Code follows the style guidelines
-   - All tests pass
-   - Pre-commit hooks pass
-   - Documentation is updated if needed
+2. Make your changes and commit with a clear, descriptive commit message
 
-3. Commit your changes with a clear, descriptive commit message
-
-4. Push to your fork and submit a pull request to the main repository
-
-5. Describe your changes in the pull request, including:
-   - What the change does
-   - Why the change is needed
-   - Any relevant issue numbers
+3. Push to your fork and submit a pull request to the main repository
 
 ## License
 
