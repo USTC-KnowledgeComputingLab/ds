@@ -1,5 +1,6 @@
-from antlr4 import InputStream, CommonTokenStream
+__all__ = ["parse", "unparse"]
 
+from antlr4 import InputStream, CommonTokenStream
 from .DspLexer import DspLexer
 from .DspParser import DspParser
 from .DspVisitor import DspVisitor
@@ -55,12 +56,10 @@ class UnparseVisitor(DsVisitor):
         return ctx.SYMBOL().getText()
 
     def visitSubscript(self, ctx):
-        terms = ctx.term()
-        return f"{self.visit(terms[0])}[{', '.join(self.visit(t) for t in terms[1:])}]"
+        return f"{self.visit(ctx.term(0))}[{', '.join(self.visit(t) for t in ctx.term()[1:])}]"
 
     def visitFunction(self, ctx):
-        terms = ctx.term()
-        return f"{self.visit(terms[0])}({', '.join(self.visit(t) for t in terms[1:])})"
+        return f"{self.visit(ctx.term(0))}({', '.join(self.visit(t) for t in ctx.term()[1:])})"
 
     def visitUnary(self, ctx):
         return f"({ctx.getChild(0).getText()} {self.visit(ctx.term())})"
