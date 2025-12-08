@@ -7,7 +7,7 @@ This package provides bidirectional conversion between two syntax formats for th
 
 ## Installation
 
-### JavaScript/TypeScript
+### JavaScript
 
 ```bash
 cd bnf
@@ -26,21 +26,20 @@ pip install -e .  # Automatically generates ANTLR parsers during installation
 
 ```
 bnf/
-├── package.json       # JavaScript/TypeScript package (atsds-bnf)
+├── package.json       # JavaScript package (atsds-bnf)
 ├── pyproject.toml     # Python package (apyds-bnf)
 ├── setup.py           # Python setup with ANTLR generation
 ├── grammars/          # ANTLR grammar files
 │   ├── Ds.g4         # Grammar for lisp-like syntax
 │   └── Dsp.g4        # Grammar for traditional syntax
-├── src/               # JavaScript source files
+├── atsds_bnf/        # JavaScript source files
 │   ├── index.js
 │   ├── unparse.js    # Ds → Dsp conversion
 │   └── parse.js      # Dsp → Ds conversion
 └── apyds_bnf/        # Python package
     ├── __init__.py
     ├── unparse.py    # Ds → Dsp conversion
-    ├── parse.py      # Dsp → Ds conversion
-    └── cli.py        # Command-line interface
+    └── parse.py      # Dsp → Ds conversion
 ```
 
 ## Syntax Examples
@@ -99,20 +98,6 @@ ds = parse('a -> b')
 print(ds)  # "(binary -> a b)"
 ```
 
-### Command-line Interface
-
-After installation, two CLI commands are available:
-
-```bash
-# Unparse: Ds → Dsp
-apyds-unparse input.ds > output.dsp
-echo "(binary -> a b)" | apyds-unparse
-
-# Parse: Dsp → Ds
-apyds-parse input.dsp > output.ds
-echo "a -> b" | apyds-parse
-```
-
 ### Generating Parsers
 
 The Python package automatically generates ANTLR parsers during installation using the custom `setup.py` build command. You can also generate them manually:
@@ -129,8 +114,10 @@ python -m antlr4_tools -Dlanguage=Python3 -visitor -no-listener -o apyds_bnf/gen
 
 ### Ds Grammar (Lisp-like)
 
-- **Rules**: Premises and conclusion separated by `----------`
-- **Terms**:
+This grammar defines the current lisp-like syntax used in DS:
+
+- **Rules**: Premises and conclusion separated by `----------` (RULE token)
+- **Terms**: All operations are prefix notation with explicit type markers
   - Symbols: `a`, `X`, `foo`
   - Subscript: `(subscript base index1 index2)`
   - Function: `(function name arg1 arg2)`
@@ -139,14 +126,22 @@ python -m antlr4_tools -Dlanguage=Python3 -visitor -no-listener -o apyds_bnf/gen
 
 ### Dsp Grammar (Traditional)
 
-- **Rules**: Premises separated by `,`, arrow `->` before conclusion
-- **Terms**:
+This grammar defines a more traditional syntax with infix operators:
+
+- **Rules**: Premises separated by commas, `->` before conclusion
+- **Terms**: Standard infix notation with operator precedence
   - Symbols: `a`, `X`, `foo`
   - Parentheses: `(expr)`
   - Subscript: `base[index1, index2]`
   - Function: `name(arg1, arg2)`
   - Unary: `op operand` (e.g., `! x`, `- y`)
-  - Binary infix operators with precedence
+  - Binary: `left op right` with full precedence hierarchy
+
+### Grammar Design Trade-offs
+
+**Rule Ambiguity**: The Dsp rule grammar allows `(term (',' term)*)? '->' term` which permits zero terms before the arrow. This design matches the specification from the issue and allows flexibility in rule definition.
+
+**SYMBOL Token**: The SYMBOL token is defined as `~[ \t\r\n,()]+` which is intentionally permissive to allow a wide variety of symbols. The lexer resolves potential ambiguities through maximal munch rule, token definition order, and keyword precedence. This design maintains compatibility with the DS system's existing symbol naming conventions.
 
 ## Development
 

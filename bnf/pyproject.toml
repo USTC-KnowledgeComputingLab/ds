@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel", "antlr4-tools>=0.2.1"]
+requires = ["setuptools>=61.0", "wheel", "antlr4-tools>=0.2.1", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "apyds-bnf"
-version = "0.1.0"
+dynamic = ["version"]
 description = "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax"
 authors = [{ name = "Hao Zhang", email = "hzhangxyz@outlook.com" }]
 license = { text = "AGPL-3.0-or-later" }
@@ -23,6 +23,7 @@ dev = [
 where = ["."]
 include = ["apyds_bnf*"]
 
-[project.scripts]
-apyds-unparse = "apyds_bnf.cli:unparse_cli"
-apyds-parse = "apyds_bnf.cli:parse_cli"
+[tool.setuptools_scm]
+version_file = "apyds_bnf/_version.py"
+version_scheme = "no-guess-dev"
+fallback_version = "0.0.0"

@@ -10,4 +10,3 @@ from .unparse import unparse
 from .parse import parse
 
 __all__ = ["unparse", "parse"]
-__version__ = "0.1.0"

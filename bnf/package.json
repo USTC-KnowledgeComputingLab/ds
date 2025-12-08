@@ -6,19 +6,18 @@
     "license": "AGPL-3.0-or-later",
     "type": "module",
     "exports": {
-        ".": "./src/index.js"
+        ".": "./atsds_bnf/index.js"
     },
-    "main": "src/index.js",
-    "module": "src/index.js",
+    "main": "atsds_bnf/index.js",
+    "module": "atsds_bnf/index.js",
     "files": [
-        "src/**/*.js",
-        "grammars/**/*.g4"
+        "atsds_bnf/**/*.js"
     ],
     "scripts": {
-        "ds": "antlr4 -Dlanguage=JavaScript grammars/Ds.g4 -visitor -no-listener -o src/generated",
-        "dsp": "antlr4 -Dlanguage=JavaScript grammars/Dsp.g4 -visitor -no-listener -o src/generated",
+        "ds": "antlr4 -Dlanguage=JavaScript grammars/Ds.g4 -visitor -no-listener -o atsds_bnf/generated",
+        "dsp": "antlr4 -Dlanguage=JavaScript grammars/Dsp.g4 -visitor -no-listener -o atsds_bnf/generated",
         "prepare": "npm-run-all ds dsp",
-        "clean": "rm -rf src/generated"
+        "clean": "rm -rf atsds_bnf/generated"
     },
     "dependencies": {
         "antlr4": "^4.13.2"

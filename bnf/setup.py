@@ -2,7 +2,6 @@
 Setup script for apyds-bnf package with ANTLR parser generation
 """
 
-import os
 import subprocess
 import sys
 from pathlib import Path
