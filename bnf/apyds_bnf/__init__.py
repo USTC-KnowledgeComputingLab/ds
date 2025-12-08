@@ -49,7 +49,6 @@ class UnparseVisitor(DsVisitor):
     def visitRule(self, ctx):
         result = [self.visit(t) for t in ctx.term()]
         conclusion = result.pop()
-        length = max(len(premise) for premise in result)
         return ", ".join(result) + " -> " + conclusion
 
     def visitSymbol(self, ctx):
@@ -88,4 +87,3 @@ def unparse(input):
     tree = parser.rule_pool()
     visitor = UnparseVisitor()
     return visitor.visit(tree)
-
