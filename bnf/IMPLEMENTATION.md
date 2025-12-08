@@ -105,23 +105,17 @@ Complete documentation including:
 
 ### Quick Start
 
-1. **Generate ANTLR Parsers**:
+1. **JavaScript**:
    ```bash
    cd bnf
-   ./setup.sh
-   ```
-
-2. **JavaScript**:
-   ```bash
    npm install
-   npm run build
-   npm test
+   npm run prepare  # Generate ANTLR parsers
    ```
 
-3. **Python**:
+2. **Python**:
    ```bash
-   pip install -e .
-   pytest py_tests/
+   cd bnf
+   pip install -e .  # Automatically generates parsers
    ```
 
 ### API Examples

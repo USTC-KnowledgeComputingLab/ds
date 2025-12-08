@@ -12,20 +12,14 @@ This package provides bidirectional conversion between two syntax formats for th
 ```bash
 cd bnf
 npm install
-npm run build
+npm run prepare  # Generate ANTLR parsers
 ```
 
 ### Python
 
 ```bash
 cd bnf
-pip install -e .
-```
-
-Or with development dependencies:
-
-```bash
-pip install -e ".[dev]"
+pip install -e .  # Automatically generates ANTLR parsers during installation
 ```
 
 ## Structure
@@ -35,22 +29,18 @@ bnf/
 ├── package.json       # JavaScript/TypeScript package (atsds-bnf)
 ├── pyproject.toml     # Python package (apyds-bnf)
 ├── setup.py           # Python setup with ANTLR generation
-├── tsconfig.json      # TypeScript configuration
 ├── grammars/          # ANTLR grammar files
 │   ├── Ds.g4         # Grammar for lisp-like syntax
 │   └── Dsp.g4        # Grammar for traditional syntax
-├── src/               # TypeScript source files
-│   ├── index.ts
-│   ├── unparse.ts    # Ds → Dsp conversion
-│   └── parse.ts      # Dsp → Ds conversion
-├── apyds_bnf/        # Python package
-│   ├── __init__.py
-│   ├── unparse.py    # Ds → Dsp conversion
-│   ├── parse.py      # Dsp → Ds conversion
-│   └── cli.py        # Command-line interface
-├── tests/            # JavaScript tests
-├── py_tests/         # Python tests
-└── examples/         # Usage examples
+├── src/               # JavaScript source files
+│   ├── index.js
+│   ├── unparse.js    # Ds → Dsp conversion
+│   └── parse.js      # Dsp → Ds conversion
+└── apyds_bnf/        # Python package
+    ├── __init__.py
+    ├── unparse.py    # Ds → Dsp conversion
+    ├── parse.py      # Dsp → Ds conversion
+    └── cli.py        # Command-line interface
 ```
 
 ## Syntax Examples
@@ -59,29 +49,24 @@ bnf/
 
 ```
 (binary -> (`P -> `Q) `P)
-(binary -> `Q)
 ----------
-(binary -> result)
+`Q
 ```
 
 ### Dsp (Traditional) Syntax
 
 ```
-(P -> Q), P -> Q
+(`P -> `Q), `P -> `Q
 ```
 
-## JavaScript/TypeScript Usage
+## JavaScript Usage
 
 ### Building
 
-The build process includes:
-
-1. **Generate parsers**: Run ANTLR4 to generate lexer/parser from grammars
-2. **Compile TypeScript**: Transpile TypeScript to JavaScript
-
 ```bash
-npm run prepare  # Generate ANTLR parsers (ds + dsp)
-npm run build    # Full build (prepare + compile)
+npm run ds       # Generate Ds.g4 parser
+npm run dsp      # Generate Dsp.g4 parser  
+npm run prepare  # Generate both parsers (runs ds + dsp in parallel)
 ```
 
 ### API
@@ -163,23 +148,9 @@ python -m antlr4_tools -Dlanguage=Python3 -visitor -no-listener -o apyds_bnf/gen
   - Unary: `op operand` (e.g., `! x`, `- y`)
   - Binary infix operators with precedence
 
-## Testing
-
-### JavaScript
-
-```bash
-npm test
-```
-
-### Python
-
-```bash
-pytest py_tests/
-```
-
 ## Development
 
-This package follows the mono repo layout and is designed to be self-contained within the `bnf` directory. Changes should not affect files outside of this directory.
+This package follows the mono repo layout and is designed to be self-contained within the `bnf` directory.
 
 ### Prerequisites
 

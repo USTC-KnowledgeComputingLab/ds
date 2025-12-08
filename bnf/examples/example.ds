@@ -1,5 +1,0 @@
-// Modus ponens: if P implies Q and P is true, then Q is true
-(binary -> `P `Q)
-`P
-----------
-`Q

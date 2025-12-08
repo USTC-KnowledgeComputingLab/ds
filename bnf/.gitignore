@@ -1,8 +1,7 @@
 # Generated files
 src/generated/
-dist/
-node_modules/
 apyds_bnf/generated/
+node_modules/
 build/
 *.egg-info/
 
