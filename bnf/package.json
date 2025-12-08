@@ -1,28 +1,33 @@
 {
     "name": "atsds-bnf",
-    "version": "0.1.0",
     "description": "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax",
     "author": "Hao Zhang <hzhangxyz@outlook.com>",
     "license": "AGPL-3.0-or-later",
-    "type": "module",
-    "exports": {
-        ".": "./atsds_bnf/index.js"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/USTC-KnowledgeComputingLab/ds.git"
     },
-    "main": "atsds_bnf/index.js",
-    "module": "atsds_bnf/index.js",
+    "type": "module",
+    "exports": "./dist/bnf.mjs",
+    "main": "dist/bnf.mjs",
+    "module": "dist/bnf.mjs",
     "files": [
-        "atsds_bnf/**/*.js"
+        "dist/bnf.mjs"
     ],
     "scripts": {
-        "ds": "antlr4 -Dlanguage=JavaScript grammars/Ds.g4 -visitor -no-listener -o atsds_bnf/generated",
-        "dsp": "antlr4 -Dlanguage=JavaScript grammars/Dsp.g4 -visitor -no-listener -o atsds_bnf/generated",
+        "ds": "antlr4 -Dlanguage=JavaScript grammars/Ds.g4 -visitor -no-listener -o atsds_bnf",
+        "dsp": "antlr4 -Dlanguage=JavaScript grammars/Dsp.g4 -visitor -no-listener -o atsds_bnf",
         "prepare": "npm-run-all ds dsp",
-        "clean": "rm -rf atsds_bnf/generated"
+        "rollup": "rollup --config rollup.config.mjs",
+        "build": "npm-run-all prepare rollup"
     },
     "dependencies": {
         "antlr4": "^4.13.2"
     },
     "devDependencies": {
-        "npm-run-all": "^4.1.5"
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-terser": "^0.4.4",
+        "npm-run-all": "^4.1.5",
+        "rollup": "^4.53.3"
     }
 }

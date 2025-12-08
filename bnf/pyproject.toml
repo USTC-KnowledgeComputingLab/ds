@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel", "antlr4-tools>=0.2.1", "setuptools-scm>=8.0"]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -14,10 +14,8 @@ dependencies = [
     "antlr4-python3-runtime>=4.13.2",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "antlr4-tools>=0.2.1",
-]
+[project.urls]
+Repository = "https://github.com/USTC-KnowledgeComputingLab/ds.git"
 
 [tool.setuptools.packages.find]
 where = ["."]
