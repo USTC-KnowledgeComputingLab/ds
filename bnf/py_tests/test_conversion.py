@@ -3,7 +3,7 @@ Tests for BNF conversion
 """
 
 import pytest
-from ds_bnf import unparse, parse
+from apyds_bnf import unparse, parse
 
 
 class TestUnparse:

@@ -1,9 +1,9 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel", "antlr4-tools>=0.2.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ds-bnf"
+name = "apyds-bnf"
 version = "0.1.0"
 description = "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax"
 authors = [{ name = "Hao Zhang", email = "hzhangxyz@outlook.com" }]
@@ -17,12 +17,13 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
+    "antlr4-tools>=0.2.1",
 ]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["ds_bnf*"]
+include = ["apyds_bnf*"]
 
 [project.scripts]
-ds-unparse = "ds_bnf.cli:unparse_cli"
-ds-parse = "ds_bnf.cli:parse_cli"
+apyds-unparse = "apyds_bnf.cli:unparse_cli"
+apyds-parse = "apyds_bnf.cli:parse_cli"

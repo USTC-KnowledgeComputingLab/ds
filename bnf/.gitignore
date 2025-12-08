@@ -1,11 +1,10 @@
 # Generated files
-javascript/src/generated/
-javascript/dist/
-javascript/node_modules/
-python/ds_bnf/generated/
-python/build/
-python/dist/
-python/*.egg-info/
+src/generated/
+dist/
+node_modules/
+apyds_bnf/generated/
+build/
+*.egg-info/
 
 # Python cache
 __pycache__/

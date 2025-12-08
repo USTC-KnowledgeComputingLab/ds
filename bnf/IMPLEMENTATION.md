@@ -12,32 +12,29 @@ This document provides a complete summary of the BNF support package implementat
 bnf/
 ├── README.md                      # Main package documentation
 ├── .gitignore                     # Git ignore rules for generated files
+├── package.json                   # NPM package (atsds-bnf)
+├── pyproject.toml                 # Python package (apyds-bnf)
+├── setup.py                       # Python setup with ANTLR generation
 ├── setup.sh                       # Setup script to generate ANTLR parsers
+├── tsconfig.json                  # TypeScript configuration
 ├── grammars/                      # ANTLR4 grammar definitions
 │   ├── Ds.g4                     # Lisp-like syntax grammar
 │   ├── Dsp.g4                    # Traditional syntax grammar
 │   └── README.md                 # Grammar design notes
-├── javascript/                    # JavaScript/TypeScript implementation
-│   ├── package.json              # NPM package configuration
-│   ├── tsconfig.json             # TypeScript configuration
-│   ├── README.md                 # JavaScript-specific documentation
-│   ├── src/
-│   │   ├── index.ts              # Main export file
-│   │   ├── unparse.ts            # Ds → Dsp converter
-│   │   └── parse.ts              # Dsp → Ds converter
-│   └── tests/
-│       └── conversion.test.js    # Test suite
-├── python/                        # Python implementation
-│   ├── pyproject.toml            # Python package configuration
-│   ├── README.md                 # Python-specific documentation
-│   ├── ds_bnf/
-│   │   ├── __init__.py           # Package initialization
-│   │   ├── unparse.py            # Ds → Dsp converter
-│   │   ├── parse.py              # Dsp → Ds converter
-│   │   └── cli.py                # Command-line interface
-│   └── tests/
-│       ├── __init__.py
-│       └── test_conversion.py    # Test suite
+├── src/                           # TypeScript source files
+│   ├── index.ts                  # Main export file
+│   ├── unparse.ts                # Ds → Dsp converter
+│   └── parse.ts                  # Dsp → Ds converter
+├── apyds_bnf/                    # Python package
+│   ├── __init__.py               # Package initialization
+│   ├── unparse.py                # Ds → Dsp converter
+│   ├── parse.py                  # Dsp → Ds converter
+│   └── cli.py                    # Command-line interface
+├── tests/                         # JavaScript tests
+│   └── conversion.test.js        # Test suite
+├── py_tests/                      # Python tests
+│   ├── __init__.py
+│   └── test_conversion.py        # Test suite
 └── examples/                      # Usage examples
     ├── README.md                 # Examples documentation
     ├── example.ds                # Sample Ds file
@@ -116,7 +113,6 @@ Complete documentation including:
 
 2. **JavaScript**:
    ```bash
-   cd javascript
    npm install
    npm run build
    npm test
@@ -124,16 +120,15 @@ Complete documentation including:
 
 3. **Python**:
    ```bash
-   cd python
    pip install -e .
-   pytest
+   pytest py_tests/
    ```
 
 ### API Examples
 
 **JavaScript**:
 ```javascript
-import { unparse, parse } from 'ds-bnf';
+import { unparse, parse } from 'atsds-bnf';
 
 const dsp = unparse('(binary -> a b)');  // "(a -> b)"
 const ds = parse('a -> b');              // "(binary -> a b)"
@@ -141,7 +136,7 @@ const ds = parse('a -> b');              // "(binary -> a b)"
 
 **Python**:
 ```python
-from ds_bnf import unparse, parse
+from apyds_bnf import unparse, parse
 
 dsp = unparse('(binary -> a b)')  # "(a -> b)"
 ds = parse('a -> b')              # "(binary -> a b)"
@@ -149,8 +144,8 @@ ds = parse('a -> b')              # "(binary -> a b)"
 
 **CLI**:
 ```bash
-ds-unparse input.ds > output.dsp
-ds-parse input.dsp > output.ds
+apyds-unparse input.ds > output.dsp
+apyds-parse input.dsp > output.ds
 ```
 
 ## Design Principles

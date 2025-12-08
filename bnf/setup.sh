@@ -13,33 +13,33 @@ echo
 
 # Check if antlr4 is installed
 if ! command -v antlr4 &> /dev/null; then
-    echo "Error: antlr4 command not found."
-    echo "Please install ANTLR4:"
-    echo "  - Using pip: pip install antlr4-tools"
-    echo "  - Or download from: https://www.antlr.org/download.html"
-    exit 1
+    echo "Warning: antlr4 command not found."
+    echo "Trying to use antlr4-tools via Python..."
+    ANTLR_CMD="python3 -m antlr4_tools"
+else
+    ANTLR_CMD="antlr4"
 fi
 
 # Generate JavaScript parsers
 echo "Generating JavaScript parsers..."
-cd "$SCRIPT_DIR/javascript"
+cd "$SCRIPT_DIR"
 mkdir -p src/generated
-antlr4 -Dlanguage=JavaScript -visitor -o src/generated "$GRAMMARS_DIR/Ds.g4" "$GRAMMARS_DIR/Dsp.g4"
+$ANTLR_CMD -Dlanguage=JavaScript -visitor -no-listener -o src/generated "$GRAMMARS_DIR/Ds.g4" "$GRAMMARS_DIR/Dsp.g4"
 echo "✓ JavaScript parsers generated"
 echo
 
 # Generate Python parsers
 echo "Generating Python parsers..."
-cd "$SCRIPT_DIR/python"
-mkdir -p ds_bnf/generated
-antlr4 -Dlanguage=Python3 -visitor -o ds_bnf/generated "$GRAMMARS_DIR/Ds.g4" "$GRAMMARS_DIR/Dsp.g4"
+cd "$SCRIPT_DIR"
+mkdir -p apyds_bnf/generated
+$ANTLR_CMD -Dlanguage=Python3 -visitor -no-listener -o apyds_bnf/generated "$GRAMMARS_DIR/Ds.g4" "$GRAMMARS_DIR/Dsp.g4"
 # Create __init__.py for the generated package
-touch ds_bnf/generated/__init__.py
+touch apyds_bnf/generated/__init__.py
 echo "✓ Python parsers generated"
 echo
 
 echo "BNF package setup complete!"
 echo
 echo "Next steps:"
-echo "  JavaScript: cd javascript && npm install && npm run build"
-echo "  Python:     cd python && pip install -e ."
+echo "  JavaScript: npm install && npm run build"
+echo "  Python:     pip install -e ."

@@ -26,7 +26,7 @@ This directory contains example files demonstrating the BNF conversion.
 ### JavaScript
 
 ```javascript
-import { unparse, parse } from 'ds-bnf';
+import { unparse, parse } from 'atsds-bnf';
 import { readFileSync } from 'fs';
 
 // Read and convert Ds to Dsp
@@ -45,7 +45,7 @@ console.log(dsOutput);
 ### Python
 
 ```python
-from ds_bnf import unparse, parse
+from apyds_bnf import unparse, parse
 
 # Read and convert Ds to Dsp
 with open('example.ds') as f:
@@ -65,10 +65,7 @@ print(ds_output)
 ### Command-line
 
 ```bash
-# Using JavaScript
-cat example.ds | node -e "import('ds-bnf').then(m => console.log(m.unparse(require('fs').readFileSync(0, 'utf-8'))))"
-
-# Using Python
-ds-unparse example.ds
-ds-parse example.dsp
+# Using Python CLI
+apyds-unparse example.ds
+apyds-parse example.dsp
 ```

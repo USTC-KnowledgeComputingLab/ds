@@ -1,5 +1,5 @@
 {
-    "name": "ds-bnf",
+    "name": "atsds-bnf",
     "version": "0.1.0",
     "description": "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax",
     "author": "Hao Zhang <hzhangxyz@outlook.com>",
@@ -12,11 +12,14 @@
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist/**/*"
+        "dist/**/*",
+        "grammars/**/*.g4"
     ],
     "scripts": {
-        "generate": "antlr4 -Dlanguage=JavaScript -visitor -o src/generated ../grammars/Ds.g4 ../grammars/Dsp.g4",
-        "build": "npm run generate && tsc",
+        "ds": "antlr4 -Dlanguage=JavaScript grammars/Ds.g4 -visitor -no-listener -o src/generated",
+        "dsp": "antlr4 -Dlanguage=JavaScript grammars/Dsp.g4 -visitor -no-listener -o src/generated",
+        "prepare": "npm-run-all ds dsp",
+        "build": "npm run prepare && tsc",
         "test": "node --test tests/*.test.js",
         "clean": "rm -rf dist src/generated"
     },
@@ -25,6 +28,7 @@
     },
     "devDependencies": {
         "@types/node": "^20.17.9",
+        "npm-run-all": "^4.1.5",
         "typescript": "^5.9.3"
     }
 }
