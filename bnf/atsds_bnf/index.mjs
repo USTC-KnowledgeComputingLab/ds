@@ -1,7 +1,4 @@
-import {
-    InputStream,
-    CommonTokenStream
-} from "antlr4";
+import { InputStream, CommonTokenStream } from "antlr4";
 import DspLexer from "./DspLexer.js";
 import DspParser from "./DspParser.js";
 import DspVisitor from "./DspVisitor.js";
@@ -11,16 +8,19 @@ import DsVisitor from "./DsVisitor.js";
 
 class ParseVisitor extends DspVisitor {
     visitRule_pool(ctx) {
-        return ctx.rule_().map(r => this.visit(r)).join("\n\n");
+        return ctx
+            .rule_()
+            .map((r) => this.visit(r))
+            .join("\n\n");
     }
 
     visitRule(ctx) {
-        const result = ctx.term().map(t => this.visit(t));
+        const result = ctx.term().map((t) => this.visit(t));
         if (result.length === 1) {
             return `----\n${result[0]}`;
         } else {
             const conclusion = result.pop();
-            const length = Math.max(...result.map(premise => premise.length));
+            const length = Math.max(...result.map((premise) => premise.length));
             result.push("-".repeat(Math.max(length, 4)));
             result.push(conclusion);
             return result.join("\n");
@@ -36,11 +36,17 @@ class ParseVisitor extends DspVisitor {
     }
 
     visitSubscript(ctx) {
-        return `(subscript ${ctx.term().map(t => this.visit(t)).join(" ")})`;
+        return `(subscript ${ctx
+            .term()
+            .map((t) => this.visit(t))
+            .join(" ")})`;
     }
 
     visitFunction(ctx) {
-        return `(function ${ctx.term().map(t => this.visit(t)).join(" ")})`;
+        return `(function ${ctx
+            .term()
+            .map((t) => this.visit(t))
+            .join(" ")})`;
     }
 
     visitUnary(ctx) {
@@ -52,14 +58,16 @@ class ParseVisitor extends DspVisitor {
     }
 }
 
-
 class UnparseVisitor extends DsVisitor {
     visitRule_pool(ctx) {
-        return ctx.rule_().map(r => this.visit(r)).join("\n");
+        return ctx
+            .rule_()
+            .map((r) => this.visit(r))
+            .join("\n");
     }
 
     visitRule(ctx) {
-        const result = ctx.term().map(t => this.visit(t));
+        const result = ctx.term().map((t) => this.visit(t));
         const conclusion = result.pop();
         return result.join(", ") + " -> " + conclusion;
     }
@@ -69,11 +77,19 @@ class UnparseVisitor extends DsVisitor {
     }
 
     visitSubscript(ctx) {
-        return `${this.visit(ctx.term(0))}[${ctx.term().slice(1).map(t => this.visit(t)).join(", ")}]`;
+        return `${this.visit(ctx.term(0))}[${ctx
+            .term()
+            .slice(1)
+            .map((t) => this.visit(t))
+            .join(", ")}]`;
     }
 
     visitFunction(ctx) {
-        return `${this.visit(ctx.term(0))}(${ctx.term().slice(1).map(t => this.visit(t)).join(", ")})`;
+        return `${this.visit(ctx.term(0))}(${ctx
+            .term()
+            .slice(1)
+            .map((t) => this.visit(t))
+            .join(", ")})`;
     }
 
     visitUnary(ctx) {

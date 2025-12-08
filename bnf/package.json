@@ -8,18 +8,18 @@
         "url": "https://github.com/USTC-KnowledgeComputingLab/ds.git"
     },
     "type": "module",
-    "exports": "./dist/bnf.mjs",
-    "main": "dist/bnf.mjs",
-    "module": "dist/bnf.mjs",
+    "exports": "./dist/index.mjs",
+    "main": "dist/index.mjs",
+    "module": "dist/index.mjs",
+    "browser": "dist/index.mjs",
     "files": [
-        "dist/bnf.mjs"
+        "dist/index.mjs"
     ],
     "scripts": {
         "ds": "antlr4 -Dlanguage=JavaScript grammars/Ds.g4 -visitor -no-listener -o atsds_bnf",
         "dsp": "antlr4 -Dlanguage=JavaScript grammars/Dsp.g4 -visitor -no-listener -o atsds_bnf",
         "prepare": "npm-run-all ds dsp",
-        "rollup": "rollup --config rollup.config.mjs",
-        "build": "npm-run-all prepare rollup"
+        "build": "rollup --config rollup.config.mjs"
     },
     "dependencies": {
         "antlr4": "^4.13.2"
