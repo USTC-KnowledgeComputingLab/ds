@@ -1,27 +1,30 @@
 [build-system]
-requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+requires = [
+  "setuptools~=80.9.0",
+  "setuptools-scm~=9.2.2",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "apyds-bnf"
 dynamic = ["version"]
-description = "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax"
-authors = [{ name = "Hao Zhang", email = "hzhangxyz@outlook.com" }]
-license = { text = "AGPL-3.0-or-later" }
-readme = "README.md"
-requires-python = ">=3.10"
 dependencies = [
-    "antlr4-python3-runtime>=4.13.2",
+  "antlr4-python3-runtime~=4.13.2",
 ]
+requires-python = ">=3.10, <3.15"
+authors = [{ name = "Hao Zhang", email = "hzhangxyz@outlook.com" }]
+description = "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
 
 [project.urls]
 Repository = "https://github.com/USTC-KnowledgeComputingLab/ds.git"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["apyds_bnf*"]
 
 [tool.setuptools_scm]
 version_file = "apyds_bnf/_version.py"
 version_scheme = "no-guess-dev"
 fallback_version = "0.0.0"
+root = ".."
+
+[tool.setuptools.packages.find]
+include = ["apyds_bnf"]

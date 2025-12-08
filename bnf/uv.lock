@@ -1,6 +1,6 @@
 version = 1
 revision = 3
-requires-python = ">=3.10"
+requires-python = ">=3.10, <3.15"
 
 [[package]]
 name = "antlr4-python3-runtime"
@@ -19,4 +19,4 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "antlr4-python3-runtime", specifier = ">=4.13.2" }]
+requires-dist = [{ name = "antlr4-python3-runtime", specifier = "~=4.13.2" }]

@@ -1,2 +1,2 @@
-generated
-_version.py
+*
+!__init__.py
