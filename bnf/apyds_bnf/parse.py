@@ -71,7 +71,7 @@ class ParseVisitor(DspVisitor):
         for i in range(ctx.getChildCount()):
             child = ctx.getChild(i)
             # Check if this is a terminal node (has a symbol attribute)
-            if hasattr(child, 'symbol'):
+            if hasattr(child, "symbol"):
                 op = child.getText()
                 break
             else:

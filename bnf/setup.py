@@ -73,12 +73,12 @@ class BuildWithAntlr(build_py):
                         cwd=base_dir,
                     )
                     print(f"Successfully generated parser for {grammar} using antlr4-tools")
-                except (subprocess.CalledProcessError, FileNotFoundError) as e2:
+                except (subprocess.CalledProcessError, FileNotFoundError):
                     print(
-                        f"Error: Could not generate parsers. Please install antlr4 or antlr4-tools.",
+                        "Error: Could not generate parsers. Please install antlr4 or antlr4-tools.",
                         file=sys.stderr,
                     )
-                    print(f"  pip install antlr4-tools", file=sys.stderr)
+                    print("  pip install antlr4-tools", file=sys.stderr)
                     raise
 
 
