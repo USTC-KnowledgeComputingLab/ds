@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ds-bnf"
+version = "0.1.0"
+description = "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax"
+authors = [{ name = "Hao Zhang", email = "hzhangxyz@outlook.com" }]
+license = { text = "AGPL-3.0-or-later" }
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "antlr4-python3-runtime>=4.13.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ds_bnf*"]
+
+[project.scripts]
+ds-unparse = "ds_bnf.cli:unparse_cli"
+ds-parse = "ds_bnf.cli:parse_cli"
