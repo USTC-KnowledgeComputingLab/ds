@@ -44,5 +44,5 @@ NEWLINE
     ;
 
 SYMBOL
-    : ~[ \t\r\n,()]+
+    : ~[ \t\r\n,()[\]]+
     ;
