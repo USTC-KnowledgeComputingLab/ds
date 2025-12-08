@@ -72,15 +72,22 @@ class ParseVisitor extends DspVisitor {
         const left = this.visit(terms[0]);
         const right = this.visit(terms[1]);
         
-        // Find the operator - it's one of the children
+        // Find the operator - it's the token between the two terms
+        // Iterate through children to find terminal nodes (operators)
         let op = '';
         for (let i = 0; i < ctx.getChildCount(); i++) {
             const child = ctx.getChild(i);
-            const text = child.getText();
-            // Check if this is an operator (not a term)
-            if (text !== left && text !== right && text.length > 0) {
-                op = text;
+            // Check if this is a terminal node (not a term context)
+            if (!child.term && child.symbol) {
+                op = child.getText();
                 break;
+            } else if (typeof child.getText === 'function') {
+                const text = child.getText();
+                // Skip if it matches term outputs
+                if (text !== left && text !== right && !text.includes('(') && text.length > 0) {
+                    op = text;
+                    break;
+                }
             }
         }
         

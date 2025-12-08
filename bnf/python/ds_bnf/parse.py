@@ -65,15 +65,21 @@ class ParseVisitor(DspVisitor):
         left = self.visit(terms[0])
         right = self.visit(terms[1])
 
-        # Find the operator - it's one of the children
+        # Find the operator - it's the token between the two terms
+        # Iterate through children to find terminal nodes (operators)
         op = ""
         for i in range(ctx.getChildCount()):
             child = ctx.getChild(i)
-            text = child.getText()
-            # Check if this is an operator (not a term)
-            if text != left and text != right and len(text) > 0:
-                op = text
+            # Check if this is a terminal node (has a symbol attribute)
+            if hasattr(child, 'symbol'):
+                op = child.getText()
                 break
+            else:
+                text = child.getText()
+                # Skip if it matches term outputs
+                if text != left and text != right and "(" not in text and len(text) > 0:
+                    op = text
+                    break
 
         return f"(binary {op} {left} {right})"
 
