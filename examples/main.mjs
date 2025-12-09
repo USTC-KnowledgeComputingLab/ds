@@ -1,4 +1,4 @@
-import { rule_t, search_t, buffer_size } from "../atsds/tsds.mts";
+import { rule_t, search_t, buffer_size } from "../atsds/index.mts";
 
 function main() {
     const temp_data_size = 1000;

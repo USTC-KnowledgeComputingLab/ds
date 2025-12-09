@@ -26,7 +26,7 @@ The package works in browsers that support WebAssembly:
 
 ```html
 <script type="module">
-  import { term_t } from "https://unpkg.com/atsds/dist/tsds.mjs";
+  import { term_t } from "https://unpkg.com/atsds/dist/index.mjs";
   
   const term = new term_t("(hello world)");
   console.log(term.toString());

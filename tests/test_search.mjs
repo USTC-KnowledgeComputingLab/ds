@@ -1,4 +1,4 @@
-import { search_t, rule_t } from "../atsds/tsds.mts";
+import { search_t, rule_t } from "../atsds/index.mts";
 
 let search = null;
 

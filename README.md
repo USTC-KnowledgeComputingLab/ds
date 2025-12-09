@@ -6,7 +6,7 @@ A deductive system for logical inference, implemented in C++. The library provid
 
 - **C++ Core**: The core implementation in `src/` and `include/ds/` provides the fundamental data structures and algorithms
 - **Python Bindings**: Built with pybind11, wrapping the C++ core (see `apyds/`)
-- **TypeScript/JavaScript Bindings**: Built with Emscripten, compiling C++ to WebAssembly (see `tsds/`)
+- **TypeScript/JavaScript Bindings**: Built with Emscripten, compiling C++ to WebAssembly (see `atsds/`)
 
 ## Features
 

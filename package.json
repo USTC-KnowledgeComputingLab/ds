@@ -8,14 +8,14 @@
         "url": "https://github.com/USTC-KnowledgeComputingLab/ds.git"
     },
     "type": "module",
-    "exports": "./dist/tsds.mjs",
-    "main": "dist/tsds.mjs",
-    "module": "dist/tsds.mjs",
-    "browser": "dist/tsds.mjs",
-    "types": "dist/tsds.d.mts",
+    "exports": "./dist/index.mjs",
+    "main": "dist/index.mjs",
+    "module": "dist/index.mjs",
+    "browser": "dist/index.mjs",
+    "types": "dist/index.d.mts",
     "files": [
-        "dist/tsds.d.mts",
-        "dist/tsds.mjs"
+        "dist/index.d.mts",
+        "dist/index.mjs"
     ],
     "scripts": {
         "emcc": "emcc -std=c++20 atsds/ds.cc src/*.cc -Iinclude -lembind -o atsds/ds.mjs --emit-tsd ds.d.mts -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1 -s SINGLE_FILE=1",
