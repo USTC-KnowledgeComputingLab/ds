@@ -5,7 +5,7 @@
     "license": "AGPL-3.0-or-later",
     "repository": {
         "type": "git",
-        "url": "https://github.com/USTC-KnowledgeComputingLab/ds.git"
+        "url": "git+https://github.com/USTC-KnowledgeComputingLab/ds.git"
     },
     "type": "module",
     "exports": "./dist/tsds.mjs",
