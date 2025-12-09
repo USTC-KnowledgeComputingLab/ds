@@ -157,3 +157,40 @@ def test_unparse_complex_expression():
     assert "*" in dsp_output
     assert "[i]" in dsp_output
     assert "f(g, h)" in dsp_output
+
+
+def test_parse_unary_with_space():
+    """Test parsing unary operators with proper spacing to trigger visitUnary"""
+    dsp_input = "~ a -> b"
+    ds_output = parse(dsp_input)
+    # Should use visitUnary in ParseVisitor
+    assert "(unary ~ a)" in ds_output
+    assert "b" in ds_output
+
+
+def test_unparse_unary_explicit():
+    """Test unparsing explicit (unary ...) format to trigger visitUnary"""
+    ds_input = "(unary ~ a)\n----\nb"
+    dsp_output = unparse(ds_input)
+    # Should use visitUnary in UnparseVisitor
+    assert "(~ a)" in dsp_output
+    assert "-> b" in dsp_output
+
+
+def test_roundtrip_unary_operators():
+    """Test roundtrip for various unary operators"""
+    test_cases = [
+        "~ a -> b",
+        "! x -> y",
+        "- n -> m",
+        "+ p -> q",
+    ]
+    for dsp_original in test_cases:
+        ds_intermediate = parse(dsp_original)
+        dsp_result = unparse(ds_intermediate)
+        # The roundtrip should preserve semantics (may add/remove spaces/parens)
+        assert "->" in dsp_result
+        # Parse again to ensure it's valid
+        ds_final = parse(dsp_result)
+        # The DS format should be consistent
+        assert "(unary" in ds_final
