@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: StoneMoe/setup-antlr4@v4
+      - uses: StoneMoe/setup-antlr4@v4.13.2
 
       - uses: astral-sh/setup-uv@v7
         with:
@@ -48,7 +48,7 @@ jobs:
       - name: recovery tag information
         run: git fetch --tags --force
 
-      - uses: StoneMoe/setup-antlr4@v4
+      - uses: StoneMoe/setup-antlr4@v4.13.2
 
       - uses: astral-sh/setup-uv@v7
         with:
