@@ -140,7 +140,6 @@ cd bnf
 # Install dependencies
 uv sync --extra dev
 
-# Generate ANTLR parsers (done automatically during build)
 # Build package
 uv build
 
@@ -159,7 +158,7 @@ cd bnf
 # Install dependencies
 npm install
 
-# Generate ANTLR parsers and build
+# Build package
 npm run build
 
 # Run tests
