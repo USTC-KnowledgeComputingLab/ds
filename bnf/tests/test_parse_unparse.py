@@ -1,4 +1,3 @@
-import pytest
 from apyds_bnf import parse, unparse
 
 
