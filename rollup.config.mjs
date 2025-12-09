@@ -1,7 +1,6 @@
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import { copy } from "@web/rollup-plugin-copy";
 import { dts } from "rollup-plugin-dts";
 
 export default [
@@ -13,17 +12,12 @@ export default [
         output: {
             dir: "dist",
             format: "es",
-            sourcemap: false,
             entryFileNames: "[name].mjs",
         },
         plugins: [
             terser(),
             typescript(),
             nodeResolve(),
-            copy({
-                patterns: ["ds.wasm"],
-                rootDir: "atsds",
-            }),
         ],
     },
     {

@@ -15,7 +15,6 @@
     "types": "dist/tsds.d.mts",
     "files": [
         "dist/tsds.d.mts",
-        "dist/ds.wasm",
         "dist/tsds.mjs"
     ],
     "scripts": {
