@@ -1,4 +1,4 @@
-import { item_t, buffer_size } from "../atsds/tsds.mts";
+import { item_t, buffer_size } from "../atsds/index.mts";
 
 let v = null;
 

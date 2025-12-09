@@ -6,7 +6,7 @@ import { dts } from "rollup-plugin-dts";
 export default [
     {
         input: {
-            tsds: "atsds/tsds.mts",
+            index: "atsds/index.mts",
             example: "examples/main.mjs",
         },
         output: {
@@ -18,7 +18,7 @@ export default [
     },
     {
         input: {
-            tsds: "atsds/tsds.mts",
+            index: "atsds/index.mts",
         },
         output: {
             dir: "dist",
