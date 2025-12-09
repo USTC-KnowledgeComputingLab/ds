@@ -108,20 +108,22 @@ premise1, premise2 -> conclusion
 For structured terms:
 - Functions: `f(a, b)`
 - Subscripts: `a[i, j]`
-- Binary operators: `a + b`
-- Unary operators: `~ a`
+- Binary operators: `(a + b)` (parenthesized)
+- Unary operators: `(~ a)` (parenthesized)
 
 ### Syntax Comparison Table
 
-| Description | Dsp Format (Input) | Ds Format (Output) |
+| Description | Dsp Format (parse input / unparse output) | Ds Format |
 |-------------|-------------------|-------------------|
 | Simple rule | `a, b -> c` | `a\nb\n----\nc` |
-| Axiom (no premises) | `a` | `----\na` |
+| Axiom (parse input) | `a` | `----\na` |
+| Axiom (unparse output) | ` -> a` | `----\na` |
 | Function call | `f(a, b) -> c` | `(function f a b)\n----------------\nc` |
 | Subscript | `a[i, j] -> b` | `(subscript a i j)\n-----------------\nb` |
 | Binary operator | `(a + b) -> c` | `(binary + a b)\n--------------\nc` |
-| Unary operator | `~ a -> b` | `(unary ~ a)\n-----------\nb` |
-| Complex expression | `(a + b) * c, d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)` |
+| Unary operator (parse input) | `~ a -> b` | `(unary ~ a)\n-----------\nb` |
+| Unary operator (unparse output) | `(~ a) -> b` | `(unary ~ a)\n-----------\nb` |
+| Complex expression | `((a + b) * c), d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)` |
 
 ## API Reference
 
@@ -225,18 +227,11 @@ print(ds)
 from apyds_bnf import unparse
 
 # Unparse multiple rules
-ds = """a
-----
-b
-
-c
-----
-d"""
+ds = "a\n----\nb\n\nc\n----\nd"
 dsp = unparse(ds)
 print(dsp)
-# Output:
-# a -> b
-# c -> d
+# Output: a -> b
+#         c -> d
 ```
 
 ### Round-trip Conversion
