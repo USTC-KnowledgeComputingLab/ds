@@ -344,6 +344,10 @@ Example programs are provided in the `examples/` directory:
 
 Each example demonstrates logical inference using propositional logic axioms.
 
+## Support Packages
+
+- **BNF Conversion Library** ([apyds-bnf](https://pypi.org/project/apyds-bnf/), [atsds-bnf](https://www.npmjs.com/package/atsds-bnf)): Bidirectional conversion between DS syntax formats. See [/bnf](/bnf) for details.
+
 ## Development
 
 ### Code Formatting
