@@ -27,17 +27,24 @@ def pdm_build_initialize(context):
         grammar_path = grammars_dir / grammar
 
         print(f"Generating parser for {grammar}...")
-        subprocess.run(
-            [
-                "antlr4",
-                "-Dlanguage=Python3",
-                str(grammar_path),
-                "-visitor",
-                "-no-listener",
-                "-o",
-                str(output_dir),
-            ],
-            check=True,
-            cwd=base_dir,
-        )
-        print(f"Successfully generated parser for {grammar}")
+        try:
+            subprocess.run(
+                [
+                    "antlr4",
+                    "-Dlanguage=Python3",
+                    str(grammar_path),
+                    "-visitor",
+                    "-no-listener",
+                    "-o",
+                    str(output_dir),
+                ],
+                check=True,
+                cwd=base_dir,
+            )
+            print(f"Successfully generated parser for {grammar}")
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(
+                f"Failed to generate parser for {grammar}. "
+                f"Ensure ANTLR4 is installed and accessible. "
+                f"Error: {e}"
+            ) from e

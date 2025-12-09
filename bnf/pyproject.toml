@@ -28,4 +28,3 @@ root = ".."
 
 [tool.pdm.build]
 includes = ["apyds_bnf"]
-run-setuptools = true
