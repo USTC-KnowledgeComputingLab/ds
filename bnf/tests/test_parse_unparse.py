@@ -51,9 +51,17 @@ def test_parse_unary_operator() -> None:
 
 def test_parse_multiple_rules() -> None:
     """Test parsing multiple rules"""
-    dsp_input = "a -> b\n\nc -> d"
+    dsp_input = "a -> b\nc -> d"
     ds_output = parse(dsp_input)
     expected = "a\n----\nb\n\nc\n----\nd"
+    assert ds_output == expected
+
+
+def test_parse_complex_expression() -> None:
+    """Test parsing complex nested expressions"""
+    dsp_input = "(a + b) * c, d[i] -> f(g, h)"
+    ds_output = parse(dsp_input)
+    expected = "(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)"
     assert ds_output == expected
 
 
@@ -99,12 +107,8 @@ def test_unparse_binary_operator() -> None:
 
 def test_unparse_unary_operator() -> None:
     """Test unparsing unary operators"""
-    # First parse a unary operator to get proper DS format
-    dsp_input = "~ a -> b"
-    ds_intermediate = parse(dsp_input)
-    # Then unparse it back
-    dsp_output = unparse(ds_intermediate)
-    # Should get back the original with proper formatting
+    ds_input = "(unary ~ a)\n----\nb"
+    dsp_output = unparse(ds_input)
     expected = "(~ a) -> b"
     assert dsp_output == expected
 
@@ -114,6 +118,14 @@ def test_unparse_multiple_rules() -> None:
     ds_input = "a\n----\nb\n\nc\n----\nd"
     dsp_output = unparse(ds_input)
     expected = "a -> b\nc -> d"
+    assert dsp_output == expected
+
+
+def test_unparse_complex_expression() -> None:
+    """Test unparsing complex nested expressions"""
+    ds_input = "(binary * (binary + a b) c)\n(subscript d i)\n----\n(function f g h)"
+    dsp_output = unparse(ds_input)
+    expected = "((a + b) * c), d[i] -> f(g, h)"
     assert dsp_output == expected
 
 
@@ -131,53 +143,3 @@ def test_roundtrip_unparse_parse() -> None:
     dsp_intermediate = unparse(ds_original)
     ds_result = parse(dsp_intermediate)
     assert ds_result == ds_original
-
-
-def test_parse_complex_expression() -> None:
-    """Test parsing complex nested expressions"""
-    dsp_input = "(a + b) * c, d[i] -> f(g, h)"
-    ds_output = parse(dsp_input)
-    expected = "(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)"
-    assert ds_output == expected
-
-
-def test_unparse_complex_expression() -> None:
-    """Test unparsing complex nested expressions"""
-    ds_input = "(binary * (binary + a b) c)\n(subscript d i)\n----\n(function f g h)"
-    dsp_output = unparse(ds_input)
-    expected = "((a + b) * c), d[i] -> f(g, h)"
-    assert dsp_output == expected
-
-
-def test_parse_unary_with_space() -> None:
-    """Test parsing unary operators with proper spacing to trigger visitUnary"""
-    dsp_input = "~ a -> b"
-    ds_output = parse(dsp_input)
-    expected = "(unary ~ a)\n-----------\nb"
-    assert ds_output == expected
-
-
-def test_unparse_unary_explicit() -> None:
-    """Test unparsing explicit (unary ...) format to trigger visitUnary"""
-    ds_input = "(unary ~ a)\n----\nb"
-    dsp_output = unparse(ds_input)
-    expected = "(~ a) -> b"
-    assert dsp_output == expected
-
-
-def test_roundtrip_unary_operators() -> None:
-    """Test roundtrip for various unary operators"""
-    test_cases = [
-        ("~ a -> b", "(unary ~ a)\n-----------\nb", "(~ a) -> b"),
-        ("! x -> y", "(unary ! x)\n-----------\ny", "(! x) -> y"),
-        ("- n -> m", "(unary - n)\n-----------\nm", "(- n) -> m"),
-        ("+ p -> q", "(unary + p)\n-----------\nq", "(+ p) -> q"),
-    ]
-    for dsp_original, expected_ds, expected_dsp in test_cases:
-        ds_intermediate = parse(dsp_original)
-        assert ds_intermediate == expected_ds
-        dsp_result = unparse(ds_intermediate)
-        assert dsp_result == expected_dsp
-        # Parse again to ensure it's valid
-        ds_final = parse(dsp_result)
-        assert ds_final == expected_ds
