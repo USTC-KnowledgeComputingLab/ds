@@ -56,11 +56,19 @@ compile_commands.json
 *.la
 
 ########################################
-# Python (uv / ruff / pytest / mypy)
+# Python (uv / ruff / pytest / mypy / setuptools)
 ########################################
 # uv venvs
 .venv/
 .uv/
+
+# setuptools
+build/
+dist/
+*.egg-info/
+*.eggs/
+*.egg
+pip-wheel-metadata/
 
 # Python cache
 __pycache__/
