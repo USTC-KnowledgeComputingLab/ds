@@ -2,6 +2,7 @@
 requires = [
   "pdm-backend",
   "setuptools-scm~=9.2.2",
+  "antlr4-tools",
 ]
 build-backend = "pdm.backend"
 
@@ -28,3 +29,7 @@ root = ".."
 
 [tool.pdm.build]
 includes = ["apyds_bnf"]
+prebuild = [
+  "antlr4 -Dlanguage=Python3 Ds.g4 -visitor -no-listener -o apyds_bnf",
+  "antlr4 -Dlanguage=Python3 Dsp.g4 -visitor -no-listener -o apyds_bnf",
+]

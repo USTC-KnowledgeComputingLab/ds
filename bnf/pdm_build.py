@@ -1,8 +1,9 @@
 """
-PDM build hook for generating ANTLR parsers before building the package
+PDM build hook that executes prebuild commands from pyproject.toml
 """
 
 import subprocess
+import tomllib
 from pathlib import Path
 
 
@@ -13,38 +14,31 @@ def pdm_build_hook_enabled(context):
 
 def pdm_build_initialize(context):
     """
-    PDM build hook that generates ANTLR parsers before building.
-    This is equivalent to the 'prepare' script in package.json.
-    
-    This function is called before the build process starts.
+    PDM build hook that executes prebuild commands defined in pyproject.toml.
+    This allows the ANTLR commands to be configured in pyproject.toml similar to package.json's prepare script.
     """
     base_dir = Path(__file__).parent
-    grammars_dir = base_dir
-    output_dir = base_dir / "apyds_bnf"
-
-    # Generate parsers for both grammars
-    for grammar in ["Ds.g4", "Dsp.g4"]:
-        grammar_path = grammars_dir / grammar
-
-        print(f"Generating parser for {grammar}...")
+    pyproject_path = base_dir / "pyproject.toml"
+    
+    # Read prebuild commands from pyproject.toml
+    with open(pyproject_path, "rb") as f:
+        pyproject = tomllib.load(f)
+    
+    commands = pyproject.get("tool", {}).get("pdm", {}).get("build", {}).get("prebuild", [])
+    
+    # Execute each command
+    for cmd in commands:
+        print(f"Running: {cmd}")
         try:
             subprocess.run(
-                [
-                    "antlr4",
-                    "-Dlanguage=Python3",
-                    str(grammar_path),
-                    "-visitor",
-                    "-no-listener",
-                    "-o",
-                    str(output_dir),
-                ],
+                cmd,
+                shell=True,
                 check=True,
                 cwd=base_dir,
             )
-            print(f"Successfully generated parser for {grammar}")
+            print(f"Successfully executed: {cmd}")
         except subprocess.CalledProcessError as e:
             raise RuntimeError(
-                f"Failed to generate parser for {grammar}. "
-                f"Ensure ANTLR4 is installed and accessible. "
+                f"Failed to execute prebuild command: {cmd}\n"
                 f"Error: {e}"
             ) from e
