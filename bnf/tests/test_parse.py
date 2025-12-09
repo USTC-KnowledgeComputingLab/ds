@@ -99,11 +99,14 @@ def test_unparse_binary_operator():
 
 
 def test_unparse_unary_operator():
-    """Test unparsing unary operators."""
+    """Test unparsing unary operators.
+    
+    Note: This test documents a bug in the current implementation where
+    getChild(0) incorrectly gets '(unary' instead of getChild(1) for the operator.
+    The expected output is wrong but matches the current buggy behavior.
+    """
     input_str = "(unary - x)\n----\ny"
-    # Note: There appears to be a bug in the unparse implementation
-    # where getChild(0) gets '(unary' instead of getChild(1) for the operator
-    expected = "((unary x) -> y"
+    expected = "((unary x) -> y"  # Bug: should be "(- x) -> y"
     result = unparse(input_str)
     assert result == expected
 

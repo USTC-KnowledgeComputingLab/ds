@@ -85,10 +85,11 @@ test("unparse binary operator", () => {
 });
 
 test("unparse unary operator", () => {
+    // Note: This test documents a bug in the current implementation where
+    // getChild(0) incorrectly gets '(unary' instead of getChild(1) for the operator.
+    // The expected output is wrong but matches the current buggy behavior.
     const input = "(unary - x)\n----\ny";
-    // Note: There appears to be a bug in the unparse implementation
-    // where getChild(0) gets '(unary' instead of getChild(1) for the operator
-    const expected = "((unary x) -> y";
+    const expected = "((unary x) -> y";  // Bug: should be "(- x) -> y"
     const result = unparse(input);
     expect(result).toBe(expected);
 });
