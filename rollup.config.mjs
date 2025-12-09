@@ -14,11 +14,7 @@ export default [
             format: "es",
             entryFileNames: "[name].mjs",
         },
-        plugins: [
-            terser(),
-            typescript(),
-            nodeResolve(),
-        ],
+        plugins: [terser(), typescript(), nodeResolve()],
     },
     {
         input: {
