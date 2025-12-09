@@ -27,6 +27,8 @@ def pdm_build_initialize(context):
     commands = pyproject.get("tool", {}).get("pdm", {}).get("build", {}).get("prebuild", [])
     
     # Execute each command
+    # Note: shell=True is used here because commands are defined in the project's own
+    # pyproject.toml file (not external user input), similar to package.json scripts.
     for cmd in commands:
         print(f"Running: {cmd}")
         try:
