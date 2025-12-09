@@ -62,13 +62,13 @@ class UnparseVisitor(DsVisitor):
         return f"{self.visit(ctx.term(0))}({', '.join(self.visit(t) for t in ctx.term()[1:])})"
 
     def visitUnary(self, ctx):
-        return f"({ctx.getChild(0).getText()} {self.visit(ctx.term())})"
+        return f"({ctx.getChild(1).getText()} {self.visit(ctx.term())})"
 
     def visitBinary(self, ctx):
         return f"({self.visit(ctx.term(0))} {ctx.getChild(1).getText()} {self.visit(ctx.term(1))})"
 
 
-def parse(input):
+def parse(input: str) -> str:
     chars = InputStream(input)
     lexer = DspLexer(chars)
     tokens = CommonTokenStream(lexer)
@@ -78,7 +78,7 @@ def parse(input):
     return visitor.visit(tree)
 
 
-def unparse(input):
+def unparse(input: str) -> str:
     chars = InputStream(input)
     lexer = DsLexer(chars)
     tokens = CommonTokenStream(lexer)
