@@ -1,0 +1,35 @@
+{
+    "name": "atsds-bnf",
+    "description": "BNF parser and unparsers for DS - conversion between lisp-like and traditional syntax",
+    "author": "Hao Zhang <hzhangxyz@outlook.com>",
+    "license": "AGPL-3.0-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/USTC-KnowledgeComputingLab/ds.git"
+    },
+    "type": "module",
+    "exports": "./dist/index.mjs",
+    "main": "dist/index.mjs",
+    "module": "dist/index.mjs",
+    "browser": "dist/index.mjs",
+    "files": [
+        "dist/index.mjs"
+    ],
+    "scripts": {
+        "ds": "antlr4 -Dlanguage=JavaScript Ds.g4 -visitor -no-listener -o atsds_bnf",
+        "dsp": "antlr4 -Dlanguage=JavaScript Dsp.g4 -visitor -no-listener -o atsds_bnf",
+        "prepare": "npm-run-all ds dsp",
+        "build": "rollup --config rollup.config.mjs"
+    },
+    "dependencies": {
+        "antlr4": "^4.13.2"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^29.0.0",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-terser": "^0.4.4",
+        "npm-run-all": "^4.1.5",
+        "rollup": "^4.53.3"
+    }
+}
