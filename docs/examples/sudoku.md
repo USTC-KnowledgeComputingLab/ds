@@ -21,7 +21,7 @@ The Sudoku solver encodes Sudoku rules as logical inference rules in the DS syst
 <script>
 (async () => {
   const vue = await import("https://unpkg.com/vue@3.5.25/dist/vue.esm-browser.prod.js");
-  const atsds = await import("https://unpkg.com/atsds@0.0.2/dist/index.mjs");
+  const atsds = await import("https://unpkg.com/atsds@0.0.4/dist/index.mjs");
   const { loadModule } = await import("https://unpkg.com/vue3-sfc-loader@0.9.5/dist/vue3-sfc-loader.esm.js");
 
   const options = {
