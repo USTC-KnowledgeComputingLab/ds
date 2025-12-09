@@ -62,4 +62,4 @@ testpaths = "tests"
 macos.archs = ["universal2"]
 windows.archs = ["AMD64"]
 test-requires = ["pytest", "pytest-cov"]
-test-command = ["pytest {project}/tests --cov=apyds"]
+test-command = ["python -m pytest {project}/tests --cov=apyds"]
