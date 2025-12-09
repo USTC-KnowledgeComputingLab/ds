@@ -16,10 +16,11 @@
         "dist/index.mjs"
     ],
     "scripts": {
-        "ds": "antlr4 -Dlanguage=JavaScript Ds.g4 -visitor -no-listener -o atsds_bnf",
-        "dsp": "antlr4 -Dlanguage=JavaScript Dsp.g4 -visitor -no-listener -o atsds_bnf",
+        "ds": "java -jar antlr-4.13.2-complete.jar -Dlanguage=JavaScript Ds.g4 -visitor -no-listener -o atsds_bnf",
+        "dsp": "java -jar antlr-4.13.2-complete.jar -Dlanguage=JavaScript Dsp.g4 -visitor -no-listener -o atsds_bnf",
         "prepare": "npm-run-all ds dsp",
-        "build": "rollup --config rollup.config.mjs"
+        "build": "rollup --config rollup.config.mjs",
+        "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.mjs"
     },
     "dependencies": {
         "antlr4": "^4.13.2"
@@ -29,6 +30,9 @@
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-terser": "^0.4.4",
+        "@types/jest": "^30.0.0",
+        "cross-env": "^10.1.0",
+        "jest": "^30.2.0",
         "npm-run-all": "^4.1.5",
         "rollup": "^4.53.3"
     }
