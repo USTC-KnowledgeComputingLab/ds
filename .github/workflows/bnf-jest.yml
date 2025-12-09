@@ -27,7 +27,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: bnf/package-lock.json
 
       - name: dependencies
         working-directory: bnf
@@ -61,7 +60,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_LATEST_VERSION }}
           cache: 'npm'
-          cache-dependency-path: bnf/package-lock.json
 
       - name: version
         working-directory: bnf

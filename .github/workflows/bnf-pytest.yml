@@ -50,20 +50,19 @@ jobs:
 
       - uses: StoneMoe/setup-antlr4@v4
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          python-version: ${{ env.PYTHON_LATEST_VERSION }}
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
 
       - name: build
         working-directory: bnf
-        run: |
-          pip install build
-          python -m build
+        run: uv build
 
       - uses: actions/upload-artifact@v5
         with:
           name: dist
-          path: bnf/dist/*
+          path: bnf/dist/*.whl
 
   upload:
     runs-on: ubuntu-latest
