@@ -93,7 +93,7 @@ class UnparseVisitor extends DsVisitor {
     }
 
     visitUnary(ctx) {
-        return `(${ctx.getChild(0).getText()} ${this.visit(ctx.term())})`;
+        return `(${ctx.getChild(1).getText()} ${this.visit(ctx.term())})`;
     }
 
     visitBinary(ctx) {
