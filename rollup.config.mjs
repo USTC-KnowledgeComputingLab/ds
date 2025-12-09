@@ -13,7 +13,7 @@ export default [
         output: {
             dir: "dist",
             format: "es",
-            sourcemap: true,
+            sourcemap: false,
             entryFileNames: "[name].mjs",
         },
         plugins: [
@@ -21,7 +21,7 @@ export default [
             typescript(),
             nodeResolve(),
             copy({
-                patterns: ["ds.wasm", "ds.wasm.map"],
+                patterns: ["ds.wasm"],
                 rootDir: "atsds",
             }),
         ],

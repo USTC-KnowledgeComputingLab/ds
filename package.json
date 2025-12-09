@@ -16,12 +16,10 @@
     "files": [
         "dist/tsds.d.mts",
         "dist/ds.wasm",
-        "dist/ds.wasm.map",
-        "dist/tsds.mjs",
-        "dist/tsds.mjs.map"
+        "dist/tsds.mjs"
     ],
     "scripts": {
-        "emcc": "emcc -std=c++20 atsds/ds.cc src/*.cc -Iinclude -lembind -o atsds/ds.mjs --emit-tsd ds.d.mts -gsource-map=inline -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1",
+        "emcc": "emcc -std=c++20 atsds/ds.cc src/*.cc -Iinclude -lembind -o atsds/ds.mjs --emit-tsd ds.d.mts -O3 -ffast-math -flto -s ALLOW_MEMORY_GROWTH=1 -s SINGLE_FILE=1",
         "rollup": "rollup --config rollup.config.mjs",
         "build": "run-s emcc rollup",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.mjs",
