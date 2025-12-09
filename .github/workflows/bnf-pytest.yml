@@ -21,7 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: StoneMoe/setup-antlr4@v4.13.2
+      - name: install antlr4
+        run: pip install antlr4-tools
 
       - uses: astral-sh/setup-uv@v7
         with:
@@ -48,7 +49,8 @@ jobs:
       - name: recovery tag information
         run: git fetch --tags --force
 
-      - uses: StoneMoe/setup-antlr4@v4.13.2
+      - name: install antlr4
+        run: pip install antlr4-tools
 
       - uses: astral-sh/setup-uv@v7
         with:
