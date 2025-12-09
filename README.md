@@ -346,42 +346,7 @@ Each example demonstrates logical inference using propositional logic axioms.
 
 ## Support Packages
 
-The DS project includes additional support packages that extend functionality:
-
-### BNF Conversion Library
-
-Located in the `/bnf` directory, this package provides bidirectional conversion between DS syntax formats:
-
-- **apyds-bnf** (Python): [PyPI](https://pypi.org/project/apyds-bnf/)
-- **atsds-bnf** (JavaScript): [npm](https://www.npmjs.com/package/atsds-bnf)
-
-The BNF library converts between:
-- **Ds format**: S-expression (lisp-like) syntax used internally by DS
-- **Dsp format**: Traditional, human-readable syntax with infix operators
-
-This makes it easier to write logical rules in a natural mathematical notation and convert them to/from the DS internal format.
-
-**Installation:**
-```bash
-# Python
-pip install apyds-bnf
-
-# JavaScript
-npm install atsds-bnf
-```
-
-**Quick example:**
-```python
-from apyds_bnf import parse, unparse
-
-# Convert readable syntax to DS format
-parse("a, b -> c")  # Returns: "a\nb\n----\nc"
-
-# Convert DS format to readable syntax
-unparse("a\nb\n----\nc")  # Returns: "a, b -> c"
-```
-
-For more details, see the [BNF package README](/bnf/README.md).
+- **BNF Conversion Library** ([apyds-bnf](https://pypi.org/project/apyds-bnf/), [atsds-bnf](https://www.npmjs.com/package/atsds-bnf)): Bidirectional conversion between DS syntax formats. See [/bnf](/bnf) for details.
 
 ## Development
 

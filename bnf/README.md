@@ -125,130 +125,6 @@ For structured terms:
 | Unary operator (unparse output) | `(~ a) -> b` | `(unary ~ a)\n-----------\nb` |
 | Complex expression | `((a + b) * c), d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)` |
 
-## API Reference
-
-### Python
-
-#### `parse(dsp_text: str) -> str`
-
-Converts Dsp syntax to Ds syntax.
-
-**Parameters:**
-- `dsp_text`: String in Dsp format (human-readable syntax)
-
-**Returns:**
-- String in Ds format (S-expression syntax)
-
-**Example:**
-```python
-from apyds_bnf import parse
-
-result = parse("a, b -> c")
-# Returns: "a\nb\n----\nc"
-```
-
-#### `unparse(ds_text: str) -> str`
-
-Converts Ds syntax to Dsp syntax.
-
-**Parameters:**
-- `ds_text`: String in Ds format (S-expression syntax)
-
-**Returns:**
-- String in Dsp format (human-readable syntax)
-
-**Example:**
-```python
-from apyds_bnf import unparse
-
-result = unparse("a\nb\n----\nc")
-# Returns: "a, b -> c"
-```
-
-### JavaScript
-
-#### `parse(dspText: string): string`
-
-Converts Dsp syntax to Ds syntax.
-
-**Parameters:**
-- `dspText`: String in Dsp format (human-readable syntax)
-
-**Returns:**
-- String in Ds format (S-expression syntax)
-
-**Example:**
-```javascript
-import { parse } from "atsds-bnf";
-
-const result = parse("a, b -> c");
-// Returns: "a\nb\n----\nc"
-```
-
-#### `unparse(dsText: string): string`
-
-Converts Ds syntax to Dsp syntax.
-
-**Parameters:**
-- `dsText`: String in Ds format (S-expression syntax)
-
-**Returns:**
-- String in Dsp format (human-readable syntax)
-
-**Example:**
-```javascript
-import { unparse } from "atsds-bnf";
-
-const result = unparse("a\nb\n----\nc");
-// Returns: "a, b -> c"
-```
-
-## Examples
-
-### Parsing Complex Expressions
-
-```python
-from apyds_bnf import parse
-
-# Parse a complex expression with nested operators
-dsp = "(a + b) * c, d[i] -> f(g, h)"
-ds = parse(dsp)
-print(ds)
-# Output:
-# (binary * (binary + a b) c)
-# (subscript d i)
-# ---------------------------
-# (function f g h)
-```
-
-### Unparsing Multiple Rules
-
-```python
-from apyds_bnf import unparse
-
-# Unparse multiple rules
-ds = "a\n----\nb\n\nc\n----\nd"
-dsp = unparse(ds)
-print(dsp)
-# Output: a -> b
-#         c -> d
-```
-
-### Round-trip Conversion
-
-```python
-from apyds_bnf import parse, unparse
-
-# Original Dsp format
-original = "a, b -> c"
-
-# Convert to Ds and back to Dsp
-ds_format = parse(original)
-result = unparse(ds_format)
-
-assert result == original  # True
-```
-
 ## Building from Source
 
 ### Prerequisites
@@ -292,40 +168,6 @@ npm run build
 npm test
 ```
 
-## Testing
-
-The package includes comprehensive tests for both Python and JavaScript implementations.
-
-### Python Tests
-
-Located in `tests/test_parse_unparse.py`:
-
-```bash
-cd bnf
-pytest
-```
-
-Tests cover:
-- Simple rules with premises and conclusions
-- Axioms (rules with no premises)
-- Function calls
-- Subscript notation
-- Binary and unary operators
-- Multiple rules
-- Complex nested expressions
-- Round-trip conversions
-
-### JavaScript Tests
-
-Located in `tests/test_parse_unparse.mjs`:
-
-```bash
-cd bnf
-npm test
-```
-
-Same test coverage as Python implementation.
-
 ## Grammar Files
 
 The conversion is based on ANTLR grammars:
@@ -334,27 +176,6 @@ The conversion is based on ANTLR grammars:
 - **Dsp.g4**: Grammar for the Dsp format (human-readable syntax)
 
 These grammars are used to generate parsers for both Python and JavaScript.
-
-## Development
-
-### Generating ANTLR Parsers
-
-For Python:
-```bash
-java -jar antlr-4.13.2-complete.jar -Dlanguage=Python3 Ds.g4 -visitor -no-listener -o apyds_bnf
-java -jar antlr-4.13.2-complete.jar -Dlanguage=Python3 Dsp.g4 -visitor -no-listener -o apyds_bnf
-```
-
-For JavaScript:
-```bash
-antlr4 -Dlanguage=JavaScript Ds.g4 -visitor -no-listener -o atsds_bnf
-antlr4 -Dlanguage=JavaScript Dsp.g4 -visitor -no-listener -o atsds_bnf
-```
-
-### Code Formatting
-
-- Python: Uses `ruff` for linting and formatting (configured in `pyproject.toml`)
-- JavaScript: Standard npm formatting tools
 
 ## License
 
