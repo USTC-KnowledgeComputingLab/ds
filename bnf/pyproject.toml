@@ -28,3 +28,11 @@ root = ".."
 
 [tool.setuptools.packages.find]
 include = ["apyds_bnf"]
+
+[project.optional-dependencies]
+dev = [
+  "pytest~=9.0.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
