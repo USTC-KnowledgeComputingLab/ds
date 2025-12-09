@@ -26,8 +26,8 @@ version_scheme = "no-guess-dev"
 fallback_version = "0.0.0"
 root = ".."
 
-[tool.setuptools.packages.find]
-include = ["apyds_bnf"]
+[tool.setuptools]
+packages = ["apyds_bnf"]
 
 [project.optional-dependencies]
 dev = [
