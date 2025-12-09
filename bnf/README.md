@@ -116,13 +116,11 @@ For structured terms:
 | Description | Dsp Format (parse input / unparse output) | Ds Format |
 |-------------|-------------------|-------------------|
 | Simple rule | `a, b -> c` | `a\nb\n----\nc` |
-| Axiom (parse input) | `a` | `----\na` |
-| Axiom (unparse output) | ` -> a` | `----\na` |
+| Axiom | `a` | `----\na` |
 | Function call | `f(a, b) -> c` | `(function f a b)\n----------------\nc` |
 | Subscript | `a[i, j] -> b` | `(subscript a i j)\n-----------------\nb` |
 | Binary operator | `(a + b) -> c` | `(binary + a b)\n--------------\nc` |
-| Unary operator (parse input) | `~ a -> b` | `(unary ~ a)\n-----------\nb` |
-| Unary operator (unparse output) | `(~ a) -> b` | `(unary ~ a)\n-----------\nb` |
+| Unary operator | `~ a -> b` | `(unary ~ a)\n-----------\nb` |
 | Complex expression | `((a + b) * c), d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)` |
 
 ## Building from Source
