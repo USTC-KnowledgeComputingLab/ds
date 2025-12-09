@@ -18,8 +18,9 @@
     "scripts": {
         "ds": "antlr4 -Dlanguage=JavaScript Ds.g4 -visitor -no-listener -o atsds_bnf",
         "dsp": "antlr4 -Dlanguage=JavaScript Dsp.g4 -visitor -no-listener -o atsds_bnf",
-        "prepare": "npm-run-all ds dsp",
-        "build": "rollup --config rollup.config.mjs",
+        "antlr4": "run-p ds dsp",
+        "rollup": "rollup --config rollup.config.mjs",
+        "build": "run-s antlr4 rollup",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.mjs",
         "all": "run-s build test"
     },
