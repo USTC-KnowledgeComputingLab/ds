@@ -129,9 +129,9 @@ The `execute()` method performs one round of inference. It matches all rules aga
 === "TypeScript"
 
     ```typescript
-    import { search_t } from "atsds";
+    import { Search } from "atsds";
 
-    const search = new search_t();
+    const search = new Search();
     search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
     search.add("(father john mary)");
 
@@ -202,9 +202,9 @@ To search until a specific target is found:
 === "TypeScript"
 
     ```typescript
-    import { rule_t, search_t } from "atsds";
+    import { Rule, Search } from "atsds";
 
-    const search = new search_t(1000, 10000);
+    const search = new Search(1000, 10000);
 
     // Set up propositional logic
     search.add("(`P -> `Q) `P `Q");
@@ -213,7 +213,7 @@ To search until a specific target is found:
     search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
     search.add("(! (! X))");
 
-    const target = new rule_t("X");
+    const target = new Rule("X");
 
     while (true) {
         let found = false;
