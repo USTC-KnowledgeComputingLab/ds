@@ -1,9 +1,9 @@
-import { search_t, rule_t } from "../atsds/index.mts";
+import { Search, Rule } from "../atsds/index.mts";
 
 let search = null;
 
 beforeEach(() => {
-    search = new search_t(100, 1000);
+    search = new Search(100, 1000);
 });
 
 test("reset_parameters", () => {
@@ -25,7 +25,7 @@ test("add_fail", () => {
 test("execute_single", () => {
     search.add("p q");
     search.add("p");
-    const target = new rule_t("q");
+    const target = new Rule("q");
     let success = false;
     const count = search.execute((rule) => {
         if (rule.key() === target.key()) {
@@ -41,8 +41,8 @@ test("execute_long", () => {
     search.add("p q r");
     search.add("p");
     search.add("q");
-    const target1 = new rule_t("q r");
-    const target2 = new rule_t("r");
+    const target1 = new Rule("q r");
+    const target2 = new Rule("r");
     let success1 = false;
     let success2 = false;
     count1 = search.execute((rule) => {

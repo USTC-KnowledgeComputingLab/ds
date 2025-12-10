@@ -236,7 +236,7 @@ textarea:focus {
 <script setup>
 import { ref, nextTick, useTemplateRef } from "vue";
 import { render } from "ejs";
-import { search_t } from "atsds";
+import { Search } from "atsds";
 
 const rule_data_url = "./Sudoku.ejs";
 const logRef = useTemplateRef("logRef");
@@ -389,7 +389,7 @@ function addLog(message) {
 }
 
 function* engine(input_strings, buffer_limit, callback) {
-  const search = new search_t(buffer_limit, buffer_limit);
+  const search = new Search(buffer_limit, buffer_limit);
 
   for (const input_string of input_strings) {
     search.add(input_string);

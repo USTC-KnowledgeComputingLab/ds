@@ -84,10 +84,10 @@ Include the headers from `include/ds/` in your C++ project.
 ### TypeScript/JavaScript Example
 
 ```typescript
-import { rule_t, search_t } from "atsds";
+import { Rule, Search } from "atsds";
 
 // Create a search engine
-const search = new search_t(1000, 10000);
+const search = new Search(1000, 10000);
 
 // Modus ponens: P -> Q, P |- Q
 search.add("(`P -> `Q) `P `Q");
@@ -102,7 +102,7 @@ search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
 search.add("(! (! X))");
 
 // Target: X (double negation elimination)
-const target = new rule_t("X");
+const target = new Rule("X");
 
 // Execute search until target is found
 while (true) {
@@ -236,8 +236,8 @@ A fact is a rule without premises:
 Grounding substitutes variables with values using a dictionary:
 
 ```typescript
-const a = new term_t("`a");
-const dict = new term_t("((`a b))"); // Substitute `a with b
+const a = new Term("`a");
+const dict = new Term("((`a b))"); // Substitute `a with b
 const result = a.ground(dict);
 console.log(result.toString()); // "b"
 ```
@@ -248,9 +248,9 @@ Matching unifies the first premise of a rule with a fact to produce a new rule. 
 
 ```typescript
 // Modus ponens rule: (p -> q), p |- q
-const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
+const mp = new Rule("(`p -> `q)\n`p\n`q\n");
 // Double negation elimination axiom: !!x -> x
-const pq = new rule_t("((! (! `x)) -> `x)");
+const pq = new Rule("((! (! `x)) -> `x)");
 // Match produces: !!x |- x
 console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
 ```
@@ -260,13 +260,13 @@ console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
 ### TypeScript/JavaScript
 
 - `buffer_size(size?: number)`: Get/set buffer size for internal operations
-- `string_t`: String wrapper class
-- `variable_t`: Logical variable class
-- `item_t`: Item (constant/functor) class
-- `list_t`: List class
-- `term_t`: General term class (variable, item, or list)
-- `rule_t`: Logical rule class
-- `search_t`: Search engine for inference
+- `String_`: String wrapper class
+- `Variable`: Logical variable class
+- `Item`: Item (constant/functor) class
+- `List`: List class
+- `Term`: General term class (variable, item, or list)
+- `Rule`: Logical rule class
+- `Search`: Search engine for inference
 
 ### Python
 
