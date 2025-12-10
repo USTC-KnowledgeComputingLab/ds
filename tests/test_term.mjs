@@ -101,24 +101,24 @@ test("rename_invalid", () => {
 });
 
 test("match_simple", () => {
-    const a = new term_t("`a");
-    const b = new term_t("b");
+    const a = new Term("`a");
+    const b = new Term("b");
     const result = a.match(b);
     expect(result).not.toBeNull();
     expect(result.toString()).toBe("((1 2 `a b))");
 });
 
 test("match_complex", () => {
-    const a = new term_t("(f b a)");
-    const b = new term_t("(f `x a)");
+    const a = new Term("(f b a)");
+    const b = new Term("(f `x a)");
     const result = a.match(b);
     expect(result).not.toBeNull();
     expect(result.toString()).toBe("((2 1 `x b))");
 });
 
 test("match_fail", () => {
-    const a = new term_t("(f `x)");
-    const b = new term_t("(g `y)");
+    const a = new Term("(f `x)");
+    const b = new Term("(g `y)");
     const result = a.match(b);
     expect(result).toBeNull();
 });
