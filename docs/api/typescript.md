@@ -273,7 +273,7 @@ match(other: term_t): term_t | null
 
 - `other`: The term to match with this term
 
-**Returns:** A term representing the unification dictionary (list of pairs), or null if matching fails.
+**Returns:** A term representing the unification dictionary (list of tuples), or null if matching fails.
 
 **Example:**
 
@@ -282,7 +282,7 @@ const a = new term_t("`a");
 const b = new term_t("b");
 const result = a.match(b);
 if (result !== null) {
-    console.log(result.toString());  // "((r f `a b))"
+    console.log(result.toString());  // "((1 2 `a b))"
 }
 ```
 

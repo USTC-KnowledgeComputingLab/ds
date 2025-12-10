@@ -217,16 +217,16 @@ Matching unifies two terms and returns a dictionary of variable bindings. The di
     
     const result = a.match(b);
     if (result !== null) {
-        console.log(result.toString());  // ((r f `a value))
+        console.log(result.toString());  // ((1 2 `a value))
     }
 
     // Match complex terms
-    const term1 = new term_t("(f `x a)");
-    const term2 = new term_t("(f b a)");
+    const term1 = new term_t("(f b a)");
+    const term2 = new term_t("(f `x a)");
     
     const dict = term1.match(term2);
     if (dict !== null) {
-        console.log(dict.toString());  // ((r f `x b))
+        console.log(dict.toString());  // ((2 1 `x b))
     }
     ```
 
@@ -240,14 +240,14 @@ Matching unifies two terms and returns a dictionary of variable bindings. The di
     b = apyds.Term("value")
     
     result = a @ b  # Uses @ operator
-    print(result)  # ((r f `a value))
+    print(result)  # ((1 2 `a value))
 
     # Match complex terms
-    term1 = apyds.Term("(f `x a)")
-    term2 = apyds.Term("(f b a)")
+    term1 = apyds.Term("(f b a)")
+    term2 = apyds.Term("(f `x a)")
     
     dict_result = term1 @ term2
-    print(dict_result)  # ((r f `x b))
+    print(dict_result)  # ((2 1 `x b))
     ```
 
 === "C++"
@@ -265,9 +265,9 @@ Matching unifies two terms and returns a dictionary of variable bindings. The di
         // Match the terms
         std::byte buffer[1000];
         auto result = reinterpret_cast<ds::term_t*>(buffer);
-        result->match(a.get(), b.get(), "r", "f", buffer + 1000);
+        result->match(a.get(), b.get(), "1", "2", buffer + 1000);
 
-        std::cout << ds::term_to_text(result, 1000).get() << std::endl;  // ((r f `a value))
+        std::cout << ds::term_to_text(result, 1000).get() << std::endl;  // ((1 2 `a value))
 
         return 0;
     }

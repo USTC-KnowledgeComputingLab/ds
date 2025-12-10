@@ -278,7 +278,7 @@ def __matmul__(self, other: Term) -> Term | None
 
 - `other`: The term to match with this term
 
-**Returns:** A term representing the unification dictionary (list of pairs), or None if matching fails.
+**Returns:** A term representing the unification dictionary (list of tuples), or None if matching fails.
 
 **Example:**
 
@@ -287,7 +287,7 @@ a = Term("`a")
 b = Term("b")
 result = a @ b
 if result is not None:
-    print(result)  # "((r f `a b))"
+    print(result)  # "((1 2 `a b))"
 ```
 
 #### rename()
