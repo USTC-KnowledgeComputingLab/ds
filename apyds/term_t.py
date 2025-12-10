@@ -84,16 +84,16 @@ class Term(Common[ds.Term]):
             other: The term to match with this term.
 
         Returns:
-            A term representing the unification dictionary (list of pairs), or None if matching fails.
+            A term representing the unification dictionary (list of tuples), or None if matching fails.
 
         Example:
             >>> a = Term("`a")
             >>> b = Term("b")
             >>> result = a @ b
-            >>> str(result) if result else None  # "((r f `a b))"
+            >>> str(result) if result else None  # "((1 2 `a b))"
         """
         capacity = buffer_size()
-        term = ds.Term.match(self.value, other.value, "r", "f", capacity)
+        term = ds.Term.match(self.value, other.value, "1", "2", capacity)
         if term is None:
             return None
         return Term(term, capacity)
