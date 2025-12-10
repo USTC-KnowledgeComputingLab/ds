@@ -17,9 +17,9 @@ A deductive system for logical inference, implemented in C++. The library provid
 === "TypeScript"
 
     ```typescript
-    import { term_t } from "atsds";
+    import { TermT } from "atsds";
     
-    const term = new term_t("(hello world)");
+    const term = new TermT("(hello world)");
     console.log(term.toString());
     // Output: (hello world)
     ```
