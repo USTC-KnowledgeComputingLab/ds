@@ -8,7 +8,7 @@ import type * as dst from "./ds.d.mts";
 
 const ds: dst.EmbindModule = await create_ds();
 
-let _bufferSize: number = 1024;
+let _buffer_size: number = 1024;
 
 /**
  * Gets the current buffer size, or sets a new buffer size and returns the previous value.
@@ -24,11 +24,11 @@ let _bufferSize: number = 1024;
  * ```
  */
 export function bufferSize(size: number = 0): number {
-    const old_size = _bufferSize;
+    const oldSize = _buffer_size;
     if (size !== 0) {
-        _bufferSize = size;
+        _buffer_size = size;
     }
-    return old_size;
+    return oldSize;
 }
 
 /**
@@ -316,12 +316,12 @@ export class Term extends _Common<dst.Term> {
      * @throws {Error} If the term type is unexpected.
      */
     term(): Variable | Item | List {
-        const term_type: dst.TermType = this.value.get_type();
-        if (term_type === ds.TermType.Variable) {
+        const termType: dst.TermType = this.value.get_type();
+        if (termType === ds.TermType.Variable) {
             return new Variable(this.value.variable());
-        } else if (term_type === ds.TermType.Item) {
+        } else if (termType === ds.TermType.Item) {
             return new Item(this.value.item());
-        } else if (term_type === ds.TermType.List) {
+        } else if (termType === ds.TermType.List) {
             return new List(this.value.list());
         } else {
             throw new Error("Unexpected term type.");
@@ -360,7 +360,7 @@ export class Term extends _Common<dst.Term> {
     /**
      * Rename all variables in this term by adding prefix and suffix.
      *
-     * @param prefix_and_suffix - A term representing a list with two inner lists.
+     * @param prefixAndSuffix - A term representing a list with two inner lists.
      *                            Each inner list contains 0 or 1 item representing the prefix and suffix.
      *                            Example: "((pre_) (_suf))" adds "pre_" as prefix and "_suf" as suffix.
      * @returns The renamed term, or null if renaming fails.
@@ -377,9 +377,9 @@ export class Term extends _Common<dst.Term> {
      * console.log(c.rename(d).toString()); // "`x_suf"
      * ```
      */
-    rename(prefix_and_suffix: Term): Term | null {
+    rename(prefixAndSuffix: Term): Term | null {
         const capacity = bufferSize();
-        const term = ds.Term.rename(this.value, prefix_and_suffix.value, capacity);
+        const term = ds.Term.rename(this.value, prefixAndSuffix.value, capacity);
         if (term === null) {
             return null;
         }
@@ -494,7 +494,7 @@ export class Rule extends _Common<dst.Rule> {
     /**
      * Rename all variables in this rule by adding prefix and suffix.
      *
-     * @param prefix_and_suffix - A rule with only a conclusion that is a list with two inner lists.
+     * @param prefixAndSuffix - A rule with only a conclusion that is a list with two inner lists.
      *                            Each inner list contains 0 or 1 item representing the prefix and suffix.
      *                            Example: "((pre_) (_suf))" adds "pre_" as prefix and "_suf" as suffix.
      * @returns The renamed rule, or null if renaming fails.
@@ -511,9 +511,9 @@ export class Rule extends _Common<dst.Rule> {
      * console.log(c.rename(d).toString()); // "----\n`x_suf\n"
      * ```
      */
-    rename(prefix_and_suffix: Rule): Rule | null {
+    rename(prefixAndSuffix: Rule): Rule | null {
         const capacity = bufferSize();
-        const rule = ds.Rule.rename(this.value, prefix_and_suffix.value, capacity);
+        const rule = ds.Rule.rename(this.value, prefixAndSuffix.value, capacity);
         if (rule === null) {
             return null;
         }

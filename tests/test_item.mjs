@@ -9,9 +9,9 @@ beforeEach(() => {
 test("toString", () => {
     expect(v.toString()).toBe("item");
 
-    const old_buffer_size = bufferSize(4);
+    const oldBufferSize = bufferSize(4);
     expect(() => v.toString()).toThrow();
-    bufferSize(old_buffer_size);
+    bufferSize(oldBufferSize);
 });
 
 test("copy", () => {
