@@ -59,6 +59,8 @@ nav:
       - TypeScript API: api/typescript.md
       - Python API: api/python.md
       - C++ API: api/cpp.md
+  - Support Packages:
+      - BNF: support-packages/bnf.md
   - Examples:
       - Basis Examples: examples/basic.md
       - Sudoku: examples/sudoku.md
