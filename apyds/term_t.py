@@ -77,15 +77,11 @@ class Term(Common[ds.Term]):
             return None
         return Term(term, capacity)
 
-    def match(
-        self, other: Term, scope_1: str | None = None, scope_2: str | None = None
-    ) -> Term | None:
+    def __matmul__(self, other: Term) -> Term | None:
         """Match two terms and return the unification result as a dictionary.
 
         Args:
             other: The term to match with this term.
-            scope_1: Optional scope string for variables in this term.
-            scope_2: Optional scope string for variables in the other term.
 
         Returns:
             A term representing the unification dictionary (list of pairs), or None if matching fails.
@@ -93,14 +89,11 @@ class Term(Common[ds.Term]):
         Example:
             >>> a = Term("`a")
             >>> b = Term("b")
-            >>> result = a.match(b)
-            >>> str(result) if result else None  # "((`a b))"
+            >>> result = a @ b
+            >>> str(result) if result else None  # "((r f `a b))"
         """
         capacity = buffer_size()
-        # Convert None to empty string for C++ binding
-        scope_1_str = scope_1 if scope_1 is not None else ""
-        scope_2_str = scope_2 if scope_2 is not None else ""
-        term = ds.Term.match(self.value, other.value, scope_1_str, scope_2_str, capacity)
+        term = ds.Term.match(self.value, other.value, "r", "f", capacity)
         if term is None:
             return None
         return Term(term, capacity)
