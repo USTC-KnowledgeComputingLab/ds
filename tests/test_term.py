@@ -115,32 +115,21 @@ def test_rename_invalid() -> None:
 def test_match_simple() -> None:
     a = apyds.Term("`a")
     b = apyds.Term("b")
-    result = a.match(b)
+    result = a @ b
     assert result is not None
-    # Result format is ((scope_1 scope_2 key value)) where scopes are empty strings
-    assert str(result) == "((  `a b))"
+    assert str(result) == "((r f `a b))"
 
 
 def test_match_complex() -> None:
     a = apyds.Term("(f `x a)")
     b = apyds.Term("(f b a)")
-    result = a.match(b)
+    result = a @ b
     assert result is not None
-    assert str(result) == "((  `x b))"
+    assert str(result) == "((r f `x b))"
 
 
 def test_match_fail() -> None:
     a = apyds.Term("(f `x)")
     b = apyds.Term("(g `y)")
-    result = a.match(b)
+    result = a @ b
     assert result is None
-
-
-def test_match_with_scopes() -> None:
-    a = apyds.Term("`a")
-    b = apyds.Term("`b")
-    result = a.match(b, "scope1", "scope2")
-    assert result is not None
-    # The result should be a dictionary with scoped variables
-    # Format: ((scope1 scope2 `a `b))
-    assert str(result) == "((scope1 scope2 `a `b))"

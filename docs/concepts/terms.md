@@ -202,6 +202,77 @@ Grounding substitutes variables in a term with values from a dictionary. The dic
     }
     ```
 
+### Matching
+
+Matching unifies two terms and returns a dictionary of variable bindings. The dictionary contains the substitutions needed to make the two terms equal.
+
+=== "TypeScript"
+
+    ```typescript
+    import { term_t } from "atsds";
+
+    // Match a variable with a value
+    const a = new term_t("`a");
+    const b = new term_t("value");
+    
+    const result = a.match(b);
+    if (result !== null) {
+        console.log(result.toString());  // ((r f `a value))
+    }
+
+    // Match complex terms
+    const term1 = new term_t("(f `x a)");
+    const term2 = new term_t("(f b a)");
+    
+    const dict = term1.match(term2);
+    if (dict !== null) {
+        console.log(dict.toString());  // ((r f `x b))
+    }
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Match a variable with a value
+    a = apyds.Term("`a")
+    b = apyds.Term("value")
+    
+    result = a @ b  # Uses @ operator
+    print(result)  # ((r f `a value))
+
+    # Match complex terms
+    term1 = apyds.Term("(f `x a)")
+    term2 = apyds.Term("(f b a)")
+    
+    dict_result = term1 @ term2
+    print(dict_result)  # ((r f `x b))
+    ```
+
+=== "C++"
+
+    ```cpp
+    #include <ds/ds.hh>
+    #include <ds/utility.hh>
+    #include <iostream>
+
+    int main() {
+        // Match a variable with a value
+        auto a = ds::text_to_term("`a", 1000);
+        auto b = ds::text_to_term("value", 1000);
+
+        // Match the terms
+        std::byte buffer[1000];
+        auto result = reinterpret_cast<ds::term_t*>(buffer);
+        result->match(a.get(), b.get(), "r", "f", buffer + 1000);
+
+        std::cout << ds::term_to_text(result, 1000).get() << std::endl;  // ((r f `a value))
+
+        return 0;
+    }
+    ```
+
 ### Renaming
 
 Renaming adds prefixes and/or suffixes to all variables in a term. This is useful for avoiding variable name collisions during unification.

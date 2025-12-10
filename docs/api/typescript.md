@@ -266,14 +266,12 @@ if (result !== null) {
 Match two terms and return the unification result as a dictionary.
 
 ```typescript
-match(other: term_t, scope_1?: string, scope_2?: string): term_t | null
+match(other: term_t): term_t | null
 ```
 
 **Parameters:**
 
 - `other`: The term to match with this term
-- `scope_1` (optional): Scope string for variables in this term
-- `scope_2` (optional): Scope string for variables in the other term
 
 **Returns:** A term representing the unification dictionary (list of pairs), or null if matching fails.
 
@@ -284,7 +282,7 @@ const a = new term_t("`a");
 const b = new term_t("b");
 const result = a.match(b);
 if (result !== null) {
-    console.log(result.toString());  // "((  `a b))"
+    console.log(result.toString());  // "((r f `a b))"
 }
 ```
 

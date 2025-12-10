@@ -105,8 +105,7 @@ test("match_simple", () => {
     const b = new term_t("b");
     const result = a.match(b);
     expect(result).not.toBeNull();
-    // Result format is ((scope_1 scope_2 key value)) where scopes are empty strings
-    expect(result.toString()).toBe("((  `a b))");
+    expect(result.toString()).toBe("((r f `a b))");
 });
 
 test("match_complex", () => {
@@ -114,7 +113,7 @@ test("match_complex", () => {
     const b = new term_t("(f b a)");
     const result = a.match(b);
     expect(result).not.toBeNull();
-    expect(result.toString()).toBe("((  `x b))");
+    expect(result.toString()).toBe("((r f `x b))");
 });
 
 test("match_fail", () => {
@@ -122,13 +121,4 @@ test("match_fail", () => {
     const b = new term_t("(g `y)");
     const result = a.match(b);
     expect(result).toBeNull();
-});
-
-test("match_with_scopes", () => {
-    const a = new term_t("`a");
-    const b = new term_t("`b");
-    const result = a.match(b, "scope1", "scope2");
-    expect(result).not.toBeNull();
-    // Format: ((scope1 scope2 `a `b))
-    expect(result.toString()).toBe("((scope1 scope2 `a `b))");
 });
