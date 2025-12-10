@@ -22,18 +22,6 @@ The search engine:
 
 ## Creating a Search Engine
 
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create with default sizes
-    search = apyds.Search()
-
-    # Create with custom sizes
-    search = apyds.Search(limit_size=1000, buffer_size=10000)
-    ```
-
 === "TypeScript"
 
     ```typescript
@@ -44,6 +32,18 @@ The search engine:
 
     // Create with custom sizes
     const search2 = new Search(1000, 10000);
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create with default sizes
+    search = apyds.Search()
+
+    # Create with custom sizes
+    search = apyds.Search(limit_size=1000, buffer_size=10000)
     ```
 
 === "C++"
@@ -64,20 +64,6 @@ The search engine:
 
 Use the `add()` method to add rules and facts to the knowledge base.
 
-=== "Python"
-
-    ```python
-    import apyds
-
-    search = apyds.Search()
-
-    # Add a fact
-    search.add("(parent john mary)")
-
-    # Add a rule with premises
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
-    ```
-
 === "TypeScript"
 
     ```typescript
@@ -90,6 +76,20 @@ Use the `add()` method to add rules and facts to the knowledge base.
 
     // Add a rule with premises
     search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    search = apyds.Search()
+
+    # Add a fact
+    search.add("(parent john mary)")
+
+    # Add a rule with premises
+    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
     ```
 
 === "C++"
@@ -108,6 +108,23 @@ Use the `add()` method to add rules and facts to the knowledge base.
 
 The `execute()` method performs one round of inference. It matches all rules against all facts and generates new conclusions.
 
+=== "TypeScript"
+
+    ```typescript
+    import { Search } from "atsds";
+
+    const search = new Search();
+    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
+    search.add("(father john mary)");
+
+    const count = search.execute((rule) => {
+        console.log(`Found: ${rule.toString()}`);
+        return false;  // Continue searching
+    });
+
+    console.log(`Generated ${count} new facts`);
+    ```
+
 === "Python"
 
     ```python
@@ -124,23 +141,6 @@ The `execute()` method performs one round of inference. It matches all rules aga
     # Execute one round
     count = search.execute(callback)
     print(f"Generated {count} new facts")
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { Search } from "atsds";
-
-    const search = new Search();
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
-    search.add("(father john mary)");
-
-    const count = search.execute((rule) => {
-        console.log(`Found: ${rule.toString()}`);
-        return false;  // Continue searching
-    });
-
-    console.log(`Generated ${count} new facts`);
     ```
 
 === "C++"
@@ -168,36 +168,6 @@ The callback receives each newly inferred rule and should return:
 ## Searching for a Target
 
 To search until a specific target is found:
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    search = apyds.Search(1000, 10000)
-
-    # Set up propositional logic
-    search.add("(`P -> `Q) `P `Q")  # Modus ponens
-    search.add("(`p -> (`q -> `p))")  # Axiom 1
-    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")  # Axiom 2
-    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")  # Axiom 3
-    search.add("(! (! X))")  # Premise
-
-    target = apyds.Rule("X")
-
-    while True:
-        found = False
-        def check(candidate):
-            nonlocal found
-            if candidate == target:
-                print(f"Found: {candidate}")
-                found = True
-                return True
-            return False
-        search.execute(check)
-        if found:
-            break
-    ```
 
 === "TypeScript"
 
@@ -229,22 +199,52 @@ To search until a specific target is found:
     }
     ```
 
+=== "Python"
+
+    ```python
+    import apyds
+
+    search = apyds.Search(1000, 10000)
+
+    # Set up propositional logic
+    search.add("(`P -> `Q) `P `Q")  # Modus ponens
+    search.add("(`p -> (`q -> `p))")  # Axiom 1
+    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")  # Axiom 2
+    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")  # Axiom 3
+    search.add("(! (! X))")  # Premise
+
+    target = apyds.Rule("X")
+
+    while True:
+        found = False
+        def check(candidate):
+            global found
+            if candidate == target:
+                print(f"Found: {candidate}")
+                found = True
+                return True
+            return False
+        search.execute(check)
+        if found:
+            break
+    ```
+
 ## Configuration Methods
 
 ### Set Limit Size
 
 Controls the maximum size for each stored rule/fact:
 
-=== "Python"
-
-    ```python
-    search.set_limit_size(2000)
-    ```
-
 === "TypeScript"
 
     ```typescript
     search.set_limit_size(2000);
+    ```
+
+=== "Python"
+
+    ```python
+    search.set_limit_size(2000)
     ```
 
 === "C++"
@@ -257,16 +257,16 @@ Controls the maximum size for each stored rule/fact:
 
 Controls the internal buffer size for operations:
 
-=== "Python"
-
-    ```python
-    search.set_buffer_size(20000)
-    ```
-
 === "TypeScript"
 
     ```typescript
     search.set_buffer_size(20000);
+    ```
+
+=== "Python"
+
+    ```python
+    search.set_buffer_size(20000)
     ```
 
 === "C++"
@@ -279,16 +279,16 @@ Controls the internal buffer size for operations:
 
 Clears all rules and facts:
 
-=== "Python"
-
-    ```python
-    search.reset()
-    ```
-
 === "TypeScript"
 
     ```typescript
     search.reset();
+    ```
+
+=== "Python"
+
+    ```python
+    search.reset()
     ```
 
 === "C++"

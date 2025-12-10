@@ -105,7 +105,7 @@ Rules represent logical inference steps. A rule has premises (conditions) and a 
         auto rule = ds::text_to_rule("(father `X `Y)\n----------\n(parent `X `Y)\n", 1000);
 
         std::cout << "Rule premises: " << rule->premises_count() << std::endl;
-        std::cout << "Rule conclusion: " << ds::rule_to_text(fact->conclusion(), 1000).get() << std::endl;
+        std::cout << "Rule conclusion: " << ds::term_to_text(fact->conclusion(), 1000).get() << std::endl;
         return 0;
     }
     ```
@@ -140,7 +140,7 @@ The search engine performs logical inference by matching rules with facts.
     while True:
         found = False
         def callback(candidate):
-            nonlocal found
+            global found
             if candidate == target:
                 print(f"Found: {candidate}")
                 found = True
