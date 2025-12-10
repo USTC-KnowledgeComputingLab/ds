@@ -1,9 +1,9 @@
-import { StringT, bufferSize } from "../atsds/index.mts";
+import { String, bufferSize } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new StringT("string");
+    v = new String("string");
 });
 
 test("toString", () => {
@@ -23,29 +23,29 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new StringT(v);
+    const v2 = new String(v);
     expect(v2.toString()).toBe("string");
 
-    expect(() => new StringT(v, 100)).toThrow();
+    expect(() => new String(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new StringT(v.value);
+    const v2 = new String(v.value);
     expect(v2.toString()).toBe("string");
 });
 
 test("create_from_text", () => {
-    const v2 = new StringT("string");
+    const v2 = new String("string");
     expect(v2.toString()).toBe("string");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new StringT(v.data());
+    const v2 = new String(v.data());
     expect(v2.toString()).toBe("string");
 
-    expect(() => new StringT(v.data(), 100)).toThrow();
+    expect(() => new String(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new StringT(100)).toThrow();
+    expect(() => new String(100)).toThrow();
 });

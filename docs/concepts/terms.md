@@ -73,25 +73,25 @@ Lists are the primary way to build complex structures in the deductive system. T
 === "TypeScript"
 
     ```typescript
-    import { VariableT, ItemT, ListT, TermT } from "atsds";
+    import { Variable, Item, List, Term } from "atsds";
 
     // Create a variable
-    const var1 = new VariableT("`X");
+    const var1 = new Variable("`X");
     console.log(`Variable name: ${var1.name().toString()}`);  // X
 
     // Create an item
-    const item = new ItemT("hello");
+    const item = new Item("hello");
     console.log(`Item name: ${item.name().toString()}`);  // hello
 
     // Create a list
-    const lst = new ListT("(a b c)");
+    const lst = new List("(a b c)");
     console.log(`List length: ${lst.length()}`);  // 3
     console.log(`First element: ${lst.getitem(0).toString()}`);  // a
 
     // Create a generic term
-    const term = new TermT("(f `x)");
+    const term = new Term("(f `x)");
     // Access the underlying type
-    const inner = term.term();  // Returns a ListT
+    const inner = term.term();  // Returns a List
     ```
 
 === "Python"
@@ -145,13 +145,13 @@ Grounding substitutes variables in a term with values from a dictionary. The dic
 === "TypeScript"
 
     ```typescript
-    import { TermT } from "atsds";
+    import { Term } from "atsds";
 
     // Create a term with a variable
-    const term = new TermT("`a");
+    const term = new Term("`a");
 
     // Create a dictionary for substitution
-    const dictionary = new TermT("((`a b))");
+    const dictionary = new Term("((`a b))");
 
     // Ground the term
     const result = term.ground(dictionary);
@@ -209,13 +209,13 @@ Renaming adds prefixes and/or suffixes to all variables in a term. This is usefu
 === "TypeScript"
 
     ```typescript
-    import { TermT } from "atsds";
+    import { Term } from "atsds";
 
     // Create a term with a variable
-    const term = new TermT("`x");
+    const term = new Term("`x");
 
     // Create prefix and suffix specification
-    const spec = new TermT("((pre_) (_suf))");
+    const spec = new Term("((pre_) (_suf))");
 
     // Rename the term
     const result = term.rename(spec);

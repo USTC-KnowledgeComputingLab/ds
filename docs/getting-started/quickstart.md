@@ -30,13 +30,13 @@ Terms are the basic building blocks of the deductive system. A term can be:
 === "TypeScript"
 
     ```typescript
-    import { VariableT, ItemT, ListT, TermT } from "atsds";
+    import { Variable, Item, List, Term } from "atsds";
 
     // Create different types of terms
-    const var1 = new VariableT("`X");
-    const item = new ItemT("hello");
-    const lst = new ListT("(a b c)");
-    const term = new TermT("(f `x a)");
+    const var1 = new Variable("`X");
+    const item = new Item("hello");
+    const lst = new List("(a b c)");
+    const term = new Term("(f `x a)");
 
     console.log(`Variable: ${var1.toString()}`);  // `X
     console.log(`Item: ${item.toString()}`);      // hello
@@ -81,14 +81,14 @@ Rules represent logical inference steps. A rule has premises (conditions) and a 
 === "TypeScript"
 
     ```typescript
-    import { RuleT } from "atsds";
+    import { Rule } from "atsds";
 
     // A fact (rule with no premises)
-    const fact = new RuleT("(parent john mary)");
+    const fact = new Rule("(parent john mary)");
     console.log(`Fact: ${fact.toString()}`);
 
     // A rule with premises
-    const rule = new RuleT("(father `X `Y)\n----------\n(parent `X `Y)\n");
+    const rule = new Rule("(father `X `Y)\n----------\n(parent `X `Y)\n");
     console.log(`Rule premises: ${rule.length()}`);
     console.log(`Rule conclusion: ${rule.conclusion().toString()}`);
     ```
@@ -154,10 +154,10 @@ The search engine performs logical inference by matching rules with facts.
 === "TypeScript"
 
     ```typescript
-    import { RuleT, SearchT } from "atsds";
+    import { Rule, Search } from "atsds";
 
     // Create search engine
-    const search = new SearchT(1000, 10000);
+    const search = new Search(1000, 10000);
 
     // Add modus ponens: P -> Q, P |- Q
     search.add("(`P -> `Q) `P `Q");
@@ -171,7 +171,7 @@ The search engine performs logical inference by matching rules with facts.
     search.add("(! (! X))");
 
     // Define target: X
-    const target = new RuleT("X");
+    const target = new Rule("X");
 
     // Execute search
     while (true) {

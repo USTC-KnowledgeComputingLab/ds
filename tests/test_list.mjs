@@ -1,9 +1,9 @@
-import { ListT, bufferSize } from "../atsds/index.mts";
+import { List, bufferSize } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new ListT("(a b c)");
+    v = new List("(a b c)");
 });
 
 test("toString", () => {
@@ -23,31 +23,31 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new ListT(v);
+    const v2 = new List(v);
     expect(v2.toString()).toBe("(a b c)");
 
-    expect(() => new ListT(v, 100)).toThrow();
+    expect(() => new List(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new ListT(v.value);
+    const v2 = new List(v.value);
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_text", () => {
-    const v2 = new ListT("(a b c)");
+    const v2 = new List("(a b c)");
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new ListT(v.data());
+    const v2 = new List(v.data());
     expect(v2.toString()).toBe("(a b c)");
 
-    expect(() => new ListT(v.data(), 100)).toThrow();
+    expect(() => new List(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new ListT(100)).toThrow();
+    expect(() => new List(100)).toThrow();
 });
 
 test("length", () => {

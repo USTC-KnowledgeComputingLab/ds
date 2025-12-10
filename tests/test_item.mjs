@@ -1,9 +1,9 @@
-import { ItemT, bufferSize } from "../atsds/index.mts";
+import { Item, bufferSize } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new ItemT("item");
+    v = new Item("item");
 });
 
 test("toString", () => {
@@ -23,31 +23,31 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new ItemT(v);
+    const v2 = new Item(v);
     expect(v2.toString()).toBe("item");
 
-    expect(() => new ItemT(v, 100)).toThrow();
+    expect(() => new Item(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new ItemT(v.value);
+    const v2 = new Item(v.value);
     expect(v2.toString()).toBe("item");
 });
 
 test("create_from_text", () => {
-    const v2 = new ItemT("item");
+    const v2 = new Item("item");
     expect(v2.toString()).toBe("item");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new ItemT(v.data());
+    const v2 = new Item(v.data());
     expect(v2.toString()).toBe("item");
 
-    expect(() => new ItemT(v.data(), 100)).toThrow();
+    expect(() => new Item(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new ItemT(100)).toThrow();
+    expect(() => new Item(100)).toThrow();
 });
 
 test("name", () => {

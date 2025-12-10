@@ -5,13 +5,13 @@ This page documents the TypeScript API for the `atsds` package. The documentatio
 ```typescript
 import { 
     bufferSize,
-    StringT, 
-    VariableT, 
-    ItemT, 
-    ListT, 
-    TermT, 
-    RuleT, 
-    SearchT 
+    String, 
+    Variable, 
+    Item, 
+    List, 
+    Term, 
+    Rule, 
+    Search 
 } from "atsds";
 ```
 
@@ -38,19 +38,19 @@ const oldSize = bufferSize(2048);     // Set new size, returns old size
 
 ---
 
-## StringT
+## String
 
 Wrapper class for deductive system strings.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | StringT, size?: number)
+constructor(value: string | Buffer | String, size?: number)
 ```
 
 **Parameters:**
 
-- `value`: Initial value (string, buffer, or another StringT)
+- `value`: Initial value (string, buffer, or another String)
 - `size` (optional): Buffer capacity for internal storage
 
 ### Methods
@@ -84,7 +84,7 @@ size(): number
 Create a deep copy of this instance.
 
 ```typescript
-copy(): StringT
+copy(): String
 ```
 
 #### key()
@@ -98,94 +98,94 @@ key(): string
 **Example:**
 
 ```typescript
-const str1 = new StringT("hello");
-const str2 = new StringT(str1.data());
+const str1 = new String("hello");
+const str2 = new String(str1.data());
 console.log(str1.toString());  // "hello"
 ```
 
 ---
 
-## VariableT
+## Variable
 
 Wrapper class for logical variables in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | VariableT, size?: number)
+constructor(value: string | Buffer | Variable, size?: number)
 ```
 
 **Parameters:**
 
-- `value`: Initial value (string starting with backtick, buffer, or another VariableT)
+- `value`: Initial value (string starting with backtick, buffer, or another Variable)
 - `size` (optional): Buffer capacity for internal storage
 
 ### Methods
 
-Inherits all methods from `StringT`, plus:
+Inherits all methods from `String`, plus:
 
 #### name()
 
 Get the name of this variable (without the backtick prefix).
 
 ```typescript
-name(): StringT
+name(): String
 ```
 
 **Example:**
 
 ```typescript
-const var1 = new VariableT("`X");
+const var1 = new Variable("`X");
 console.log(var1.name().toString());  // "X"
 console.log(var1.toString());         // "`X"
 ```
 
 ---
 
-## ItemT
+## Item
 
 Wrapper class for items (constants/functors) in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | ItemT, size?: number)
+constructor(value: string | Buffer | Item, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `StringT`, plus:
+Inherits all methods from `String`, plus:
 
 #### name()
 
 Get the name of this item.
 
 ```typescript
-name(): StringT
+name(): String
 ```
 
 **Example:**
 
 ```typescript
-const item = new ItemT("atom");
+const item = new Item("atom");
 console.log(item.name().toString());  // "atom"
 ```
 
 ---
 
-## ListT
+## List
 
 Wrapper class for lists in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | ListT, size?: number)
+constructor(value: string | Buffer | List, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `StringT`, plus:
+Inherits all methods from `String`, plus:
 
 #### length()
 
@@ -200,39 +200,39 @@ length(): number
 Get an element from the list by index.
 
 ```typescript
-getitem(index: number): TermT
+getitem(index: number): Term
 ```
 
 **Example:**
 
 ```typescript
-const list = new ListT("(a b c)");
+const list = new List("(a b c)");
 console.log(list.length());           // 3
 console.log(list.getitem(0).toString());  // "a"
 ```
 
 ---
 
-## TermT
+## Term
 
 Wrapper class for logical terms in the deductive system. A term can be a variable, item, or list.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | TermT, size?: number)
+constructor(value: string | Buffer | Term, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `StringT`, plus:
+Inherits all methods from `String`, plus:
 
 #### term()
 
 Extracts the underlying term and returns it as its concrete type.
 
 ```typescript
-term(): VariableT | ItemT | ListT
+term(): Variable | Item | List
 ```
 
 #### ground()
@@ -240,7 +240,7 @@ term(): VariableT | ItemT | ListT
 Ground this term using a dictionary to substitute variables with values.
 
 ```typescript
-ground(other: TermT, scope?: string): TermT | null
+ground(other: Term, scope?: string): Term | null
 ```
 
 **Parameters:**
@@ -253,8 +253,8 @@ ground(other: TermT, scope?: string): TermT | null
 **Example:**
 
 ```typescript
-const a = new TermT("`a");
-const dict = new TermT("((`a b))");
+const a = new Term("`a");
+const dict = new Term("((`a b))");
 const result = a.ground(dict);
 if (result !== null) {
     console.log(result.toString());  // "b"
@@ -266,7 +266,7 @@ if (result !== null) {
 Rename all variables in this term by adding prefix and suffix.
 
 ```typescript
-rename(prefix_and_suffix: TermT): TermT | null
+rename(prefix_and_suffix: Term): Term | null
 ```
 
 **Parameters:**
@@ -278,8 +278,8 @@ rename(prefix_and_suffix: TermT): TermT | null
 **Example:**
 
 ```typescript
-const term = new TermT("`x");
-const spec = new TermT("((pre_) (_suf))");
+const term = new Term("`x");
+const spec = new Term("((pre_) (_suf))");
 const result = term.rename(spec);
 if (result !== null) {
     console.log(result.toString());  // "`pre_x_suf"
@@ -288,19 +288,19 @@ if (result !== null) {
 
 ---
 
-## RuleT
+## Rule
 
 Wrapper class for logical rules in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | RuleT, size?: number)
+constructor(value: string | Buffer | Rule, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `StringT`, plus:
+Inherits all methods from `String`, plus:
 
 #### length()
 
@@ -315,7 +315,7 @@ length(): number
 Get a premise term by index.
 
 ```typescript
-getitem(index: number): TermT
+getitem(index: number): Term
 ```
 
 #### conclusion()
@@ -323,7 +323,7 @@ getitem(index: number): TermT
 Get the conclusion of the rule.
 
 ```typescript
-conclusion(): TermT
+conclusion(): Term
 ```
 
 #### ground()
@@ -331,7 +331,7 @@ conclusion(): TermT
 Ground this rule using a dictionary.
 
 ```typescript
-ground(other: RuleT, scope?: string): RuleT | null
+ground(other: Rule, scope?: string): Rule | null
 ```
 
 #### match()
@@ -339,7 +339,7 @@ ground(other: RuleT, scope?: string): RuleT | null
 Match this rule with another rule using unification.
 
 ```typescript
-match(other: RuleT): RuleT | null
+match(other: Rule): Rule | null
 ```
 
 **Parameters:**
@@ -351,8 +351,8 @@ match(other: RuleT): RuleT | null
 **Example:**
 
 ```typescript
-const mp = new RuleT("(`p -> `q)\n`p\n`q\n");
-const pq = new RuleT("((! (! `x)) -> `x)");
+const mp = new Rule("(`p -> `q)\n`p\n`q\n");
+const pq = new Rule("((! (! `x)) -> `x)");
 const result = mp.match(pq);
 if (result !== null) {
     console.log(result.toString());
@@ -365,12 +365,12 @@ if (result !== null) {
 Rename all variables in this rule.
 
 ```typescript
-rename(prefix_and_suffix: RuleT): RuleT | null
+rename(prefix_and_suffix: Rule): Rule | null
 ```
 
 ---
 
-## SearchT
+## Search
 
 Search engine for the deductive system.
 
@@ -426,7 +426,7 @@ add(text: string): boolean
 Execute the search engine with a callback for each inferred rule.
 
 ```typescript
-execute(callback: (candidate: RuleT) => boolean): number
+execute(callback: (candidate: Rule) => boolean): number
 ```
 
 **Parameters:**
@@ -438,7 +438,7 @@ execute(callback: (candidate: RuleT) => boolean): number
 **Example:**
 
 ```typescript
-const search = new SearchT(1000, 10000);
+const search = new Search(1000, 10000);
 search.add("(`P -> `Q) `P `Q");
 search.add("(! (! X))");
 
@@ -457,23 +457,23 @@ Here's a complete example demonstrating most of the TypeScript API:
 ```typescript
 import { 
     bufferSize, 
-    StringT, 
-    VariableT, 
-    ItemT, 
-    ListT, 
-    TermT, 
-    RuleT, 
-    SearchT 
+    String, 
+    Variable, 
+    Item, 
+    List, 
+    Term, 
+    Rule, 
+    Search 
 } from "atsds";
 
 // Configure buffer size
 bufferSize(2048);
 
 // Create terms
-const varX = new VariableT("`X");
-const item = new ItemT("hello");
-const lst = new ListT("(a b c)");
-const term = new TermT("(f `x `y)");
+const varX = new Variable("`X");
+const item = new Item("hello");
+const lst = new List("(a b c)");
+const term = new Term("(f `x `y)");
 
 console.log(`Variable: ${varX.toString()}, name: ${varX.name().toString()}`);
 console.log(`Item: ${item.toString()}, name: ${item.name().toString()}`);
@@ -481,30 +481,30 @@ console.log(`List: ${lst.toString()}, length: ${lst.length()}`);
 console.log(`Term: ${term.toString()}`);
 
 // Work with rules
-const fact = new RuleT("(parent john mary)");
-const rule = new RuleT("(father `X `Y)\n----------\n(parent `X `Y)\n");
+const fact = new Rule("(parent john mary)");
+const rule = new Rule("(father `X `Y)\n----------\n(parent `X `Y)\n");
 
 console.log(`\nFact: ${fact.toString()}`);
 console.log(`Rule premises: ${rule.length()}, conclusion: ${rule.conclusion().toString()}`);
 
 // Grounding
-const termA = new TermT("`a");
-const dictionary = new TermT("((`a hello))");
+const termA = new Term("`a");
+const dictionary = new Term("((`a hello))");
 const grounded = termA.ground(dictionary);
 if (grounded) {
     console.log(`\nGrounding \`a with ((\`a hello)): ${grounded.toString()}`);
 }
 
 // Matching
-const mp = new RuleT("(`p -> `q)\n`p\n`q\n");
-const axiom = new RuleT("((A) -> B)");
+const mp = new Rule("(`p -> `q)\n`p\n`q\n");
+const axiom = new Rule("((A) -> B)");
 const matched = mp.match(axiom);
 if (matched) {
     console.log(`\nMatching modus ponens with (A -> B):\n${matched.toString()}`);
 }
 
 // Search engine
-const search = new SearchT(1000, 10000);
+const search = new Search(1000, 10000);
 search.add("p q");  // p implies q
 search.add("q r");  // q implies r
 search.add("p");    // fact: p
@@ -519,7 +519,7 @@ for (let i = 0; i < 3; i++) {
 }
 
 // Copying and comparison
-const rule1 = new RuleT("(a b c)");
+const rule1 = new Rule("(a b c)");
 const rule2 = rule1.copy();
 console.log(`\nRule comparison: ${rule1.key() === rule2.key()}`);  // true
 ```
