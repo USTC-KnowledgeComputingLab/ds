@@ -261,6 +261,31 @@ if (result !== null) {
 }
 ```
 
+#### match()
+
+Match two terms and return the unification result as a dictionary.
+
+```typescript
+match(other: term_t): term_t | null
+```
+
+**Parameters:**
+
+- `other`: The term to match with this term
+
+**Returns:** A term representing the unification dictionary (list of tuples), or null if matching fails.
+
+**Example:**
+
+```typescript
+const a = new term_t("`a");
+const b = new term_t("b");
+const result = a.match(b);
+if (result !== null) {
+    console.log(result.toString());  // "((1 2 `a b))"
+}
+```
+
 #### rename()
 
 Rename all variables in this term by adding prefix and suffix.

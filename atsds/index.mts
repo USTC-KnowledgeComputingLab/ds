@@ -358,6 +358,31 @@ export class term_t extends _common_t<dst.Term> {
     }
 
     /**
+     * Match two terms and return the unification result as a dictionary.
+     *
+     * @param other - The term to match with this term.
+     * @returns A term representing the unification dictionary (list of tuples), or null if matching fails.
+     *
+     * @example
+     * ```typescript
+     * const a = new term_t("`a");
+     * const b = new term_t("b");
+     * const result = a.match(b);
+     * if (result !== null) {
+     *     console.log(result.toString());  // "((1 2 `a b))"
+     * }
+     * ```
+     */
+    match(other: term_t): term_t | null {
+        const capacity = buffer_size();
+        const term = ds.Term.match(this.value, other.value, "1", "2", capacity);
+        if (term === null) {
+            return null;
+        }
+        return new term_t(term, capacity);
+    }
+
+    /**
      * Rename all variables in this term by adding prefix and suffix.
      *
      * @param prefix_and_suffix - A term representing a list with two inner lists.

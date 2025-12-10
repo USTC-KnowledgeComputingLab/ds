@@ -266,6 +266,30 @@ if result is not None:
     print(result)  # "b"
 ```
 
+#### \_\_matmul\_\_() / match
+
+Match two terms and return the unification result as a dictionary.
+
+```python
+def __matmul__(self, other: Term) -> Term | None
+```
+
+**Parameters:**
+
+- `other`: The term to match with this term
+
+**Returns:** A term representing the unification dictionary (list of tuples), or None if matching fails.
+
+**Example:**
+
+```python
+a = Term("`a")
+b = Term("b")
+result = a @ b
+if result is not None:
+    print(result)  # "((1 2 `a b))"
+```
+
 #### rename()
 
 Rename all variables in this term by adding prefix and suffix.

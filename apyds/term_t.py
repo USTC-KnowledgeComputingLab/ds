@@ -77,6 +77,27 @@ class Term(Common[ds.Term]):
             return None
         return Term(term, capacity)
 
+    def __matmul__(self, other: Term) -> Term | None:
+        """Match two terms and return the unification result as a dictionary.
+
+        Args:
+            other: The term to match with this term.
+
+        Returns:
+            A term representing the unification dictionary (list of tuples), or None if matching fails.
+
+        Example:
+            >>> a = Term("`a")
+            >>> b = Term("b")
+            >>> result = a @ b
+            >>> str(result) if result else None  # "((1 2 `a b))"
+        """
+        capacity = buffer_size()
+        term = ds.Term.match(self.value, other.value, "1", "2", capacity)
+        if term is None:
+            return None
+        return Term(term, capacity)
+
     def rename(self, prefix_and_suffix: Term) -> Term | None:
         """Rename all variables in this term by adding prefix and suffix.
 

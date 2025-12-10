@@ -110,3 +110,26 @@ def test_rename_invalid() -> None:
     a = apyds.Term("`x")
     b = apyds.Term("item")
     assert a.rename(b) is None
+
+
+def test_match_simple() -> None:
+    a = apyds.Term("`a")
+    b = apyds.Term("b")
+    result = a @ b
+    assert result is not None
+    assert str(result) == "((1 2 `a b))"
+
+
+def test_match_complex() -> None:
+    a = apyds.Term("(f b a)")
+    b = apyds.Term("(f `x a)")
+    result = a @ b
+    assert result is not None
+    assert str(result) == "((2 1 `x b))"
+
+
+def test_match_fail() -> None:
+    a = apyds.Term("(f `x)")
+    b = apyds.Term("(g `y)")
+    result = a @ b
+    assert result is None
