@@ -266,6 +266,32 @@ if result is not None:
     print(result)  # "b"
 ```
 
+#### match()
+
+Match two terms and return the unification result as a dictionary.
+
+```python
+def match(self, other: Term, scope_1: str | None = None, scope_2: str | None = None) -> Term | None
+```
+
+**Parameters:**
+
+- `other`: The term to match with this term
+- `scope_1` (optional): Scope string for variables in this term
+- `scope_2` (optional): Scope string for variables in the other term
+
+**Returns:** A term representing the unification dictionary (list of pairs), or None if matching fails.
+
+**Example:**
+
+```python
+a = Term("`a")
+b = Term("b")
+result = a.match(b)
+if result is not None:
+    print(result)  # "((`a b))"
+```
+
 #### rename()
 
 Rename all variables in this term by adding prefix and suffix.

@@ -77,6 +77,31 @@ class Term(Common[ds.Term]):
             return None
         return Term(term, capacity)
 
+    def match(
+        self, other: Term, scope_1: str | None = None, scope_2: str | None = None
+    ) -> Term | None:
+        """Match two terms and return the unification result as a dictionary.
+
+        Args:
+            other: The term to match with this term.
+            scope_1: Optional scope string for variables in this term.
+            scope_2: Optional scope string for variables in the other term.
+
+        Returns:
+            A term representing the unification dictionary (list of pairs), or None if matching fails.
+
+        Example:
+            >>> a = Term("`a")
+            >>> b = Term("b")
+            >>> result = a.match(b)
+            >>> str(result) if result else None  # "((`a b))"
+        """
+        capacity = buffer_size()
+        term = ds.Term.match(self.value, other.value, scope_1, scope_2, capacity)
+        if term is None:
+            return None
+        return Term(term, capacity)
+
     def rename(self, prefix_and_suffix: Term) -> Term | None:
         """Rename all variables in this term by adding prefix and suffix.
 

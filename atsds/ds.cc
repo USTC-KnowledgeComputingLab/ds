@@ -88,6 +88,17 @@ auto rule_ground(ds::rule_t* rule, ds::rule_t* dictionary, const std::string& sc
     return std::unique_ptr<ds::rule_t>(result);
 }
 
+auto term_match(ds::term_t* term_1, ds::term_t* term_2, const std::string& scope_1, const std::string& scope_2, int length) -> std::unique_ptr<ds::term_t> {
+    const char* scope_1_ptr = scope_1.size() != 0 ? scope_1.data() : nullptr;
+    const char* scope_2_ptr = scope_2.size() != 0 ? scope_2.data() : nullptr;
+    auto result = reinterpret_cast<ds::term_t*>(operator new(length));
+    if (result->match(term_1, term_2, scope_1_ptr, scope_2_ptr, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
+        operator delete(result);
+        return std::unique_ptr<ds::term_t>(nullptr);
+    }
+    return std::unique_ptr<ds::term_t>(result);
+}
+
 auto rule_match(ds::rule_t* rule_1, ds::rule_t* rule_2, int length) -> std::unique_ptr<ds::rule_t> {
     auto result = reinterpret_cast<ds::rule_t*>(operator new(length));
     if (result->match(rule_1, rule_2, reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
@@ -163,6 +174,7 @@ EMSCRIPTEN_BINDINGS(ds) {
 
     term_t.class_function("ground", term_ground, em::return_value_policy::take_ownership());
     rule_t.class_function("ground", rule_ground, em::return_value_policy::take_ownership());
+    term_t.class_function("match", term_match, em::return_value_policy::take_ownership());
     rule_t.class_function("match", rule_match, em::return_value_policy::take_ownership());
     term_t.class_function("rename", term_rename, em::return_value_policy::take_ownership());
     rule_t.class_function("rename", rule_rename, em::return_value_policy::take_ownership());

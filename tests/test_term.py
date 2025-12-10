@@ -110,3 +110,37 @@ def test_rename_invalid() -> None:
     a = apyds.Term("`x")
     b = apyds.Term("item")
     assert a.rename(b) is None
+
+
+def test_match_simple() -> None:
+    a = apyds.Term("`a")
+    b = apyds.Term("b")
+    result = a.match(b)
+    assert result is not None
+    assert str(result) == "((`a b))"
+
+
+def test_match_complex() -> None:
+    a = apyds.Term("(f `x a)")
+    b = apyds.Term("(f b a)")
+    result = a.match(b)
+    assert result is not None
+    assert str(result) == "((`x b))"
+
+
+def test_match_fail() -> None:
+    a = apyds.Term("(f `x)")
+    b = apyds.Term("(g `y)")
+    result = a.match(b)
+    assert result is None
+
+
+def test_match_with_scopes() -> None:
+    a = apyds.Term("`a")
+    b = apyds.Term("`b")
+    result = a.match(b, "scope1", "scope2")
+    assert result is not None
+    # The result should be a dictionary with scoped variables
+    result_str = str(result)
+    assert "scope1" in result_str and "scope2" in result_str and "`a" in result_str and "`b" in result_str
+
