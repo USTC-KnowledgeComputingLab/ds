@@ -8,7 +8,7 @@ import type * as dst from "./ds.d.mts";
 
 const ds: dst.EmbindModule = await create_ds();
 
-let _buffer_size: number = 1024;
+let _bufferSize: number = 1024;
 
 /**
  * Gets the current buffer size, or sets a new buffer size and returns the previous value.
@@ -19,14 +19,14 @@ let _buffer_size: number = 1024;
  *
  * @example
  * ```typescript
- * const currentSize = buffer_size(); // Get current size
- * const oldSize = buffer_size(2048); // Set new size, returns old size
+ * const currentSize = bufferSize(); // Get current size
+ * const oldSize = bufferSize(2048); // Set new size, returns old size
  * ```
  */
-export function buffer_size(size: number = 0): number {
-    const old_size = _buffer_size;
+export function bufferSize(size: number = 0): number {
+    const old_size = _bufferSize;
     if (size !== 0) {
-        _buffer_size = size;
+        _bufferSize = size;
     }
     return old_size;
 }
@@ -55,14 +55,14 @@ interface StaticCommon<T extends Common> {
  * Valid initialization arguments for deductive system types.
  * @internal
  */
-type InitialArgument<T extends Common> = _common_t<T> | T | string | dst.Buffer | null;
+type InitialArgument<T extends Common> = _CommonT<T> | T | string | dst.Buffer | null;
 
 /**
  * Base class for all deductive system wrapper types.
  * Handles initialization, serialization, and common operations.
  * @internal
  */
-class _common_t<T extends Common> {
+class _CommonT<T extends Common> {
     type: StaticCommon<T>;
     value: T;
     capacity: number;
@@ -77,7 +77,7 @@ class _common_t<T extends Common> {
      */
     constructor(type: StaticCommon<T>, value: InitialArgument<T>, size: number = 0) {
         this.type = type;
-        if (value instanceof _common_t) {
+        if (value instanceof _CommonT) {
             this.value = value.value;
             this.capacity = value.capacity;
             if (size !== 0) {
@@ -87,7 +87,7 @@ class _common_t<T extends Common> {
             this.value = value;
             this.capacity = size;
         } else if (typeof value === "string") {
-            this.capacity = size !== 0 ? size : buffer_size();
+            this.capacity = size !== 0 ? size : bufferSize();
             this.value = this.type.from_string(value, this.capacity);
             if (this.value === null) {
                 throw new Error("Initialization from a string failed.");
@@ -110,7 +110,7 @@ class _common_t<T extends Common> {
      * @throws {Error} If conversion fails.
      */
     toString(): string {
-        const result = this.type.to_string(this.value, buffer_size());
+        const result = this.type.to_string(this.value, bufferSize());
         if (result === "") {
             throw new Error("Conversion to string failed.");
         }
@@ -162,16 +162,16 @@ class _common_t<T extends Common> {
  *
  * @example
  * ```typescript
- * const str1 = new string_t("hello");
- * const str2 = new string_t(str1.data()); // From binary
+ * const str1 = new StringT("hello");
+ * const str2 = new StringT(str1.data()); // From binary
  * console.log(str1.toString()); // "hello"
  * ```
  */
-export class string_t extends _common_t<dst.String> {
+export class StringT extends _CommonT<dst.String> {
     /**
      * Creates a new string instance.
      *
-     * @param value - Initial value (string, buffer, or another string_t).
+     * @param value - Initial value (string, buffer, or another StringT).
      * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
@@ -186,15 +186,15 @@ export class string_t extends _common_t<dst.String> {
  *
  * @example
  * ```typescript
- * const var1 = new variable_t("`X");
+ * const var1 = new VariableT("`X");
  * console.log(var1.name().toString()); // "X"
  * ```
  */
-export class variable_t extends _common_t<dst.Variable> {
+export class VariableT extends _CommonT<dst.Variable> {
     /**
      * Creates a new variable instance.
      *
-     * @param value - Initial value (string, buffer, or another variable_t).
+     * @param value - Initial value (string, buffer, or another VariableT).
      * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
@@ -205,10 +205,10 @@ export class variable_t extends _common_t<dst.Variable> {
     /**
      * Get the name of this variable.
      *
-     * @returns The variable name as a string_t.
+     * @returns The variable name as a StringT.
      */
-    name(): string_t {
-        return new string_t(this.value.name());
+    name(): StringT {
+        return new StringT(this.value.name());
     }
 }
 
@@ -218,15 +218,15 @@ export class variable_t extends _common_t<dst.Variable> {
  *
  * @example
  * ```typescript
- * const item = new item_t("atom");
+ * const item = new ItemT("atom");
  * console.log(item.name().toString()); // "atom"
  * ```
  */
-export class item_t extends _common_t<dst.Item> {
+export class ItemT extends _CommonT<dst.Item> {
     /**
      * Creates a new item instance.
      *
-     * @param value - Initial value (string, buffer, or another item_t).
+     * @param value - Initial value (string, buffer, or another ItemT).
      * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
@@ -237,10 +237,10 @@ export class item_t extends _common_t<dst.Item> {
     /**
      * Get the name of this item.
      *
-     * @returns The item name as a string_t.
+     * @returns The item name as a StringT.
      */
-    name(): string_t {
-        return new string_t(this.value.name());
+    name(): StringT {
+        return new StringT(this.value.name());
     }
 }
 
@@ -250,16 +250,16 @@ export class item_t extends _common_t<dst.Item> {
  *
  * @example
  * ```typescript
- * const list = new list_t("(a b c)");
+ * const list = new ListT("(a b c)");
  * console.log(list.length()); // 3
  * console.log(list.getitem(0).toString()); // "a"
  * ```
  */
-export class list_t extends _common_t<dst.List> {
+export class ListT extends _CommonT<dst.List> {
     /**
      * Creates a new list instance.
      *
-     * @param value - Initial value (string, buffer, or another list_t).
+     * @param value - Initial value (string, buffer, or another ListT).
      * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
@@ -282,8 +282,8 @@ export class list_t extends _common_t<dst.List> {
      * @param index - The zero-based index of the element.
      * @returns The term at the specified index.
      */
-    getitem(index: number): term_t {
-        return new term_t(this.value.getitem(index));
+    getitem(index: number): TermT {
+        return new TermT(this.value.getitem(index));
     }
 }
 
@@ -293,15 +293,15 @@ export class list_t extends _common_t<dst.List> {
  *
  * @example
  * ```typescript
- * const term = new term_t("(f `x a)");
+ * const term = new TermT("(f `x a)");
  * const innerTerm = term.term(); // Get the underlying term type
  * ```
  */
-export class term_t extends _common_t<dst.Term> {
+export class TermT extends _CommonT<dst.Term> {
     /**
      * Creates a new term instance.
      *
-     * @param value - Initial value (string, buffer, or another term_t).
+     * @param value - Initial value (string, buffer, or another TermT).
      * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
@@ -310,19 +310,19 @@ export class term_t extends _common_t<dst.Term> {
     }
 
     /**
-     * Extracts the underlying term and returns it as its concrete type (variable_t, item_t, or list_t).
+     * Extracts the underlying term and returns it as its concrete type (VariableT, ItemT, or ListT).
      *
-     * @returns The term as a variable_t, item_t, or list_t.
+     * @returns The term as a VariableT, ItemT, or ListT.
      * @throws {Error} If the term type is unexpected.
      */
-    term(): variable_t | item_t | list_t {
+    term(): VariableT | ItemT | ListT {
         const term_type: dst.TermType = this.value.get_type();
         if (term_type === ds.TermType.Variable) {
-            return new variable_t(this.value.variable());
+            return new VariableT(this.value.variable());
         } else if (term_type === ds.TermType.Item) {
-            return new item_t(this.value.item());
+            return new ItemT(this.value.item());
         } else if (term_type === ds.TermType.List) {
-            return new list_t(this.value.list());
+            return new ListT(this.value.list());
         } else {
             throw new Error("Unexpected term type.");
         }
@@ -338,23 +338,23 @@ export class term_t extends _common_t<dst.Term> {
      *
      * @example
      * ```typescript
-     * const a = new term_t("`a");
-     * const b = new term_t("((`a b))");
+     * const a = new TermT("`a");
+     * const b = new TermT("((`a b))");
      * console.log(a.ground(b).toString()); // "b"
      *
      * // With scope
-     * const c = new term_t("`a");
-     * const d = new term_t("((x y `a `b) (y x `b `c))");
+     * const c = new TermT("`a");
+     * const d = new TermT("((x y `a `b) (y x `b `c))");
      * console.log(c.ground(d, "x").toString()); // "`c"
      * ```
      */
-    ground(other: term_t, scope: string = ""): term_t | null {
-        const capacity = buffer_size();
+    ground(other: TermT, scope: string = ""): TermT | null {
+        const capacity = bufferSize();
         const term = ds.Term.ground(this.value, other.value, scope, capacity);
         if (term === null) {
             return null;
         }
-        return new term_t(term, capacity);
+        return new TermT(term, capacity);
     }
 
     /**
@@ -367,23 +367,23 @@ export class term_t extends _common_t<dst.Term> {
      *
      * @example
      * ```typescript
-     * const a = new term_t("`x");
-     * const b = new term_t("((pre_) (_suf))");
+     * const a = new TermT("`x");
+     * const b = new TermT("((pre_) (_suf))");
      * console.log(a.rename(b).toString()); // "`pre_x_suf"
      *
      * // With empty prefix (only suffix)
-     * const c = new term_t("`x");
-     * const d = new term_t("(() (_suf))");
+     * const c = new TermT("`x");
+     * const d = new TermT("(() (_suf))");
      * console.log(c.rename(d).toString()); // "`x_suf"
      * ```
      */
-    rename(prefix_and_suffix: term_t): term_t | null {
-        const capacity = buffer_size();
+    rename(prefix_and_suffix: TermT): TermT | null {
+        const capacity = bufferSize();
         const term = ds.Term.rename(this.value, prefix_and_suffix.value, capacity);
         if (term === null) {
             return null;
         }
-        return new term_t(term, capacity);
+        return new TermT(term, capacity);
     }
 }
 
@@ -393,16 +393,16 @@ export class term_t extends _common_t<dst.Term> {
  *
  * @example
  * ```typescript
- * const rule = new rule_t("(father `X `Y)\n----------\n(parent `X `Y)\n");
+ * const rule = new RuleT("(father `X `Y)\n----------\n(parent `X `Y)\n");
  * console.log(rule.conclusion().toString()); // "(parent `X `Y)"
  * console.log(rule.length()); // 1 (number of premises)
  * ```
  */
-export class rule_t extends _common_t<dst.Rule> {
+export class RuleT extends _CommonT<dst.Rule> {
     /**
      * Creates a new rule instance.
      *
-     * @param value - Initial value (string, buffer, or another rule_t).
+     * @param value - Initial value (string, buffer, or another RuleT).
      * @param size - Optional buffer capacity for the internal storage.
      * @throws {Error} If initialization fails.
      */
@@ -425,8 +425,8 @@ export class rule_t extends _common_t<dst.Rule> {
      * @param index - The zero-based index of the premise.
      * @returns The premise term at the specified index.
      */
-    getitem(index: number): term_t {
-        return new term_t(this.value.getitem(index));
+    getitem(index: number): TermT {
+        return new TermT(this.value.getitem(index));
     }
 
     /**
@@ -434,37 +434,37 @@ export class rule_t extends _common_t<dst.Rule> {
      *
      * @returns The conclusion term.
      */
-    conclusion(): term_t {
-        return new term_t(this.value.conclusion());
+    conclusion(): TermT {
+        return new TermT(this.value.conclusion());
     }
 
     /**
      * Ground this rule using a dictionary to substitute variables with values.
      *
      * @param other - A rule representing a dictionary (list of pairs). Each pair contains a variable and its substitution value.
-     *                Example: new rule_t("((`a b))") means substitute variable `a with value b.
+     *                Example: new RuleT("((`a b))") means substitute variable `a with value b.
      * @param scope - Optional scope string for variable scoping.
      * @returns The grounded rule, or null if grounding fails.
      *
      * @example
      * ```typescript
-     * const a = new rule_t("`a");
-     * const b = new rule_t("((`a b))");
+     * const a = new RuleT("`a");
+     * const b = new RuleT("((`a b))");
      * console.log(a.ground(b).toString()); // "----\nb\n"
      *
      * // With scope
-     * const c = new rule_t("`a");
-     * const d = new rule_t("((x y `a `b) (y x `b `c))");
+     * const c = new RuleT("`a");
+     * const d = new RuleT("((x y `a `b) (y x `b `c))");
      * console.log(c.ground(d, "x").toString()); // "----\n`c\n"
      * ```
      */
-    ground(other: rule_t, scope: string = ""): rule_t | null {
-        const capacity = buffer_size();
+    ground(other: RuleT, scope: string = ""): RuleT | null {
+        const capacity = bufferSize();
         const rule = ds.Rule.ground(this.value, other.value, scope, capacity);
         if (rule === null) {
             return null;
         }
-        return new rule_t(rule, capacity);
+        return new RuleT(rule, capacity);
     }
 
     /**
@@ -477,18 +477,18 @@ export class rule_t extends _common_t<dst.Rule> {
      *
      * @example
      * ```typescript
-     * const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
-     * const pq = new rule_t("((! (! `x)) -> `x)");
+     * const mp = new RuleT("(`p -> `q)\n`p\n`q\n");
+     * const pq = new RuleT("((! (! `x)) -> `x)");
      * console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
      * ```
      */
-    match(other: rule_t): rule_t | null {
-        const capacity = buffer_size();
+    match(other: RuleT): RuleT | null {
+        const capacity = bufferSize();
         const rule = ds.Rule.match(this.value, other.value, capacity);
         if (rule === null) {
             return null;
         }
-        return new rule_t(rule, capacity);
+        return new RuleT(rule, capacity);
     }
 
     /**
@@ -501,23 +501,23 @@ export class rule_t extends _common_t<dst.Rule> {
      *
      * @example
      * ```typescript
-     * const a = new rule_t("`x");
-     * const b = new rule_t("((pre_) (_suf))");
+     * const a = new RuleT("`x");
+     * const b = new RuleT("((pre_) (_suf))");
      * console.log(a.rename(b).toString()); // "----\n`pre_x_suf\n"
      *
      * // With empty prefix (only suffix)
-     * const c = new rule_t("`x");
-     * const d = new rule_t("(() (_suf))");
+     * const c = new RuleT("`x");
+     * const d = new RuleT("(() (_suf))");
      * console.log(c.rename(d).toString()); // "----\n`x_suf\n"
      * ```
      */
-    rename(prefix_and_suffix: rule_t): rule_t | null {
-        const capacity = buffer_size();
+    rename(prefix_and_suffix: RuleT): RuleT | null {
+        const capacity = bufferSize();
         const rule = ds.Rule.rename(this.value, prefix_and_suffix.value, capacity);
         if (rule === null) {
             return null;
         }
-        return new rule_t(rule, capacity);
+        return new RuleT(rule, capacity);
     }
 }
 
@@ -527,7 +527,7 @@ export class rule_t extends _common_t<dst.Rule> {
  *
  * @example
  * ```typescript
- * const search = new search_t();
+ * const search = new SearchT();
  * search.add("(parent john mary)");
  * search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
  * search.execute((rule) => {
@@ -536,7 +536,7 @@ export class rule_t extends _common_t<dst.Rule> {
  * });
  * ```
  */
-export class search_t {
+export class SearchT {
     _search: dst.Search;
 
     /**
@@ -590,9 +590,9 @@ export class search_t {
      * @param callback - Function called for each candidate rule. Return false to continue, true to stop.
      * @returns The number of rules processed.
      */
-    execute(callback: (candidate: rule_t) => boolean): number {
+    execute(callback: (candidate: RuleT) => boolean): number {
         return this._search.execute((candidate: dst.Rule): boolean => {
-            return callback(new rule_t(candidate).copy());
+            return callback(new RuleT(candidate).copy());
         });
     }
 }

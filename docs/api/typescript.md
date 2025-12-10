@@ -4,23 +4,23 @@ This page documents the TypeScript API for the `atsds` package. The documentatio
 
 ```typescript
 import { 
-    buffer_size,
-    string_t, 
-    variable_t, 
-    item_t, 
-    list_t, 
-    term_t, 
-    rule_t, 
-    search_t 
+    bufferSize,
+    StringT, 
+    VariableT, 
+    ItemT, 
+    ListT, 
+    TermT, 
+    RuleT, 
+    SearchT 
 } from "atsds";
 ```
 
-## buffer_size
+## bufferSize
 
 Gets the current buffer size, or sets a new buffer size and returns the previous value.
 
 ```typescript
-function buffer_size(size?: number): number;
+function bufferSize(size?: number): number;
 ```
 
 **Parameters:**
@@ -32,25 +32,25 @@ function buffer_size(size?: number): number;
 **Example:**
 
 ```typescript
-const currentSize = buffer_size();     // Get current size
-const oldSize = buffer_size(2048);     // Set new size, returns old size
+const currentSize = bufferSize();     // Get current size
+const oldSize = bufferSize(2048);     // Set new size, returns old size
 ```
 
 ---
 
-## string_t
+## StringT
 
 Wrapper class for deductive system strings.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | string_t, size?: number)
+constructor(value: string | Buffer | StringT, size?: number)
 ```
 
 **Parameters:**
 
-- `value`: Initial value (string, buffer, or another string_t)
+- `value`: Initial value (string, buffer, or another StringT)
 - `size` (optional): Buffer capacity for internal storage
 
 ### Methods
@@ -84,7 +84,7 @@ size(): number
 Create a deep copy of this instance.
 
 ```typescript
-copy(): string_t
+copy(): StringT
 ```
 
 #### key()
@@ -98,94 +98,94 @@ key(): string
 **Example:**
 
 ```typescript
-const str1 = new string_t("hello");
-const str2 = new string_t(str1.data());
+const str1 = new StringT("hello");
+const str2 = new StringT(str1.data());
 console.log(str1.toString());  // "hello"
 ```
 
 ---
 
-## variable_t
+## VariableT
 
 Wrapper class for logical variables in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | variable_t, size?: number)
+constructor(value: string | Buffer | VariableT, size?: number)
 ```
 
 **Parameters:**
 
-- `value`: Initial value (string starting with backtick, buffer, or another variable_t)
+- `value`: Initial value (string starting with backtick, buffer, or another VariableT)
 - `size` (optional): Buffer capacity for internal storage
 
 ### Methods
 
-Inherits all methods from `string_t`, plus:
+Inherits all methods from `StringT`, plus:
 
 #### name()
 
 Get the name of this variable (without the backtick prefix).
 
 ```typescript
-name(): string_t
+name(): StringT
 ```
 
 **Example:**
 
 ```typescript
-const var1 = new variable_t("`X");
+const var1 = new VariableT("`X");
 console.log(var1.name().toString());  // "X"
 console.log(var1.toString());         // "`X"
 ```
 
 ---
 
-## item_t
+## ItemT
 
 Wrapper class for items (constants/functors) in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | item_t, size?: number)
+constructor(value: string | Buffer | ItemT, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `string_t`, plus:
+Inherits all methods from `StringT`, plus:
 
 #### name()
 
 Get the name of this item.
 
 ```typescript
-name(): string_t
+name(): StringT
 ```
 
 **Example:**
 
 ```typescript
-const item = new item_t("atom");
+const item = new ItemT("atom");
 console.log(item.name().toString());  // "atom"
 ```
 
 ---
 
-## list_t
+## ListT
 
 Wrapper class for lists in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | list_t, size?: number)
+constructor(value: string | Buffer | ListT, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `string_t`, plus:
+Inherits all methods from `StringT`, plus:
 
 #### length()
 
@@ -200,39 +200,39 @@ length(): number
 Get an element from the list by index.
 
 ```typescript
-getitem(index: number): term_t
+getitem(index: number): TermT
 ```
 
 **Example:**
 
 ```typescript
-const list = new list_t("(a b c)");
+const list = new ListT("(a b c)");
 console.log(list.length());           // 3
 console.log(list.getitem(0).toString());  // "a"
 ```
 
 ---
 
-## term_t
+## TermT
 
 Wrapper class for logical terms in the deductive system. A term can be a variable, item, or list.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | term_t, size?: number)
+constructor(value: string | Buffer | TermT, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `string_t`, plus:
+Inherits all methods from `StringT`, plus:
 
 #### term()
 
 Extracts the underlying term and returns it as its concrete type.
 
 ```typescript
-term(): variable_t | item_t | list_t
+term(): VariableT | ItemT | ListT
 ```
 
 #### ground()
@@ -240,7 +240,7 @@ term(): variable_t | item_t | list_t
 Ground this term using a dictionary to substitute variables with values.
 
 ```typescript
-ground(other: term_t, scope?: string): term_t | null
+ground(other: TermT, scope?: string): TermT | null
 ```
 
 **Parameters:**
@@ -253,8 +253,8 @@ ground(other: term_t, scope?: string): term_t | null
 **Example:**
 
 ```typescript
-const a = new term_t("`a");
-const dict = new term_t("((`a b))");
+const a = new TermT("`a");
+const dict = new TermT("((`a b))");
 const result = a.ground(dict);
 if (result !== null) {
     console.log(result.toString());  // "b"
@@ -266,7 +266,7 @@ if (result !== null) {
 Rename all variables in this term by adding prefix and suffix.
 
 ```typescript
-rename(prefix_and_suffix: term_t): term_t | null
+rename(prefix_and_suffix: TermT): TermT | null
 ```
 
 **Parameters:**
@@ -278,8 +278,8 @@ rename(prefix_and_suffix: term_t): term_t | null
 **Example:**
 
 ```typescript
-const term = new term_t("`x");
-const spec = new term_t("((pre_) (_suf))");
+const term = new TermT("`x");
+const spec = new TermT("((pre_) (_suf))");
 const result = term.rename(spec);
 if (result !== null) {
     console.log(result.toString());  // "`pre_x_suf"
@@ -288,19 +288,19 @@ if (result !== null) {
 
 ---
 
-## rule_t
+## RuleT
 
 Wrapper class for logical rules in the deductive system.
 
 ### Constructor
 
 ```typescript
-constructor(value: string | Buffer | rule_t, size?: number)
+constructor(value: string | Buffer | RuleT, size?: number)
 ```
 
 ### Methods
 
-Inherits all methods from `string_t`, plus:
+Inherits all methods from `StringT`, plus:
 
 #### length()
 
@@ -315,7 +315,7 @@ length(): number
 Get a premise term by index.
 
 ```typescript
-getitem(index: number): term_t
+getitem(index: number): TermT
 ```
 
 #### conclusion()
@@ -323,7 +323,7 @@ getitem(index: number): term_t
 Get the conclusion of the rule.
 
 ```typescript
-conclusion(): term_t
+conclusion(): TermT
 ```
 
 #### ground()
@@ -331,7 +331,7 @@ conclusion(): term_t
 Ground this rule using a dictionary.
 
 ```typescript
-ground(other: rule_t, scope?: string): rule_t | null
+ground(other: RuleT, scope?: string): RuleT | null
 ```
 
 #### match()
@@ -339,7 +339,7 @@ ground(other: rule_t, scope?: string): rule_t | null
 Match this rule with another rule using unification.
 
 ```typescript
-match(other: rule_t): rule_t | null
+match(other: RuleT): RuleT | null
 ```
 
 **Parameters:**
@@ -351,8 +351,8 @@ match(other: rule_t): rule_t | null
 **Example:**
 
 ```typescript
-const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
-const pq = new rule_t("((! (! `x)) -> `x)");
+const mp = new RuleT("(`p -> `q)\n`p\n`q\n");
+const pq = new RuleT("((! (! `x)) -> `x)");
 const result = mp.match(pq);
 if (result !== null) {
     console.log(result.toString());
@@ -365,12 +365,12 @@ if (result !== null) {
 Rename all variables in this rule.
 
 ```typescript
-rename(prefix_and_suffix: rule_t): rule_t | null
+rename(prefix_and_suffix: RuleT): RuleT | null
 ```
 
 ---
 
-## search_t
+## SearchT
 
 Search engine for the deductive system.
 
@@ -426,7 +426,7 @@ add(text: string): boolean
 Execute the search engine with a callback for each inferred rule.
 
 ```typescript
-execute(callback: (candidate: rule_t) => boolean): number
+execute(callback: (candidate: RuleT) => boolean): number
 ```
 
 **Parameters:**
@@ -438,7 +438,7 @@ execute(callback: (candidate: rule_t) => boolean): number
 **Example:**
 
 ```typescript
-const search = new search_t(1000, 10000);
+const search = new SearchT(1000, 10000);
 search.add("(`P -> `Q) `P `Q");
 search.add("(! (! X))");
 
@@ -456,24 +456,24 @@ Here's a complete example demonstrating most of the TypeScript API:
 
 ```typescript
 import { 
-    buffer_size, 
-    string_t, 
-    variable_t, 
-    item_t, 
-    list_t, 
-    term_t, 
-    rule_t, 
-    search_t 
+    bufferSize, 
+    StringT, 
+    VariableT, 
+    ItemT, 
+    ListT, 
+    TermT, 
+    RuleT, 
+    SearchT 
 } from "atsds";
 
 // Configure buffer size
-buffer_size(2048);
+bufferSize(2048);
 
 // Create terms
-const varX = new variable_t("`X");
-const item = new item_t("hello");
-const lst = new list_t("(a b c)");
-const term = new term_t("(f `x `y)");
+const varX = new VariableT("`X");
+const item = new ItemT("hello");
+const lst = new ListT("(a b c)");
+const term = new TermT("(f `x `y)");
 
 console.log(`Variable: ${varX.toString()}, name: ${varX.name().toString()}`);
 console.log(`Item: ${item.toString()}, name: ${item.name().toString()}`);
@@ -481,30 +481,30 @@ console.log(`List: ${lst.toString()}, length: ${lst.length()}`);
 console.log(`Term: ${term.toString()}`);
 
 // Work with rules
-const fact = new rule_t("(parent john mary)");
-const rule = new rule_t("(father `X `Y)\n----------\n(parent `X `Y)\n");
+const fact = new RuleT("(parent john mary)");
+const rule = new RuleT("(father `X `Y)\n----------\n(parent `X `Y)\n");
 
 console.log(`\nFact: ${fact.toString()}`);
 console.log(`Rule premises: ${rule.length()}, conclusion: ${rule.conclusion().toString()}`);
 
 // Grounding
-const termA = new term_t("`a");
-const dictionary = new term_t("((`a hello))");
+const termA = new TermT("`a");
+const dictionary = new TermT("((`a hello))");
 const grounded = termA.ground(dictionary);
 if (grounded) {
     console.log(`\nGrounding \`a with ((\`a hello)): ${grounded.toString()}`);
 }
 
 // Matching
-const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
-const axiom = new rule_t("((A) -> B)");
+const mp = new RuleT("(`p -> `q)\n`p\n`q\n");
+const axiom = new RuleT("((A) -> B)");
 const matched = mp.match(axiom);
 if (matched) {
     console.log(`\nMatching modus ponens with (A -> B):\n${matched.toString()}`);
 }
 
 // Search engine
-const search = new search_t(1000, 10000);
+const search = new SearchT(1000, 10000);
 search.add("p q");  // p implies q
 search.add("q r");  // q implies r
 search.add("p");    // fact: p
@@ -519,7 +519,7 @@ for (let i = 0; i < 3; i++) {
 }
 
 // Copying and comparison
-const rule1 = new rule_t("(a b c)");
+const rule1 = new RuleT("(a b c)");
 const rule2 = rule1.copy();
 console.log(`\nRule comparison: ${rule1.key() === rule2.key()}`);  // true
 ```

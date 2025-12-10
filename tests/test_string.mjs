@@ -1,17 +1,17 @@
-import { string_t, buffer_size } from "../atsds/index.mts";
+import { StringT, bufferSize } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new string_t("string");
+    v = new StringT("string");
 });
 
 test("toString", () => {
     expect(v.toString()).toBe("string");
 
-    const old_buffer_size = buffer_size(4);
+    const old_buffer_size = bufferSize(4);
     expect(() => v.toString()).toThrow();
-    buffer_size(old_buffer_size);
+    bufferSize(old_buffer_size);
 });
 
 test("copy", () => {
@@ -23,29 +23,29 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new string_t(v);
+    const v2 = new StringT(v);
     expect(v2.toString()).toBe("string");
 
-    expect(() => new string_t(v, 100)).toThrow();
+    expect(() => new StringT(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new string_t(v.value);
+    const v2 = new StringT(v.value);
     expect(v2.toString()).toBe("string");
 });
 
 test("create_from_text", () => {
-    const v2 = new string_t("string");
+    const v2 = new StringT("string");
     expect(v2.toString()).toBe("string");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new string_t(v.data());
+    const v2 = new StringT(v.data());
     expect(v2.toString()).toBe("string");
 
-    expect(() => new string_t(v.data(), 100)).toThrow();
+    expect(() => new StringT(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new string_t(100)).toThrow();
+    expect(() => new StringT(100)).toThrow();
 });

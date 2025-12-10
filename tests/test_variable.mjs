@@ -1,17 +1,17 @@
-import { variable_t, buffer_size } from "../atsds/index.mts";
+import { VariableT, bufferSize } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new variable_t("`variable");
+    v = new VariableT("`variable");
 });
 
 test("toString", () => {
     expect(v.toString()).toBe("`variable");
 
-    const old_buffer_size = buffer_size(4);
+    const old_buffer_size = bufferSize(4);
     expect(() => v.toString()).toThrow();
-    buffer_size(old_buffer_size);
+    bufferSize(old_buffer_size);
 });
 
 test("copy", () => {
@@ -23,31 +23,31 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new variable_t(v);
+    const v2 = new VariableT(v);
     expect(v2.toString()).toBe("`variable");
 
-    expect(() => new variable_t(v, 100)).toThrow();
+    expect(() => new VariableT(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new variable_t(v.value);
+    const v2 = new VariableT(v.value);
     expect(v2.toString()).toBe("`variable");
 });
 
 test("create_from_text", () => {
-    const v2 = new variable_t("`variable");
+    const v2 = new VariableT("`variable");
     expect(v2.toString()).toBe("`variable");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new variable_t(v.data());
+    const v2 = new VariableT(v.data());
     expect(v2.toString()).toBe("`variable");
 
-    expect(() => new variable_t(v.data(), 100)).toThrow();
+    expect(() => new VariableT(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new variable_t(100)).toThrow();
+    expect(() => new VariableT(100)).toThrow();
 });
 
 test("name", () => {

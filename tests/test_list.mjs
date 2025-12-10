@@ -1,17 +1,17 @@
-import { list_t, buffer_size } from "../atsds/index.mts";
+import { ListT, bufferSize } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new list_t("(a b c)");
+    v = new ListT("(a b c)");
 });
 
 test("toString", () => {
     expect(v.toString()).toBe("(a b c)");
 
-    const old_buffer_size = buffer_size(4);
+    const old_buffer_size = bufferSize(4);
     expect(() => v.toString()).toThrow();
-    buffer_size(old_buffer_size);
+    bufferSize(old_buffer_size);
 });
 
 test("copy", () => {
@@ -23,31 +23,31 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new list_t(v);
+    const v2 = new ListT(v);
     expect(v2.toString()).toBe("(a b c)");
 
-    expect(() => new list_t(v, 100)).toThrow();
+    expect(() => new ListT(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new list_t(v.value);
+    const v2 = new ListT(v.value);
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_text", () => {
-    const v2 = new list_t("(a b c)");
+    const v2 = new ListT("(a b c)");
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new list_t(v.data());
+    const v2 = new ListT(v.data());
     expect(v2.toString()).toBe("(a b c)");
 
-    expect(() => new list_t(v.data(), 100)).toThrow();
+    expect(() => new ListT(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new list_t(100)).toThrow();
+    expect(() => new ListT(100)).toThrow();
 });
 
 test("length", () => {

@@ -73,25 +73,25 @@ Lists are the primary way to build complex structures in the deductive system. T
 === "TypeScript"
 
     ```typescript
-    import { variable_t, item_t, list_t, term_t } from "atsds";
+    import { VariableT, ItemT, ListT, TermT } from "atsds";
 
     // Create a variable
-    const var1 = new variable_t("`X");
+    const var1 = new VariableT("`X");
     console.log(`Variable name: ${var1.name().toString()}`);  // X
 
     // Create an item
-    const item = new item_t("hello");
+    const item = new ItemT("hello");
     console.log(`Item name: ${item.name().toString()}`);  // hello
 
     // Create a list
-    const lst = new list_t("(a b c)");
+    const lst = new ListT("(a b c)");
     console.log(`List length: ${lst.length()}`);  // 3
     console.log(`First element: ${lst.getitem(0).toString()}`);  // a
 
     // Create a generic term
-    const term = new term_t("(f `x)");
+    const term = new TermT("(f `x)");
     // Access the underlying type
-    const inner = term.term();  // Returns a list_t
+    const inner = term.term();  // Returns a ListT
     ```
 
 === "Python"
@@ -145,13 +145,13 @@ Grounding substitutes variables in a term with values from a dictionary. The dic
 === "TypeScript"
 
     ```typescript
-    import { term_t } from "atsds";
+    import { TermT } from "atsds";
 
     // Create a term with a variable
-    const term = new term_t("`a");
+    const term = new TermT("`a");
 
     // Create a dictionary for substitution
-    const dictionary = new term_t("((`a b))");
+    const dictionary = new TermT("((`a b))");
 
     // Ground the term
     const result = term.ground(dictionary);
@@ -209,13 +209,13 @@ Renaming adds prefixes and/or suffixes to all variables in a term. This is usefu
 === "TypeScript"
 
     ```typescript
-    import { term_t } from "atsds";
+    import { TermT } from "atsds";
 
     // Create a term with a variable
-    const term = new term_t("`x");
+    const term = new TermT("`x");
 
     // Create prefix and suffix specification
-    const spec = new term_t("((pre_) (_suf))");
+    const spec = new TermT("((pre_) (_suf))");
 
     // Rename the term
     const result = term.rename(spec);
@@ -273,13 +273,13 @@ Operations like grounding and renaming require buffer space for intermediate res
 === "TypeScript"
 
     ```typescript
-    import { buffer_size } from "atsds";
+    import { bufferSize } from "atsds";
 
     // Get current buffer size
-    const current = buffer_size();
+    const current = bufferSize();
 
     // Set new buffer size (returns previous value)
-    const old = buffer_size(4096);
+    const old = bufferSize(4096);
     ```
 
 === "Python"

@@ -1,12 +1,12 @@
-import { rule_t, search_t, buffer_size } from "../atsds/index.mts";
+import { RuleT, SearchT, bufferSize } from "../atsds/index.mts";
 
 function main() {
     const temp_data_size = 1000;
     const temp_text_size = 1000;
     const single_result_size = 10000;
 
-    buffer_size(temp_text_size);
-    const search = new search_t(temp_data_size, single_result_size);
+    bufferSize(temp_text_size);
+    const search = new SearchT(temp_data_size, single_result_size);
 
     // P -> Q, P |- Q
     search.add("(`P -> `Q) `P `Q");
@@ -20,7 +20,7 @@ function main() {
     // premise
     search.add("(! (! X))");
 
-    const target = new rule_t("X");
+    const target = new RuleT("X");
 
     while (true) {
         let success = false;

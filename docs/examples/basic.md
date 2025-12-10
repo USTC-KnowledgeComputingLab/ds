@@ -54,10 +54,10 @@ Given the premise ¬¬X (double negation of X), we can derive X.
 === "TypeScript"
 
     ```typescript
-    import { rule_t, search_t } from "atsds";
+    import { RuleT, SearchT } from "atsds";
 
     // Create a search engine
-    const search = new search_t(1000, 10000);
+    const search = new SearchT(1000, 10000);
 
     // Modus ponens: P -> Q, P |- Q
     search.add("(`P -> `Q) `P `Q");
@@ -72,7 +72,7 @@ Given the premise ¬¬X (double negation of X), we can derive X.
     search.add("(! (! X))");
 
     // Target: X (double negation elimination)
-    const target = new rule_t("X");
+    const target = new RuleT("X");
 
     // Execute search until target is found
     while (true) {
