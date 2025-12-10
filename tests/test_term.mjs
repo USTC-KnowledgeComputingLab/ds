@@ -132,5 +132,3 @@ test("match_with_scopes", () => {
     // Format: ((scope1 scope2 `a `b))
     expect(result.toString()).toBe("((scope1 scope2 `a `b))");
 });
-
-

@@ -144,4 +144,3 @@ def test_match_with_scopes() -> None:
     # The result should be a dictionary with scoped variables
     # Format: ((scope1 scope2 `a `b))
     assert str(result) == "((scope1 scope2 `a `b))"
-
