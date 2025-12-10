@@ -88,9 +88,8 @@ auto rule_ground(ds::rule_t* rule, ds::rule_t* dictionary, const std::string& sc
     return std::unique_ptr<ds::rule_t>(result);
 }
 
-auto term_match(ds::term_t* term_1, ds::term_t* term_2, const std::string& scope_1, const std::string& scope_2, int length) -> std::unique_ptr<ds::term_t> {
-    // Pass scopes as-is, don't convert empty strings to nullptr
-    // The C++ match implementation expects valid C strings, not nullptr
+auto term_match(ds::term_t* term_1, ds::term_t* term_2, const std::string& scope_1, const std::string& scope_2, int length)
+    -> std::unique_ptr<ds::term_t> {
     auto result = reinterpret_cast<ds::term_t*>(operator new(length));
     if (result->match(term_1, term_2, scope_1.data(), scope_2.data(), reinterpret_cast<std::byte*>(result) + length) == nullptr) [[unlikely]] {
         operator delete(result);
