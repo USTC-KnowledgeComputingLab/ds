@@ -69,7 +69,7 @@ class UnparseVisitor extends DsVisitor {
     visitRule(ctx) {
         const result = ctx.term().map((t) => this.visit(t));
         const conclusion = result.pop();
-        return result.join(", ") + " -> " + conclusion;
+        return `${result.join(", ")} -> ${conclusion}`;
     }
 
     visitSymbol(ctx) {

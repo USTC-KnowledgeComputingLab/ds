@@ -68,7 +68,7 @@ test("execute_duplicated_facts", () => {
     search.add("p r");
     search.add("p");
     search.add("q");
-    const count = search.execute((rule) => false);
+    const count = search.execute((_rule) => false);
     expect(count).toBe(1);
 });
 
@@ -77,7 +77,7 @@ test("execute_duplicated_rules", () => {
     search.add("p r s");
     search.add("p");
     search.add("q");
-    const count = search.execute((rule) => false);
+    const count = search.execute((_rule) => false);
     expect(count).toBe(1);
 });
 
@@ -85,6 +85,6 @@ test("execute_exceed", () => {
     search.set_limit_size(100);
     expect(search.add("(2 `x) (`x `x`)")).toBe(true);
     expect(search.add("(2 a-very-long-fact-that-exceeds-half-of-the-limit-size)")).toBe(true);
-    const count = search.execute((rule) => false);
+    const count = search.execute((_rule) => false);
     expect(count).toBe(0);
 });
