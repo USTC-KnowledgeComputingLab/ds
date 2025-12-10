@@ -117,15 +117,15 @@ def test_match_simple() -> None:
     b = apyds.Term("b")
     result = a @ b
     assert result is not None
-    assert str(result) == "((r f `a b))"
+    assert str(result) == "((1 2 `a b))"
 
 
 def test_match_complex() -> None:
-    a = apyds.Term("(f `x a)")
-    b = apyds.Term("(f b a)")
+    a = apyds.Term("(f b a)")
+    b = apyds.Term("(f `x a)")
     result = a @ b
     assert result is not None
-    assert str(result) == "((r f `x b))"
+    assert str(result) == "((2 1 `x b))"
 
 
 def test_match_fail() -> None:

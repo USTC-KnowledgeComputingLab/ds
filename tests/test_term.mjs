@@ -105,15 +105,15 @@ test("match_simple", () => {
     const b = new term_t("b");
     const result = a.match(b);
     expect(result).not.toBeNull();
-    expect(result.toString()).toBe("((r f `a b))");
+    expect(result.toString()).toBe("((1 2 `a b))");
 });
 
 test("match_complex", () => {
-    const a = new term_t("(f `x a)");
-    const b = new term_t("(f b a)");
+    const a = new term_t("(f b a)");
+    const b = new term_t("(f `x a)");
     const result = a.match(b);
     expect(result).not.toBeNull();
-    expect(result.toString()).toBe("((r f `x b))");
+    expect(result.toString()).toBe("((2 1 `x b))");
 });
 
 test("match_fail", () => {
