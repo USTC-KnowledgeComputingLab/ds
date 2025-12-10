@@ -88,7 +88,7 @@ test("match", () => {
     const pq = new Rule("((! (! `x)) -> `x)");
     expect(mp.match(pq).toString()).toBe("(! (! `x))\n----------\n`x\n");
 
-    fail = new Rule("(`q <- `p)");
+    const fail = new Rule("(`q <- `p)");
     expect(mp.match(fail)).toBeNull();
 });
 
