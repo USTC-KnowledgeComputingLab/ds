@@ -26,9 +26,9 @@ The package works in browsers that support WebAssembly:
 
 ```html
 <script type="module">
-  import { term_t } from "https://unpkg.com/atsds/dist/index.mjs";
+  import { Term } from "https://unpkg.com/atsds/dist/index.mjs";
   
-  const term = new term_t("(hello world)");
+  const term = new Term("(hello world)");
   console.log(term.toString());
 </script>
 ```
@@ -174,9 +174,9 @@ ctest
 === "TypeScript"
 
     ```typescript
-    import { term_t } from "atsds";
+    import { Term } from "atsds";
     
-    const term = new term_t("(hello world)");
+    const term = new Term("(hello world)");
     console.log(term.toString());
     // Output: (hello world)
     ```

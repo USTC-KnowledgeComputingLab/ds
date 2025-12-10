@@ -82,13 +82,13 @@ The last term is the conclusion, and all preceding terms are premises.
 === "TypeScript"
 
     ```typescript
-    import { rule_t } from "atsds";
+    import { Rule } from "atsds";
 
     // Create a fact
-    const fact = new rule_t("(parent john mary)");
+    const fact = new Rule("(parent john mary)");
 
     // Create a rule with premises
-    const rule = new rule_t("(father `X `Y)\n----------\n(parent `X `Y)\n");
+    const rule = new Rule("(father `X `Y)\n----------\n(parent `X `Y)\n");
 
     // Access rule components
     console.log(`Number of premises: ${rule.length()}`);  // 1
@@ -145,13 +145,13 @@ Grounding substitutes variables in a rule with values from a dictionary.
 === "TypeScript"
 
     ```typescript
-    import { rule_t } from "atsds";
+    import { Rule } from "atsds";
 
     // Create a rule with variables
-    const rule = new rule_t("`a");
+    const rule = new Rule("`a");
 
     // Create a dictionary
-    const dictionary = new rule_t("((`a b))");
+    const dictionary = new Rule("((`a b))");
 
     // Ground the rule
     const result = rule.ground(dictionary);
@@ -208,13 +208,13 @@ Matching unifies the first premise of a rule with a fact, producing a new rule w
 === "TypeScript"
 
     ```typescript
-    import { rule_t } from "atsds";
+    import { Rule } from "atsds";
 
     // Modus ponens rule
-    const mp = new rule_t("(`p -> `q)\n`p\n`q\n");
+    const mp = new Rule("(`p -> `q)\n`p\n`q\n");
 
     // Double negation elimination axiom
-    const axiom = new rule_t("((! (! `x)) -> `x)");
+    const axiom = new Rule("((! (! `x)) -> `x)");
 
     // Match
     const result = mp.match(axiom);
@@ -278,13 +278,13 @@ Renaming adds prefixes and/or suffixes to all variables in a rule.
 === "TypeScript"
 
     ```typescript
-    import { rule_t } from "atsds";
+    import { Rule } from "atsds";
 
     // Create a rule
-    const rule = new rule_t("`x");
+    const rule = new Rule("`x");
 
     // Rename with prefix and suffix
-    const spec = new rule_t("((pre_) (_suf))");
+    const spec = new Rule("((pre_) (_suf))");
     const result = rule.rename(spec);
     if (result !== null) {
         console.log(result.toString());  // ----\n`pre_x_suf\n
@@ -337,11 +337,11 @@ Rules can be compared for equality. Two rules are equal if they have the same bi
 === "TypeScript"
 
     ```typescript
-    import { rule_t } from "atsds";
+    import { Rule } from "atsds";
 
-    const rule1 = new rule_t("(a b c)");
-    const rule2 = new rule_t("(a b c)");
-    const rule3 = new rule_t("(a b d)");
+    const rule1 = new Rule("(a b c)");
+    const rule2 = new Rule("(a b c)");
+    const rule3 = new Rule("(a b d)");
 
     console.log(rule1.key() === rule2.key());  // true
     console.log(rule1.key() === rule3.key());  // false

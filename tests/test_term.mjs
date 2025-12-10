@@ -1,9 +1,9 @@
-import { list_t, item_t, variable_t, term_t, buffer_size } from "../atsds/index.mts";
+import { List, Item, Variable, Term, buffer_size } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new term_t("(a b c)");
+    v = new Term("(a b c)");
 });
 
 test("toString", () => {
@@ -23,80 +23,80 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new term_t(v);
+    const v2 = new Term(v);
     expect(v2.toString()).toBe("(a b c)");
 
-    expect(() => new term_t(v, 100)).toThrow();
+    expect(() => new Term(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new term_t(v.value);
+    const v2 = new Term(v.value);
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_text", () => {
-    const v2 = new term_t("(a b c)");
+    const v2 = new Term("(a b c)");
     expect(v2.toString()).toBe("(a b c)");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new term_t(v.data());
+    const v2 = new Term(v.data());
     expect(v2.toString()).toBe("(a b c)");
 
-    expect(() => new term_t(v.data(), 100)).toThrow();
+    expect(() => new Term(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new term_t(100)).toThrow();
+    expect(() => new Term(100)).toThrow();
 });
 
 test("term", () => {
-    expect(new term_t("()").term()).toBeInstanceOf(list_t);
-    expect(new term_t("a").term()).toBeInstanceOf(item_t);
-    expect(new term_t("`a").term()).toBeInstanceOf(variable_t);
+    expect(new Term("()").term()).toBeInstanceOf(List);
+    expect(new Term("a").term()).toBeInstanceOf(Item);
+    expect(new Term("`a").term()).toBeInstanceOf(Variable);
 });
 
 test("ground_simple", () => {
-    const a = new term_t("`a");
-    const b = new term_t("((`a b))");
+    const a = new Term("`a");
+    const b = new Term("((`a b))");
     expect(a.ground(b).toString()).toBe("b");
 
-    expect(a.ground(new term_t("((`a b c d e))"))).toBeNull();
+    expect(a.ground(new Term("((`a b c d e))"))).toBeNull();
 });
 
 test("ground_scope", () => {
-    const a = new term_t("`a");
-    const b = new term_t("((x y `a `b) (y x `b `c))");
+    const a = new Term("`a");
+    const b = new Term("((x y `a `b) (y x `b `c))");
     expect(a.ground(b, "x").toString()).toBe("`c");
 });
 
 test("rename_simple", () => {
-    const a = new term_t("`x");
-    const b = new term_t("((pre_) (_suf))");
+    const a = new Term("`x");
+    const b = new Term("((pre_) (_suf))");
     expect(a.rename(b).toString()).toBe("`pre_x_suf");
 });
 
 test("rename_empty_prefix", () => {
-    const a = new term_t("`x");
-    const b = new term_t("(() (_suf))");
+    const a = new Term("`x");
+    const b = new Term("(() (_suf))");
     expect(a.rename(b).toString()).toBe("`x_suf");
 });
 
 test("rename_empty_suffix", () => {
-    const a = new term_t("`x");
-    const b = new term_t("((pre_) ())");
+    const a = new Term("`x");
+    const b = new Term("((pre_) ())");
     expect(a.rename(b).toString()).toBe("`pre_x");
 });
 
 test("rename_list", () => {
-    const a = new term_t("(`x `y)");
-    const b = new term_t("((p_) (_s))");
+    const a = new Term("(`x `y)");
+    const b = new Term("((p_) (_s))");
     expect(a.rename(b).toString()).toBe("(`p_x_s `p_y_s)");
 });
 
 test("rename_invalid", () => {
-    const a = new term_t("`x");
-    const b = new term_t("item");
+    const a = new Term("`x");
+    const b = new Term("item");
     expect(a.rename(b)).toBeNull();
 });
 

@@ -37,13 +37,13 @@ The search engine:
 === "TypeScript"
 
     ```typescript
-    import { search_t } from "atsds";
+    import { Search } from "atsds";
 
     // Create with default sizes
-    const search = new search_t();
+    const search = new Search();
 
     // Create with custom sizes
-    const search2 = new search_t(1000, 10000);
+    const search2 = new Search(1000, 10000);
     ```
 
 === "C++"
@@ -81,9 +81,9 @@ Use the `add()` method to add rules and facts to the knowledge base.
 === "TypeScript"
 
     ```typescript
-    import { search_t } from "atsds";
+    import { Search } from "atsds";
 
-    const search = new search_t();
+    const search = new Search();
 
     // Add a fact
     search.add("(parent john mary)");

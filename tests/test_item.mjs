@@ -1,9 +1,9 @@
-import { item_t, buffer_size } from "../atsds/index.mts";
+import { Item, buffer_size } from "../atsds/index.mts";
 
 let v = null;
 
 beforeEach(() => {
-    v = new item_t("item");
+    v = new Item("item");
 });
 
 test("toString", () => {
@@ -23,31 +23,31 @@ test("key", () => {
 });
 
 test("create_from_same", () => {
-    const v2 = new item_t(v);
+    const v2 = new Item(v);
     expect(v2.toString()).toBe("item");
 
-    expect(() => new item_t(v, 100)).toThrow();
+    expect(() => new Item(v, 100)).toThrow();
 });
 
 test("create_from_base", () => {
-    const v2 = new item_t(v.value);
+    const v2 = new Item(v.value);
     expect(v2.toString()).toBe("item");
 });
 
 test("create_from_text", () => {
-    const v2 = new item_t("item");
+    const v2 = new Item("item");
     expect(v2.toString()).toBe("item");
 });
 
 test("create_from_bytes", () => {
-    const v2 = new item_t(v.data());
+    const v2 = new Item(v.data());
     expect(v2.toString()).toBe("item");
 
-    expect(() => new item_t(v.data(), 100)).toThrow();
+    expect(() => new Item(v.data(), 100)).toThrow();
 });
 
 test("create_fail", () => {
-    expect(() => new item_t(100)).toThrow();
+    expect(() => new Item(100)).toThrow();
 });
 
 test("name", () => {
