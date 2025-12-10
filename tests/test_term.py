@@ -117,7 +117,8 @@ def test_match_simple() -> None:
     b = apyds.Term("b")
     result = a.match(b)
     assert result is not None
-    assert str(result) == "((`a b))"
+    # Result format is ((scope_1 scope_2 key value)) where scopes are empty strings
+    assert str(result) == "((  `a b))"
 
 
 def test_match_complex() -> None:
@@ -125,7 +126,7 @@ def test_match_complex() -> None:
     b = apyds.Term("(f b a)")
     result = a.match(b)
     assert result is not None
-    assert str(result) == "((`x b))"
+    assert str(result) == "((  `x b))"
 
 
 def test_match_fail() -> None:
@@ -141,6 +142,6 @@ def test_match_with_scopes() -> None:
     result = a.match(b, "scope1", "scope2")
     assert result is not None
     # The result should be a dictionary with scoped variables
-    result_str = str(result)
-    assert "scope1" in result_str and "scope2" in result_str and "`a" in result_str and "`b" in result_str
+    # Format: ((scope1 scope2 `a `b))
+    assert str(result) == "((scope1 scope2 `a `b))"
 

@@ -284,7 +284,7 @@ const a = new term_t("`a");
 const b = new term_t("b");
 const result = a.match(b);
 if (result !== null) {
-    console.log(result.toString());  // "((`a b))"
+    console.log(result.toString());  // "((  `a b))"
 }
 ```
 

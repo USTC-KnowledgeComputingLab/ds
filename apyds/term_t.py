@@ -97,7 +97,10 @@ class Term(Common[ds.Term]):
             >>> str(result) if result else None  # "((`a b))"
         """
         capacity = buffer_size()
-        term = ds.Term.match(self.value, other.value, scope_1, scope_2, capacity)
+        # Convert None to empty string for C++ binding
+        scope_1_str = scope_1 if scope_1 is not None else ""
+        scope_2_str = scope_2 if scope_2 is not None else ""
+        term = ds.Term.match(self.value, other.value, scope_1_str, scope_2_str, capacity)
         if term is None:
             return None
         return Term(term, capacity)

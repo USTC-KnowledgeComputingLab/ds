@@ -289,7 +289,7 @@ a = Term("`a")
 b = Term("b")
 result = a.match(b)
 if result is not None:
-    print(result)  # "((`a b))"
+    print(result)  # "((  `a b))"
 ```
 
 #### rename()
