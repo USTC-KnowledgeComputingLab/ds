@@ -29,13 +29,9 @@ root = ".."
 [tool.setuptools]
 packages = ["apyds_bnf"]
 
-[tool.setuptools.package-data]
-apyds_bnf = ["py.typed"]
-
 [project.optional-dependencies]
 dev = [
   "ruff~=0.14.6",
-  "mypy~=1.18.2",
   "pytest~=9.0.1",
   "pytest-cov~=7.0.0",
 ]
@@ -54,22 +50,3 @@ select = ["E4", "E7", "E9", "F"]
 [tool.pytest.ini_options]
 addopts = "--cov=apyds_bnf"
 testpaths = "tests"
-
-[tool.mypy]
-files = ["apyds_bnf/__init__.py"]
-
-[[tool.mypy.overrides]]
-module = [
-  "apyds_bnf.DsLexer",
-  "apyds_bnf.DsParser",
-  "apyds_bnf.DsVisitor",
-  "apyds_bnf.DspLexer",
-  "apyds_bnf.DspParser",
-  "apyds_bnf.DspVisitor",
-]
-ignore_errors = true
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "antlr4.*"
-ignore_missing_imports = true
