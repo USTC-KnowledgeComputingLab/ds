@@ -7,5 +7,5 @@
         "isolatedModules": true,
         "skipLibCheck": true
     },
-    "include": ["atsds_bnf/*"]
+    "include": ["atsds_bnf/*.mts"]
 }
