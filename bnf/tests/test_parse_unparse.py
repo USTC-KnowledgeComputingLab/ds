@@ -1,3 +1,4 @@
+import pytest
 from apyds_bnf import parse, unparse
 
 
@@ -143,3 +144,38 @@ def test_roundtrip_unparse_parse() -> None:
     dsp_intermediate = unparse(ds_original)
     ds_result = parse(dsp_intermediate)
     assert ds_result == ds_original
+
+
+def test_parse_error_missing_closing_parenthesis() -> None:
+    """Test that parse throws error on missing closing parenthesis"""
+    dsp_input = "(a + b -> c"
+    with pytest.raises(Exception, match=r"line 1:7.*no viable alternative"):
+        parse(dsp_input)
+
+
+def test_parse_error_bad_syntax() -> None:
+    """Test that parse throws error on bad syntax"""
+    dsp_input = "a b c -> -> d"
+    with pytest.raises(Exception, match=r"line 1:2.*mismatched input"):
+        parse(dsp_input)
+
+
+def test_parse_error_malformed_parentheses() -> None:
+    """Test that parse throws error on malformed parentheses"""
+    dsp_input = "()()()"
+    with pytest.raises(Exception, match=r"line 1:1.*no viable alternative"):
+        parse(dsp_input)
+
+
+def test_unparse_error_incomplete_binary() -> None:
+    """Test that unparse throws error on incomplete binary expression"""
+    ds_input = "(binary"
+    with pytest.raises(Exception, match=r"line 1:7.*mismatched input"):
+        unparse(ds_input)
+
+
+def test_unparse_error_malformed_function() -> None:
+    """Test that unparse throws error on malformed function"""
+    ds_input = "(function"
+    with pytest.raises(Exception, match=r"line 1:9.*mismatched input"):
+        unparse(ds_input)

@@ -1,12 +1,18 @@
 __all__ = ["parse", "unparse"]
 
 from antlr4 import InputStream, CommonTokenStream
+from antlr4.error.ErrorListener import ErrorListener
 from .DspLexer import DspLexer
 from .DspParser import DspParser
 from .DspVisitor import DspVisitor
 from .DsLexer import DsLexer
 from .DsParser import DsParser
 from .DsVisitor import DsVisitor
+
+
+class ThrowingErrorListener(ErrorListener):
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        raise Exception(f"line {line}:{column} {msg}")
 
 
 class ParseVisitor(DspVisitor):
@@ -71,8 +77,12 @@ class UnparseVisitor(DsVisitor):
 def parse(input: str) -> str:
     chars = InputStream(input)
     lexer = DspLexer(chars)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(ThrowingErrorListener())
     tokens = CommonTokenStream(lexer)
     parser = DspParser(tokens)
+    parser.removeErrorListeners()
+    parser.addErrorListener(ThrowingErrorListener())
     tree = parser.rule_pool()
     visitor = ParseVisitor()
     return visitor.visit(tree)
@@ -81,8 +91,12 @@ def parse(input: str) -> str:
 def unparse(input: str) -> str:
     chars = InputStream(input)
     lexer = DsLexer(chars)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(ThrowingErrorListener())
     tokens = CommonTokenStream(lexer)
     parser = DsParser(tokens)
+    parser.removeErrorListeners()
+    parser.addErrorListener(ThrowingErrorListener())
     tree = parser.rule_pool()
     visitor = UnparseVisitor()
     return visitor.visit(tree)
