@@ -1,3 +1,4 @@
 *
 !__init__.py
 !py.typed
+!_version.py
