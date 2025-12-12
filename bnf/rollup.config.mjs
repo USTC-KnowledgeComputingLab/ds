@@ -19,9 +19,7 @@ export default [
             json(),
             terser(),
             copy({
-                targets: [
-                    { src: "atsds_bnf/index.d.mts", dest: "dist" }
-                ]
+                targets: [{ src: "atsds_bnf/index.d.mts", dest: "dist" }],
             }),
         ],
     },
