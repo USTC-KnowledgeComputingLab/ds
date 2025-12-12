@@ -250,160 +250,152 @@ const example = `  945
 92   7   
    1 2 87`;
 
-const grid = ref(
-  example.split("\n").map((row) => row.split("").map((cell) => parseInt(cell))),
-);
+const grid = ref(example.split("\n").map((row) => row.split("").map((cell) => parseInt(cell))));
 const log = ref("");
 const run = ref(false);
-const inputRef = ref(
-  Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => null)),
-);
+const inputRef = ref(Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => null)));
 
 function focusInput(event) {
-  event.target.select();
+    event.target.select();
 }
 
 function blurInput(rowIndex, colIndex) {
-  const value = grid.value[rowIndex][colIndex];
-  if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(value)) {
-    grid.value[rowIndex][colIndex] = "";
-  }
+    const value = grid.value[rowIndex][colIndex];
+    if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(value)) {
+        grid.value[rowIndex][colIndex] = "";
+    }
 }
 
 function keyDownInput(event, row, col) {
-  const { key } = event;
-  let newRow = row;
-  let newCol = col;
-  switch (key) {
-    case "ArrowUp":
-      newRow = Math.max(0, row - 1);
-      break;
-    case "ArrowDown":
-      newRow = Math.min(8, row + 1);
-      break;
-    case "ArrowLeft":
-      newCol = Math.max(0, col - 1);
-      break;
-    case "ArrowRight":
-      newCol = Math.min(8, col + 1);
-      break;
-    default:
-      return;
-  }
-  event.preventDefault();
-  const nextInput = inputRef.value[newRow][newCol];
-  if (nextInput) {
-    nextInput.focus();
-  }
+    const { key } = event;
+    let newRow = row;
+    let newCol = col;
+    switch (key) {
+        case "ArrowUp":
+            newRow = Math.max(0, row - 1);
+            break;
+        case "ArrowDown":
+            newRow = Math.min(8, row + 1);
+            break;
+        case "ArrowLeft":
+            newCol = Math.max(0, col - 1);
+            break;
+        case "ArrowRight":
+            newCol = Math.min(8, col + 1);
+            break;
+        default:
+            return;
+    }
+    event.preventDefault();
+    const nextInput = inputRef.value[newRow][newCol];
+    if (nextInput) {
+        nextInput.focus();
+    }
 }
 
 function refInput(el, row, col) {
-  inputRef.value[row][col] = el;
+    inputRef.value[row][col] = el;
 }
 
 let generator = null;
 
 function clearSudoku() {
-  grid.value = Array.from({ length: 9 }, () =>
-    Array.from({ length: 9 }, () => ""),
-  );
-  log.value = "";
-  run.value = false;
-  generator = null;
+    grid.value = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => ""));
+    log.value = "";
+    run.value = false;
+    generator = null;
 }
 
 async function solveSudoku() {
-  if (!generator) {
-    generator = search();
-  }
+    if (!generator) {
+        generator = search();
+    }
 
-  while (true) {
-    const { value, done } = await generator.next();
-    if (value) {
-      addLog(`New rules/facts count: ${value}`);
+    while (true) {
+        const { value, done } = await generator.next();
+        if (value) {
+            addLog(`New rules/facts count: ${value}`);
+        }
+        if (done) {
+            addLog("Sudoku solved.");
+            break;
+        }
+        addLog("A cycle of search completed.");
+        await new Promise((resolve) => setTimeout(resolve, 1));
     }
-    if (done) {
-      addLog("Sudoku solved.");
-      break;
-    }
-    addLog("A cycle of search completed.");
-    await new Promise((resolve) => setTimeout(resolve, 1));
-  }
 }
 
 async function updateSudoku() {
-  if (!generator) {
-    generator = search();
-  }
+    if (!generator) {
+        generator = search();
+    }
 
-  const { value, done } = await generator.next();
-  if (value) {
-    addLog(`New rules/facts count: ${value}`);
-  }
-  if (done) {
-    addLog("Search completed.");
-  } else {
-    addLog("Search not completed...");
-  }
+    const { value, done } = await generator.next();
+    if (value) {
+        addLog(`New rules/facts count: ${value}`);
+    }
+    if (done) {
+        addLog("Search completed.");
+    } else {
+        addLog("Search not completed...");
+    }
 }
 
 async function* search() {
-  addLog("Loading Sudoku grid...");
-  run.value = true;
-  const response = await fetch(rule_data_url);
-  const text = render(await response.text());
-  const sections = text.split(/\n\n/);
-  let data = sections
-    .filter((section) => section.trim().length > 0)
-    .map((section) => section.trim());
-  for (let row = 0; row < 9; row++) {
-    for (let col = 0; col < 9; col++) {
-      const value = grid.value[row][col];
-      if ([1, 2, 3, 4, 5, 6, 7, 8, 9].includes(value)) {
-        addLog(`Cell (${row + 1}, ${col + 1}) = ${value}`);
-        data.push(`((Cell ${row + 1} ${col + 1}) = (Literal ${value}))`);
-      }
+    addLog("Loading Sudoku grid...");
+    run.value = true;
+    const response = await fetch(rule_data_url);
+    const text = render(await response.text());
+    const sections = text.split(/\n\n/);
+    const data = sections.filter((section) => section.trim().length > 0).map((section) => section.trim());
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+            const value = grid.value[row][col];
+            if ([1, 2, 3, 4, 5, 6, 7, 8, 9].includes(value)) {
+                addLog(`Cell (${row + 1}, ${col + 1}) = ${value}`);
+                data.push(`((Cell ${row + 1} ${col + 1}) = (Literal ${value}))`);
+            }
+        }
     }
-  }
-  addLog("Search start...");
-  yield* engine(data, 1000, (candidate) => {
-    if (candidate.length() === 0) {
-      const text = candidate.toString();
-      const match = text.match(/\(\(Cell (\d) (\d)\) = \(Literal (\d)\)\)/);
-      if (match) {
-        const row = parseInt(match[1]);
-        const col = parseInt(match[2]);
-        const value = parseInt(match[3]);
-        addLog(`Cell (${row}, ${col}) = ${value}`);
-        grid.value[row - 1][col - 1] = value;
-      }
-    }
-  });
+    addLog("Search start...");
+    yield* engine(data, 1000, (candidate) => {
+        if (candidate.length() === 0) {
+            const text = candidate.toString();
+            const match = text.match(/\(\(Cell (\d) (\d)\) = \(Literal (\d)\)\)/);
+            if (match) {
+                const row = parseInt(match[1]);
+                const col = parseInt(match[2]);
+                const value = parseInt(match[3]);
+                addLog(`Cell (${row}, ${col}) = ${value}`);
+                grid.value[row - 1][col - 1] = value;
+            }
+        }
+    });
 }
 
 function addLog(message) {
-  log.value += Date() + " : " + message + "\n";
-  nextTick(() => {
-    logRef.value.scrollTop = logRef.value.scrollHeight;
-  });
+    log.value += Date() + " : " + message + "\n";
+    nextTick(() => {
+        logRef.value.scrollTop = logRef.value.scrollHeight;
+    });
 }
 
 function* engine(input_strings, buffer_limit, callback) {
-  const search = new Search(buffer_limit, buffer_limit);
+    const search = new Search(buffer_limit, buffer_limit);
 
-  for (const input_string of input_strings) {
-    search.add(input_string);
-  }
-
-  while (true) {
-    const count = search.execute((rule) => {
-      callback(rule);
-      return false;
-    });
-    if (count === 0) {
-      return;
+    for (const input_string of input_strings) {
+        search.add(input_string);
     }
-    yield count;
-  }
+
+    while (true) {
+        const count = search.execute((rule) => {
+            callback(rule);
+            return false;
+        });
+        if (count === 0) {
+            return;
+        }
+        yield count;
+    }
 }
 </script>
