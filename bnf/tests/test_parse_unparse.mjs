@@ -143,3 +143,33 @@ test("roundtrip_unparse_parse", () => {
     const ds_result = parse(dsp_intermediate);
     expect(ds_result).toBe(ds_original);
 });
+
+test("parse_error_missing_closing_parenthesis", () => {
+    // Test that parse throws error on missing closing parenthesis
+    const dsp_input = "(a + b -> c";
+    expect(() => parse(dsp_input)).toThrow(/line 1:7 no viable alternative/);
+});
+
+test("parse_error_bad_syntax", () => {
+    // Test that parse throws error on bad syntax
+    const dsp_input = "a b c -> -> d";
+    expect(() => parse(dsp_input)).toThrow(/line 1:2 mismatched input/);
+});
+
+test("parse_error_malformed_parentheses", () => {
+    // Test that parse throws error on malformed parentheses
+    const dsp_input = "()()()";
+    expect(() => parse(dsp_input)).toThrow(/line 1:1 no viable alternative/);
+});
+
+test("unparse_error_incomplete_binary", () => {
+    // Test that unparse throws error on incomplete binary expression
+    const ds_input = "(binary";
+    expect(() => unparse(ds_input)).toThrow(/line 1:7 mismatched input/);
+});
+
+test("unparse_error_malformed_function", () => {
+    // Test that unparse throws error on malformed function
+    const ds_input = "(function";
+    expect(() => unparse(ds_input)).toThrow(/line 1:9 mismatched input/);
+});

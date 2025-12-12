@@ -1,10 +1,16 @@
-import { InputStream, CommonTokenStream } from "antlr4";
+import { InputStream, CommonTokenStream, ErrorListener } from "antlr4";
 import DspLexer from "./DspLexer.js";
 import DspParser from "./DspParser.js";
 import DspVisitor from "./DspVisitor.js";
 import DsLexer from "./DsLexer.js";
 import DsParser from "./DsParser.js";
 import DsVisitor from "./DsVisitor.js";
+
+class ThrowingErrorListener extends ErrorListener {
+    syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
+        throw new Error(`line ${line}:${column} ${msg}`);
+    }
+}
 
 class ParseVisitor extends DspVisitor {
     visitRule_pool(ctx) {
@@ -104,8 +110,12 @@ class UnparseVisitor extends DsVisitor {
 export function parse(input) {
     const chars = new InputStream(input);
     const lexer = new DspLexer(chars);
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(new ThrowingErrorListener());
     const tokens = new CommonTokenStream(lexer);
     const parser = new DspParser(tokens);
+    parser.removeErrorListeners();
+    parser.addErrorListener(new ThrowingErrorListener());
     const tree = parser.rule_pool();
     const visitor = new ParseVisitor();
     return visitor.visit(tree);
@@ -114,8 +124,12 @@ export function parse(input) {
 export function unparse(input) {
     const chars = new InputStream(input);
     const lexer = new DsLexer(chars);
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(new ThrowingErrorListener());
     const tokens = new CommonTokenStream(lexer);
     const parser = new DsParser(tokens);
+    parser.removeErrorListeners();
+    parser.addErrorListener(new ThrowingErrorListener());
     const tree = parser.rule_pool();
     const visitor = new UnparseVisitor();
     return visitor.visit(tree);
