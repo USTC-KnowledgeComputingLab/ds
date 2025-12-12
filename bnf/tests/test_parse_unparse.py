@@ -1,3 +1,4 @@
+import pytest
 from apyds_bnf import parse, unparse
 
 
@@ -148,53 +149,33 @@ def test_roundtrip_unparse_parse() -> None:
 def test_parse_error_missing_closing_parenthesis() -> None:
     """Test that parse throws error on missing closing parenthesis"""
     dsp_input = "(a + b -> c"
-    try:
+    with pytest.raises(Exception, match=r"line 1:7.*no viable alternative"):
         parse(dsp_input)
-        assert False, "Expected exception to be raised"
-    except Exception as e:
-        assert "line 1:7" in str(e)
-        assert "no viable alternative" in str(e)
 
 
 def test_parse_error_bad_syntax() -> None:
     """Test that parse throws error on bad syntax"""
     dsp_input = "a b c -> -> d"
-    try:
+    with pytest.raises(Exception, match=r"line 1:2.*mismatched input"):
         parse(dsp_input)
-        assert False, "Expected exception to be raised"
-    except Exception as e:
-        assert "line 1:2" in str(e)
-        assert "mismatched input" in str(e)
 
 
 def test_parse_error_malformed_parentheses() -> None:
     """Test that parse throws error on malformed parentheses"""
     dsp_input = "()()()"
-    try:
+    with pytest.raises(Exception, match=r"line 1:1.*no viable alternative"):
         parse(dsp_input)
-        assert False, "Expected exception to be raised"
-    except Exception as e:
-        assert "line 1:1" in str(e)
-        assert "no viable alternative" in str(e)
 
 
 def test_unparse_error_incomplete_binary() -> None:
     """Test that unparse throws error on incomplete binary expression"""
     ds_input = "(binary"
-    try:
+    with pytest.raises(Exception, match=r"line 1:7.*mismatched input"):
         unparse(ds_input)
-        assert False, "Expected exception to be raised"
-    except Exception as e:
-        assert "line 1:7" in str(e)
-        assert "mismatched input" in str(e)
 
 
 def test_unparse_error_malformed_function() -> None:
     """Test that unparse throws error on malformed function"""
     ds_input = "(function"
-    try:
+    with pytest.raises(Exception, match=r"line 1:9.*mismatched input"):
         unparse(ds_input)
-        assert False, "Expected exception to be raised"
-    except Exception as e:
-        assert "line 1:9" in str(e)
-        assert "mismatched input" in str(e)
