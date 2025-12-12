@@ -27,7 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: ${{ env.EM_CACHE_FOLDER }}
           key: jest-em-cache-${{ runner.os }}-${{ matrix.node-version }}
@@ -65,7 +65,7 @@ jobs:
           node-version: ${{ env.NODE_LATEST_VERSION }}
           cache: 'npm'
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: ${{ env.EM_CACHE_FOLDER }}
           key: jest-em-cache-${{ runner.os }}-${{ env.NODE_LATEST_VERSION }}
