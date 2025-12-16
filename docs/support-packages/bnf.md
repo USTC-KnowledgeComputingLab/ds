@@ -41,7 +41,7 @@ print(ds_output)
 # c
 
 # Unparse: Convert from DS format to readable Dsp
-ds_input = "a\nb\n----\nc"
+ds_input = "a\nb\n----\nc\n"
 dsp_output = unparse(ds_input)
 print(dsp_output)
 # Output: a, b -> c
@@ -63,7 +63,7 @@ console.log(ds_output);
 // c
 
 // Unparse: Convert from DS format to readable Dsp
-const ds_input = "a\nb\n----\nc";
+const ds_input = "a\nb\n----\nc\n";
 const dsp_output = unparse(ds_input);
 console.log(dsp_output);
 // Output: a, b -> c
@@ -108,13 +108,13 @@ For structured terms:
 
 | Description | Dsp Format | Ds Format |
 |-------------|------------|-----------|
-| Simple rule | `a, b -> c` | `a\nb\n----\nc` |
+| Simple rule | `a, b -> c` | `a\nb\n----\nc\n` |
 | Axiom | `a` | `----\na\n` |
-| Function call | `f(a, b) -> c` | `(function f a b)\n----------------\nc` |
-| Subscript | `a[i, j] -> b` | `(subscript a i j)\n-----------------\nb` |
-| Binary operator | `(a + b) -> c` | `(binary + a b)\n--------------\nc` |
-| Unary operator | `~ a -> b` | `(unary ~ a)\n-----------\nb` |
-| Complex expression | `((a + b) * c), d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)` |
+| Function call | `f(a, b) -> c` | `(function f a b)\n----------------\nc\n` |
+| Subscript | `a[i, j] -> b` | `(subscript a i j)\n-----------------\nb\n` |
+| Binary operator | `(a + b) -> c` | `(binary + a b)\n--------------\nc\n` |
+| Unary operator | `~ a -> b` | `(unary ~ a)\n-----------\nb\n` |
+| Complex expression | `((a + b) * c), d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)\n` |
 
 ## Package Information
 
