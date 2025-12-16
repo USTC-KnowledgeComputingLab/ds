@@ -4,7 +4,7 @@ test("parse_simple_rule", () => {
     // Test parsing a simple rule with premises and conclusion
     const dsp_input = "a, b -> c";
     const ds_output = parse(dsp_input);
-    const expected = "a\nb\n----\nc";
+    const expected = "a\nb\n----\nc\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -20,7 +20,7 @@ test("parse_function", () => {
     // Test parsing a function call
     const dsp_input = "f(a, b) -> c";
     const ds_output = parse(dsp_input);
-    const expected = "(function f a b)\n----------------\nc";
+    const expected = "(function f a b)\n----------------\nc\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -28,7 +28,7 @@ test("parse_subscript", () => {
     // Test parsing subscript notation
     const dsp_input = "a[i, j] -> b";
     const ds_output = parse(dsp_input);
-    const expected = "(subscript a i j)\n-----------------\nb";
+    const expected = "(subscript a i j)\n-----------------\nb\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -36,7 +36,7 @@ test("parse_binary_operator", () => {
     // Test parsing binary operators
     const dsp_input = "(a + b) -> c";
     const ds_output = parse(dsp_input);
-    const expected = "(binary + a b)\n--------------\nc";
+    const expected = "(binary + a b)\n--------------\nc\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -44,7 +44,7 @@ test("parse_unary_operator", () => {
     // Test parsing unary operators
     const dsp_input = "~ a -> b";
     const ds_output = parse(dsp_input);
-    const expected = "(unary ~ a)\n-----------\nb";
+    const expected = "(unary ~ a)\n-----------\nb\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -52,7 +52,7 @@ test("parse_multiple_rules", () => {
     // Test parsing multiple rules
     const dsp_input = "a -> b\nc -> d";
     const ds_output = parse(dsp_input);
-    const expected = "a\n----\nb\n\nc\n----\nd";
+    const expected = "a\n----\nb\n\n\nc\n----\nd\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -60,13 +60,13 @@ test("parse_complex_expression", () => {
     // Test parsing complex nested expressions
     const dsp_input = "(a + b) * c, d[i] -> f(g, h)";
     const ds_output = parse(dsp_input);
-    const expected = "(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)";
+    const expected = "(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)\n";
     expect(ds_output).toBe(expected);
 });
 
 test("unparse_simple_rule", () => {
     // Test unparsing a simple rule
-    const ds_input = "a\nb\n----\nc";
+    const ds_input = "a\nb\n----\nc\n";
     const dsp_output = unparse(ds_input);
     const expected = "a, b -> c";
     expect(dsp_output).toBe(expected);
@@ -82,7 +82,7 @@ test("unparse_no_premises", () => {
 
 test("unparse_function", () => {
     // Test unparsing a function
-    const ds_input = "(function f a b)\n----\nc";
+    const ds_input = "(function f a b)\n----\nc\n";
     const dsp_output = unparse(ds_input);
     const expected = "f(a, b) -> c";
     expect(dsp_output).toBe(expected);
@@ -90,7 +90,7 @@ test("unparse_function", () => {
 
 test("unparse_subscript", () => {
     // Test unparsing subscript notation
-    const ds_input = "(subscript a i j)\n----\nb";
+    const ds_input = "(subscript a i j)\n----\nb\n";
     const dsp_output = unparse(ds_input);
     const expected = "a[i, j] -> b";
     expect(dsp_output).toBe(expected);
@@ -98,7 +98,7 @@ test("unparse_subscript", () => {
 
 test("unparse_binary_operator", () => {
     // Test unparsing binary operators
-    const ds_input = "(binary + a b)\n----\nc";
+    const ds_input = "(binary + a b)\n----\nc\n";
     const dsp_output = unparse(ds_input);
     const expected = "(a + b) -> c";
     expect(dsp_output).toBe(expected);
@@ -106,7 +106,7 @@ test("unparse_binary_operator", () => {
 
 test("unparse_unary_operator", () => {
     // Test unparsing unary operators
-    const ds_input = "(unary ~ a)\n----\nb";
+    const ds_input = "(unary ~ a)\n----\nb\n";
     const dsp_output = unparse(ds_input);
     const expected = "(~ a) -> b";
     expect(dsp_output).toBe(expected);
@@ -114,7 +114,7 @@ test("unparse_unary_operator", () => {
 
 test("unparse_multiple_rules", () => {
     // Test unparsing multiple rules
-    const ds_input = "a\n----\nb\n\nc\n----\nd";
+    const ds_input = "a\n----\nb\n\n\nc\n----\nd\n";
     const dsp_output = unparse(ds_input);
     const expected = "a -> b\nc -> d";
     expect(dsp_output).toBe(expected);
@@ -122,7 +122,7 @@ test("unparse_multiple_rules", () => {
 
 test("unparse_complex_expression", () => {
     // Test unparsing complex nested expressions
-    const ds_input = "(binary * (binary + a b) c)\n(subscript d i)\n----\n(function f g h)";
+    const ds_input = "(binary * (binary + a b) c)\n(subscript d i)\n----\n(function f g h)\n";
     const dsp_output = unparse(ds_input);
     const expected = "((a + b) * c), d[i] -> f(g, h)";
     expect(dsp_output).toBe(expected);
@@ -138,7 +138,7 @@ test("roundtrip_parse_unparse", () => {
 
 test("roundtrip_unparse_parse", () => {
     // Test that unparse followed by parse produces consistent results
-    const ds_original = "a\nb\n----\nc";
+    const ds_original = "a\nb\n----\nc\n";
     const dsp_intermediate = unparse(ds_original);
     const ds_result = parse(dsp_intermediate);
     expect(ds_result).toBe(ds_original);
