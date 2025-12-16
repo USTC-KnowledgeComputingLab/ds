@@ -374,7 +374,7 @@ async function* search() {
 }
 
 function addLog(message) {
-    log.value += Date() + " : " + message + "\n";
+    log.value += `${Date()} : ${message}\n`;
     nextTick(() => {
         logRef.value.scrollTop = logRef.value.scrollHeight;
     });
