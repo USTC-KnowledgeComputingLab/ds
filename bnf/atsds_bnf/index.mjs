@@ -23,7 +23,7 @@ class ParseVisitor extends DspVisitor {
     visitRule(ctx) {
         const result = ctx.term().map((t) => this.visit(t));
         if (result.length === 1) {
-            return `----\n${result[0]}`;
+            return `----\n${result[0]}\n`;
         } else {
             const conclusion = result.pop();
             const length = Math.max(...result.map((premise) => premise.length));

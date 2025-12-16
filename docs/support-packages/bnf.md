@@ -109,7 +109,7 @@ For structured terms:
 | Description | Dsp Format | Ds Format |
 |-------------|------------|-----------|
 | Simple rule | `a, b -> c` | `a\nb\n----\nc` |
-| Axiom | `a` | `----\na` |
+| Axiom | `a` | `----\na\n` |
 | Function call | `f(a, b) -> c` | `(function f a b)\n----------------\nc` |
 | Subscript | `a[i, j] -> b` | `(subscript a i j)\n-----------------\nb` |
 | Binary operator | `(a + b) -> c` | `(binary + a b)\n--------------\nc` |
