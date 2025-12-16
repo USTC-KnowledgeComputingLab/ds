@@ -28,7 +28,6 @@ class ParseVisitor(DspVisitor):
             length = max(len(premise) for premise in result)
             result.append("-" * max(length, 4))
             result.append(conclusion)
-            result.append("")
             return "\n".join(result)
 
     def visitSymbol(self, ctx):

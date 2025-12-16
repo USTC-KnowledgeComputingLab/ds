@@ -29,7 +29,6 @@ class ParseVisitor extends DspVisitor {
             const length = Math.max(...result.map((premise) => premise.length));
             result.push("-".repeat(Math.max(length, 4)));
             result.push(conclusion);
-            result.push("");
             return result.join("\n");
         }
     }
