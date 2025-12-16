@@ -14,7 +14,7 @@ def test_parse_no_premises() -> None:
     """Test parsing a rule with no premises (axiom)"""
     dsp_input = "a"
     ds_output = parse(dsp_input)
-    expected = "----\na"
+    expected = "----\na\n"
     assert ds_output == expected
 
 
@@ -76,7 +76,7 @@ def test_unparse_simple_rule() -> None:
 
 def test_unparse_no_premises() -> None:
     """Test unparsing a rule with no premises"""
-    ds_input = "----\na"
+    ds_input = "----\na\n"
     dsp_output = unparse(ds_input)
     expected = " -> a"
     assert dsp_output == expected

@@ -12,7 +12,7 @@ test("parse_no_premises", () => {
     // Test parsing a rule with no premises (axiom)
     const dsp_input = "a";
     const ds_output = parse(dsp_input);
-    const expected = "----\na";
+    const expected = "----\na\n";
     expect(ds_output).toBe(expected);
 });
 
@@ -74,7 +74,7 @@ test("unparse_simple_rule", () => {
 
 test("unparse_no_premises", () => {
     // Test unparsing a rule with no premises
-    const ds_input = "----\na";
+    const ds_input = "----\na\n";
     const dsp_output = unparse(ds_input);
     const expected = " -> a";
     expect(dsp_output).toBe(expected);

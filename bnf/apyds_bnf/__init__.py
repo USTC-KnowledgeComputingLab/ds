@@ -22,7 +22,7 @@ class ParseVisitor(DspVisitor):
     def visitRule(self, ctx):
         result = [self.visit(t) for t in ctx.term()]
         if len(result) == 1:
-            return f"----\n{result[0]}"
+            return f"----\n{result[0]}\n"
         else:
             conclusion = result.pop()
             length = max(len(premise) for premise in result)
