@@ -57,7 +57,7 @@ class UnparseVisitor(DsVisitor):
     def visitRule(self, ctx):
         result = [self.visit(t) for t in ctx.term()]
         conclusion = result.pop()
-        return f"{', '.join(result)} -> {conclusion}"
+        return f"{', '.join(result)} => {conclusion}"
 
     def visitSymbol(self, ctx):
         return ctx.SYMBOL().getText()
