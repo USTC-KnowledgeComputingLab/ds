@@ -11,15 +11,14 @@ class BuildWithAntlr(build_py):
         super().run()
 
     def generate_antlr_parsers(self):
-        base_dir = Path(__file__).parent
-        grammars_dir = base_dir
-        output_dir = base_dir / "apyds_bnf"
-
-        # Check if antlr4 is available
         if not shutil.which("antlr4"):
             print("Warning: antlr4 command not found. Skipping parser generation.")
             print("This is normal when resolving dependencies (e.g., with Dependabot).")
             return
+
+        base_dir = Path(__file__).parent
+        grammars_dir = base_dir
+        output_dir = base_dir / "apyds_bnf"
 
         for grammar in ["Ds.g4", "Dsp.g4"]:
             grammar_path = grammars_dir / grammar
