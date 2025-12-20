@@ -17,8 +17,7 @@ term
     | term '[' term (',' term)* ']'                          # subscript
     | term '(' (term (',' term)*)? ')'                       # function
     | <assoc=right> ('~' | '!' | '-' | '+' | '&' | '*') term # unary
-    | term '.*' term                                         # binary
-    | term '->*' term                                        # binary
+    | term ('.*' | '->*') term                               # binary
     | term ('*' | '/' | '%') term                            # binary
     | term ('+' | '-') term                                  # binary
     | term ('<<' | '>>') term                                # binary

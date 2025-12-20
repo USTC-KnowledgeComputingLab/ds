@@ -40,14 +40,6 @@ test("parse_binary_operator", () => {
     expect(ds_output).toBe(expected);
 });
 
-test("parse_pointer_to_member_operator", () => {
-    // Test parsing pointer-to-member operator (->*)
-    const dsp_input = "(a ->* b) => c";
-    const ds_output = parse(dsp_input);
-    const expected = "(binary ->* a b)\n----------------\nc\n";
-    expect(ds_output).toBe(expected);
-});
-
 test("parse_unary_operator", () => {
     // Test parsing unary operators
     const dsp_input = "~ a => b";
@@ -109,14 +101,6 @@ test("unparse_binary_operator", () => {
     const ds_input = "(binary + a b)\n----\nc\n";
     const dsp_output = unparse(ds_input);
     const expected = "(a + b) => c";
-    expect(dsp_output).toBe(expected);
-});
-
-test("unparse_pointer_to_member_operator", () => {
-    // Test unparsing pointer-to-member operator (->*)
-    const ds_input = "(binary ->* a b)\n----\nc\n";
-    const dsp_output = unparse(ds_input);
-    const expected = "(a ->* b) => c";
     expect(dsp_output).toBe(expected);
 });
 

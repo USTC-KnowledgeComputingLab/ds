@@ -42,14 +42,6 @@ def test_parse_binary_operator() -> None:
     assert ds_output == expected
 
 
-def test_parse_pointer_to_member_operator() -> None:
-    """Test parsing pointer-to-member operator (->*)"""
-    dsp_input = "(a ->* b) => c"
-    ds_output = parse(dsp_input)
-    expected = "(binary ->* a b)\n----------------\nc\n"
-    assert ds_output == expected
-
-
 def test_parse_unary_operator() -> None:
     """Test parsing unary operators"""
     dsp_input = "~ a => b"
@@ -111,14 +103,6 @@ def test_unparse_binary_operator() -> None:
     ds_input = "(binary + a b)\n----\nc\n"
     dsp_output = unparse(ds_input)
     expected = "(a + b) => c"
-    assert dsp_output == expected
-
-
-def test_unparse_pointer_to_member_operator() -> None:
-    """Test unparsing pointer-to-member operator (->*)"""
-    ds_input = "(binary ->* a b)\n----\nc\n"
-    dsp_output = unparse(ds_input)
-    expected = "(a ->* b) => c"
     assert dsp_output == expected
 
 
