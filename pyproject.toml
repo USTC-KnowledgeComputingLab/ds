@@ -20,7 +20,6 @@ license = "AGPL-3.0-or-later"
 Repository = "https://github.com/USTC-KnowledgeComputingLab/ds.git"
 
 [tool.setuptools_scm]
-version_file = "apyds/_version.py"
 version_scheme = "no-guess-dev"
 fallback_version = "0.0.0"
 
