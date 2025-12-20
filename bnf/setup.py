@@ -1,11 +1,11 @@
 import subprocess
 import shutil
-from pathlib import Path
-from setuptools import setup
-from setuptools.command.build_py import build_py
+import pathlib
+import setuptools
+import setuptools.command.build_py
 
 
-class BuildWithAntlr(build_py):
+class BuildWithAntlr(setuptools.command.build_py.build_py):
     def run(self):
         self.generate_antlr_parsers()
         super().run()
@@ -17,7 +17,7 @@ class BuildWithAntlr(build_py):
             )
             return
 
-        base_dir = Path(__file__).parent
+        base_dir = pathlib.Path(__file__).parent
         grammars_dir = base_dir
         output_dir = base_dir / "apyds_bnf"
 
@@ -42,7 +42,7 @@ class BuildWithAntlr(build_py):
 
 
 if __name__ == "__main__":
-    setup(
+    setuptools.setup(
         cmdclass={
             "build_py": BuildWithAntlr,
         }
