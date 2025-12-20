@@ -56,7 +56,7 @@ compile_commands.json
 *.la
 
 ########################################
-# Python (uv / ruff / pytest / mypy / setuptools)
+# Python (uv / ruff / pytest / setuptools)
 ########################################
 # uv venvs
 .venv/
@@ -83,11 +83,6 @@ __pycache__/
 .coverage
 .coverage.*
 htmlcov/
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
 
 # ruff
 .ruff_cache/
