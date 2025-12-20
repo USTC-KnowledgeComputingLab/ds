@@ -12,8 +12,9 @@ class BuildWithAntlr(build_py):
 
     def generate_antlr_parsers(self):
         if not shutil.which("antlr4"):
-            print("Warning: antlr4 command not found. Skipping parser generation.")
-            print("This is normal when resolving dependencies (e.g., with Dependabot).")
+            print(
+                "Warning: antlr4 not found, skipping generation, which is normal when resolving dependencies (e.g., Dependabot)."
+            )
             return
 
         base_dir = Path(__file__).parent
