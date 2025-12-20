@@ -31,13 +31,13 @@ build.verbose = true
 
 [project.optional-dependencies]
 dev = [
-  "ruff~=0.14.6",
-  "pytest~=9.0.1",
+  "ruff~=0.14.10",
+  "pytest~=9.0.2",
   "pytest-cov~=7.0.0",
 ]
 docs = [
   "mkdocs~=1.6.1",
-  "mkdocs-material~=9.7.0",
+  "mkdocs-material~=9.7.1",
   "mike~=2.1.3",
 ]
 
