@@ -16,12 +16,12 @@ updates:
     schedule:
       interval: "weekly"
 
-  - package-ecosystem: "uv"
+  - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
 
-  - package-ecosystem: "uv"
+  - package-ecosystem: "pip"
     directory: "/bnf"
     schedule:
       interval: "weekly"
