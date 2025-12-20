@@ -40,7 +40,7 @@ npm install atsds-bnf
 from apyds_bnf import parse, unparse
 
 # Parse: Convert from readable Dsp to DS format
-dsp_input = "a, b -> c"
+dsp_input = "a, b => c"
 ds_output = parse(dsp_input)
 print(ds_output)
 # Output:
@@ -53,7 +53,7 @@ print(ds_output)
 ds_input = "a\nb\n----\nc\n"
 dsp_output = unparse(ds_input)
 print(dsp_output)
-# Output: a, b -> c
+# Output: a, b => c
 ```
 
 ### JavaScript Example
@@ -62,7 +62,7 @@ print(dsp_output)
 import { parse, unparse } from "atsds-bnf";
 
 // Parse: Convert from readable Dsp to DS format
-const dsp_input = "a, b -> c";
+const dsp_input = "a, b => c";
 const ds_output = parse(dsp_input);
 console.log(ds_output);
 // Output:
@@ -75,7 +75,7 @@ console.log(ds_output);
 const ds_input = "a\nb\n----\nc\n";
 const dsp_output = unparse(ds_input);
 console.log(dsp_output);
-// Output: a, b -> c
+// Output: a, b => c
 ```
 
 ## Syntax Formats
@@ -102,7 +102,7 @@ For structured terms:
 The Dsp format uses traditional mathematical notation:
 
 ```
-premise1, premise2 -> conclusion
+premise1, premise2 => conclusion
 ```
 
 For structured terms:
@@ -115,13 +115,13 @@ For structured terms:
 
 | Description | Dsp Format (parse input / unparse output) | Ds Format |
 |-------------|-------------------|-------------------|
-| Simple rule | `a, b -> c` | `a\nb\n----\nc\n` |
+| Simple rule | `a, b => c` | `a\nb\n----\nc\n` |
 | Axiom | `a` | `----\na\n` |
-| Function call | `f(a, b) -> c` | `(function f a b)\n----------------\nc\n` |
-| Subscript | `a[i, j] -> b` | `(subscript a i j)\n-----------------\nb\n` |
-| Binary operator | `(a + b) -> c` | `(binary + a b)\n--------------\nc\n` |
-| Unary operator | `~ a -> b` | `(unary ~ a)\n-----------\nb\n` |
-| Complex expression | `((a + b) * c), d[i] -> f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)\n` |
+| Function call | `f(a, b) => c` | `(function f a b)\n----------------\nc\n` |
+| Subscript | `a[i, j] => b` | `(subscript a i j)\n-----------------\nb\n` |
+| Binary operator | `(a + b) => c` | `(binary + a b)\n--------------\nc\n` |
+| Unary operator | `~ a => b` | `(unary ~ a)\n-----------\nb\n` |
+| Complex expression | `((a + b) * c), d[i] => f(g, h)` | `(binary * (binary + a b) c)\n(subscript d i)\n---------------------------\n(function f g h)\n` |
 
 ## Building from Source
 

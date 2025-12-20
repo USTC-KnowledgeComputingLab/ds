@@ -6,7 +6,7 @@ rule_pool
 
 rule
     : term
-    | (term (',' term)*)? '->' term
+    | (term (',' term)*)? '=>' term
     ;
 
 term
