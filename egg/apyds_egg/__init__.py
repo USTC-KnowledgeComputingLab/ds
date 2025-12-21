@@ -1,7 +1,7 @@
-"""E-graph implementation for equality saturation.
+"""E-graph implementation for equality saturation with apyds Terms.
 
 This module provides an implementation of E-graphs (Equivalence Graphs),
-which efficiently represent equivalence classes of expressions.
+which efficiently represent equivalence classes of expressions using apyds Terms.
 """
 
 __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
@@ -54,19 +54,17 @@ class UnionFind:
 
 
 class ENode:
-    """A node in the E-graph representing an operation applied to children.
+    """A node in the E-graph representing a Term and its children.
 
-    Attributes:
-        op: Operation name (string for items/variables, "()" for lists).
-        children: Tuple of EClassId references to child e-classes.
+    For Items and Variables, the op is their string representation.
+    For Lists, the op is "()" and children are the list elements.
     """
 
     def __init__(self, op, children):
         """Create a new E-node.
 
         Args:
-            op: Operation string (for items/variables use the string itself,
-                for lists use "()").
+            op: Operation string (item/variable string, or "()" for lists).
             children: Tuple of EClassId values representing children.
         """
         self.op = op
@@ -101,9 +99,9 @@ class ENode:
 
 
 class EGraph:
-    """E-graph data structure for equality saturation.
+    """E-graph data structure for equality saturation with apyds Terms.
 
-    An E-graph maintains equivalence classes of expressions and supports
+    An E-graph maintains equivalence classes of Terms and supports
     efficient congruence closure through deferred rebuilding.
     """
 

@@ -45,5 +45,4 @@ select = ["E4", "E7", "E9", "F"]
 [tool.ruff.format]
 
 [tool.pytest.ini_options]
-addopts = "--cov=apyds_egg"
 testpaths = "tests"
