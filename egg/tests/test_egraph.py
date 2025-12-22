@@ -40,14 +40,16 @@ def test_enode_canonicalize():
     a = EClassId(0)
     b = EClassId(1)
     c = EClassId(2)
+    d = EClassId(3)
 
     uf.union(a, c)
+    uf.union(d, b)
 
     node = ENode("+", (a, b))
     canon = node.canonicalize(uf.find)
 
     assert canon.children[0] == uf.find(a)
-    assert canon.children[1] == b
+    assert canon.children[1] == uf.find(b)
 
 
 def test_enode_frozen():
@@ -129,14 +131,13 @@ def test_egraph_merge_idempotent():
 def test_egraph_congruence():
     eg = EGraph()
 
-    x = eg.add(apyds.Term("x"))
-    a = eg.add(apyds.Term("a"))
-    b = eg.add(apyds.Term("b"))
-
     ax = eg.add(apyds.Term("(+ a x)"))
     bx = eg.add(apyds.Term("(+ b x)"))
 
     assert eg.find(ax) != eg.find(bx)
+
+    a = eg.add(apyds.Term("a"))
+    b = eg.add(apyds.Term("b"))
 
     eg.merge(a, b)
     eg.rebuild()
@@ -147,20 +148,18 @@ def test_egraph_congruence():
 def test_egraph_congruence_nested():
     eg = EGraph()
 
+    acc = eg.add(apyds.Term("(g (f a x) c x)"))
+    bcc = eg.add(apyds.Term("(g (f b x) d x)"))
+
     a = eg.add(apyds.Term("a"))
     b = eg.add(apyds.Term("b"))
     c = eg.add(apyds.Term("c"))
-
-    ac = eg.add(apyds.Term("(f a c)"))
-    bc = eg.add(apyds.Term("(f b c)"))
-
-    acc = eg.add(apyds.Term("(g (f a c) c)"))
-    bcc = eg.add(apyds.Term("(g (f b c) c)"))
+    d = eg.add(apyds.Term("d"))
 
     eg.merge(a, b)
+    eg.merge(c, d)
     eg.rebuild()
 
-    assert eg.find(ac) == eg.find(bc)
     assert eg.find(acc) == eg.find(bcc)
 
 
@@ -184,46 +183,6 @@ def test_egraph_immediate_congruence():
     assert eg.find(a) == a
 
 
-def test_egraph_complex_example():
-    eg = EGraph()
-
-    x = eg.add(apyds.Term("x"))
-    a = eg.add(apyds.Term("a"))
-    b = eg.add(apyds.Term("b"))
-
-    ax = eg.add(apyds.Term("(+ a x)"))
-    bx = eg.add(apyds.Term("(+ b x)"))
-
-    assert eg.find(ax) != eg.find(bx)
-
-    eg.merge(a, b)
-    eg.rebuild()
-
-    assert eg.find(ax) == eg.find(bx)
-
-
-def test_egraph_variable_terms():
-    eg = EGraph()
-
-    v1 = eg.add(apyds.Term("`var1"))
-    v2 = eg.add(apyds.Term("`var2"))
-
-    assert eg.find(v1) != eg.find(v2)
-
-    eg.merge(v1, v2)
-
-    assert eg.find(v1) == eg.find(v2)
-
-
-def test_egraph_list_operator():
-    eg = EGraph()
-
-    lst1 = eg.add(apyds.Term("(a b)"))
-    lst2 = eg.add(apyds.Term("(a b)"))
-
-    assert eg.find(lst1) == eg.find(lst2)
-
-
 def test_egraph_mixed_terms():
     eg = EGraph()
 
@@ -234,23 +193,6 @@ def test_egraph_mixed_terms():
     assert isinstance(item, int)
     assert isinstance(var, int)
     assert isinstance(lst, int)
-
-
-def test_egraph_associativity_example():
-    eg = EGraph()
-
-    x = eg.add(apyds.Term("x"))
-    y = eg.add(apyds.Term("y"))
-    z = eg.add(apyds.Term("z"))
-
-    xy_z = eg.add(apyds.Term("(+ (+ x y) z)"))
-    x_yz = eg.add(apyds.Term("(+ x (+ y z))"))
-
-    assert eg.find(xy_z) != eg.find(x_yz)
-
-    eg.merge(xy_z, x_yz)
-
-    assert eg.find(xy_z) == eg.find(x_yz)
 
 
 def test_egraph_empty_list():
@@ -274,9 +216,6 @@ def test_egraph_nested_lists():
 
 def test_egraph_hashcons():
     eg = EGraph()
-
-    a = eg.add(apyds.Term("a"))
-    b = eg.add(apyds.Term("b"))
 
     ab1 = eg.add(apyds.Term("(f a b)"))
     ab2 = eg.add(apyds.Term("(f a b)"))
