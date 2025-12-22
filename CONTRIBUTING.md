@@ -33,7 +33,7 @@ To get started:
 ### Prerequisites
 
 - **C++**: C++20 compatible compiler (GCC 10+, Clang 10+, MSVC 2019+), CMake 3.30+
-- **Python**: Python 3.10-3.14
+- **Python**: Python 3.11-3.14
 - **TypeScript/JavaScript**: Node.js 20+, Emscripten SDK (for building WebAssembly)
 
 ### Building the Project

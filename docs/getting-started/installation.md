@@ -43,7 +43,7 @@ pip install apyds
 
 ### Requirements
 
-- Python 3.10-3.14
+- Python 3.11-3.14
 - Pre-built wheels are available for common platforms (Linux, macOS, Windows)
 
 ### Virtual Environment (Recommended)
