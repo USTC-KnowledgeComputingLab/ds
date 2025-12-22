@@ -17,7 +17,14 @@ class UnionFind:
         self.parent: dict[EClassId, EClassId] = {}
 
     def find(self, x: EClassId) -> EClassId:
-        """Find the canonical representative of x's set with path compression."""
+        """Find the canonical representative of x's set with path compression.
+
+        Args:
+            x: The E-class ID to find.
+
+        Returns:
+            The canonical E-class ID.
+        """
         if x not in self.parent:
             self.parent[x] = x
         if self.parent[x] != x:
@@ -25,7 +32,15 @@ class UnionFind:
         return self.parent[x]
 
     def union(self, a: EClassId, b: EClassId) -> EClassId:
-        """Union two sets and return the canonical representative."""
+        """Union two sets and return the canonical representative.
+
+        Args:
+            a: The first E-class ID.
+            b: The second E-class ID.
+
+        Returns:
+            The canonical E-class ID of the merged set.
+        """
         ra, rb = self.find(a), self.find(b)
         if ra != rb:
             self.parent[rb] = ra
@@ -40,7 +55,14 @@ class ENode:
     children: tuple[EClassId, ...]
 
     def canonicalize(self, find: Callable[[EClassId], EClassId]) -> ENode:
-        """Canonicalize children using the find function."""
+        """Canonicalize children using the find function.
+
+        Args:
+            find: Function to find the canonical E-class ID.
+
+        Returns:
+            A new ENode with canonicalized children.
+        """
         return ENode(self.op, tuple(find(c) for c in self.children))
 
 
@@ -62,7 +84,14 @@ class EGraph:
         return eid
 
     def find(self, eclass: EClassId) -> EClassId:
-        """Find the canonical representative of an E-class."""
+        """Find the canonical representative of an E-class.
+
+        Args:
+            eclass: The E-class ID to find.
+
+        Returns:
+            The canonical E-class ID.
+        """
         return self.uf.find(eclass)
 
     def add(self, term: apyds.Term) -> EClassId:
@@ -110,7 +139,15 @@ class EGraph:
         return eid
 
     def merge(self, a: EClassId, b: EClassId) -> EClassId:
-        """Merge two E-classes and schedule rebuilding."""
+        """Merge two E-classes and schedule rebuilding.
+
+        Args:
+            a: The first E-class ID to merge.
+            b: The second E-class ID to merge.
+
+        Returns:
+            The canonical E-class ID of the merged class.
+        """
         ra, rb = self.find(a), self.find(b)
         if ra == rb:
             return ra
@@ -134,9 +171,21 @@ class EGraph:
             self.worklist.clear()
 
             for eclass in todo:
-                self.repair(eclass)
+                self._repair(eclass)
 
-    def repair(self, eclass: EClassId) -> None:
+    def are_equal(self, a: EClassId, b: EClassId) -> bool:
+        """Check if two E-class IDs are equivalent.
+
+        Args:
+            a: The first E-class ID to compare.
+            b: The second E-class ID to compare.
+
+        Returns:
+            True if both E-class IDs belong to the same equivalence class, False otherwise.
+        """
+        return self.find(a) == self.find(b)
+
+    def _repair(self, eclass: EClassId) -> None:
         """Repair congruence for an E-class by updating parent nodes."""
         new_parents: dict[ENode, EClassId] = {}
 
