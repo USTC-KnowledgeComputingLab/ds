@@ -328,7 +328,7 @@ cmake --build build
 npm test
 
 # Python tests
-pytest
+uv run pytest
 
 # C++ tests (if available)
 cd build && ctest
