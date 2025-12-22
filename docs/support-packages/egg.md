@@ -2,7 +2,7 @@
 
 The E-Graph support package provides efficient management and manipulation of equivalence classes of terms for the DS deductive system.
 
-An E-Graph (Equality Graph) is a data structure that efficiently represents equivalence classes of terms and automatically maintains congruence closure. This implementation follows the egg-style approach with deferred rebuilding for optimal performance.
+An E-Graph (Equality Graph) is a data structure that efficiently represents equivalence classes of terms and automatically maintains congruence closure. This implementation follows the egg-style approach with deferred rebuilding for optimal performance. Based on the [egg library](https://egraphs-good.github.io/).
 
 ## Installation
 
@@ -73,30 +73,6 @@ assert eg.find(fa) == eg.find(fb)
 assert eg.find(gfa) == eg.find(gfb)
 ```
 
-### Union-Find Example
-
-The package also exports the Union-Find data structure used internally:
-
-```python
-from apyds_egg import UnionFind, EClassId
-
-uf = UnionFind()
-a = EClassId(0)
-b = EClassId(1)
-c = EClassId(2)
-
-# Find returns canonical representative
-assert uf.find(a) == a
-
-# Union merges sets
-uf.union(a, b)
-assert uf.find(a) == uf.find(b)
-
-# Path compression for efficiency
-uf.union(b, c)
-assert uf.find(a) == uf.find(c)
-```
-
 ## Core Concepts
 
 ### E-Graph Structure
@@ -140,26 +116,6 @@ Main class for E-Graph operations:
 - `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
 - `rebuild() -> None`: Restore congruence closure by processing the worklist
 - `find(eclass: EClassId) -> EClassId`: Find the canonical E-class representative
-
-### UnionFind[T]
-
-Generic Union-Find data structure:
-
-- `__init__()`: Create a new Union-Find structure
-- `find(x: T) -> T`: Find canonical representative with path compression
-- `union(a: T, b: T) -> T`: Union two sets and return the representative
-
-### ENode
-
-Immutable node in the E-Graph:
-
-- `op: str`: The operator/functor of the term
-- `children: tuple[EClassId, ...]`: Tuple of child E-class IDs
-- `canonicalize(find: Callable[[EClassId], EClassId]) -> ENode`: Create a new E-Node with canonicalized children
-
-### EClassId
-
-Type alias for `int` representing E-class identifiers.
 
 ## Package Information
 

@@ -2,7 +2,7 @@
 
 An E-Graph (Equality Graph) implementation for the DS deductive system, providing efficient management and manipulation of equivalence classes of terms.
 
-This package implements the egg-style E-Graph data structure with deferred congruence closure, enabling efficient equality reasoning and term rewriting.
+This package implements the egg-style E-Graph data structure with deferred congruence closure, enabling efficient equality reasoning. Based on the [egg library](https://egraphs-good.github.io/).
 
 ## Features
 
@@ -67,38 +67,6 @@ An E-Graph is a data structure that efficiently represents and maintains equival
 - **Union-Find**: Data structure for managing E-class equivalence
 - **Congruence**: Two terms are congruent if they have the same operator and their children are in equivalent E-classes
 
-### Union-Find
-
-The Union-Find data structure manages disjoint sets with path compression:
-
-```python
-from apyds_egg import UnionFind, EClassId
-
-uf = UnionFind()
-a = EClassId(0)
-b = EClassId(1)
-
-# Find canonical representative
-assert uf.find(a) == a
-
-# Union two sets
-uf.union(a, b)
-assert uf.find(a) == uf.find(b)
-```
-
-### E-Nodes
-
-E-Nodes represent terms in the E-Graph:
-
-```python
-from apyds_egg import ENode, EClassId
-
-# Create an E-Node for the term (+ a b)
-a_id = EClassId(0)
-b_id = EClassId(1)
-node = ENode("+", (a_id, b_id))
-```
-
 ### Congruence Closure
 
 The E-Graph maintains congruence closure automatically. When two E-classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-class:
@@ -132,22 +100,6 @@ assert eg.find(fa) == eg.find(fb)
 - `rebuild() -> None`: Restore congruence closure
 - `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
 
-### UnionFind
-
-- `__init__()`: Create a new Union-Find structure
-- `find(x: T) -> T`: Find canonical representative with path compression
-- `union(a: T, b: T) -> T`: Union two sets
-
-### ENode
-
-- `op: str`: The operator of the term
-- `children: tuple[EClassId, ...]`: The children E-class IDs
-- `canonicalize(find: Callable) -> ENode`: Canonicalize children
-
-### EClassId
-
-- Type alias for `int` representing E-class identifiers
-
 ## Building from Source
 
 ### Prerequisites
@@ -167,23 +119,10 @@ uv sync --extra dev
 uv build
 
 # Run tests
-pytest
+uv run pytest
 
 # Run with coverage
-pytest --cov
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage report
-pytest --cov=apyds_egg
-
-# Run specific test
-pytest tests/test_egraph.py::test_egraph_congruence
+uv run pytest --cov
 ```
 
 ## License
@@ -192,7 +131,7 @@ This project is licensed under the GNU Affero General Public License v3.0 or lat
 
 ## Repository
 
-- **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds)
+- **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds) (in `/egg` directory)
 - **Python Package**: [apyds-egg](https://pypi.org/project/apyds-egg/)
 
 ## Author
