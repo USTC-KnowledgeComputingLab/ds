@@ -286,3 +286,38 @@ def test_egraph_hashcons():
 
     assert ab1 == ab2
     assert len(eg.classes) == 4
+
+
+def test_egraph_are_equal():
+    eg = EGraph()
+
+    a = eg.add(apyds.Term("a"))
+    b = eg.add(apyds.Term("b"))
+
+    # Initially they should not be equal
+    assert not eg.are_equal(a, b)
+
+    # After merging they should be equal
+    eg.merge(a, b)
+    assert eg.are_equal(a, b)
+
+
+def test_egraph_are_equal_after_rebuild():
+    eg = EGraph()
+
+    x = eg.add(apyds.Term("x"))
+    a = eg.add(apyds.Term("a"))
+    b = eg.add(apyds.Term("b"))
+
+    ax = eg.add(apyds.Term("(+ a x)"))
+    bx = eg.add(apyds.Term("(+ b x)"))
+
+    # Initially ax and bx should not be equal
+    assert not eg.are_equal(ax, bx)
+
+    # Merge a and b
+    eg.merge(a, b)
+    eg.rebuild()
+
+    # After rebuild, ax and bx should be equal due to congruence
+    assert eg.are_equal(ax, bx)

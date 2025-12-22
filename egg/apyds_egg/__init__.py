@@ -3,29 +3,46 @@ from __future__ import annotations
 __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
 
 from dataclasses import dataclass
-from typing import NewType, Callable
+from typing import NewType, Callable, TypeVar, Generic
 from collections import defaultdict
 import apyds
 
 EClassId = NewType("EClassId", int)
 
+T = TypeVar("T")
 
-class UnionFind:
+
+class UnionFind(Generic[T]):
     """Union-find data structure for managing disjoint sets."""
 
     def __init__(self) -> None:
-        self.parent: dict[EClassId, EClassId] = {}
+        self.parent: dict[T, T] = {}
 
-    def find(self, x: EClassId) -> EClassId:
-        """Find the canonical representative of x's set with path compression."""
+    def find(self, x: T) -> T:
+        """Find the canonical representative of x's set with path compression.
+
+        Args:
+            x: The element to find.
+
+        Returns:
+            The canonical representative of x's set.
+        """
         if x not in self.parent:
             self.parent[x] = x
         if self.parent[x] != x:
             self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
 
-    def union(self, a: EClassId, b: EClassId) -> EClassId:
-        """Union two sets and return the canonical representative."""
+    def union(self, a: T, b: T) -> T:
+        """Union two sets and return the canonical representative.
+
+        Args:
+            a: The first element.
+            b: The second element.
+
+        Returns:
+            The canonical representative of the merged set.
+        """
         ra, rb = self.find(a), self.find(b)
         if ra != rb:
             self.parent[rb] = ra
@@ -40,7 +57,14 @@ class ENode:
     children: tuple[EClassId, ...]
 
     def canonicalize(self, find: Callable[[EClassId], EClassId]) -> ENode:
-        """Canonicalize children using the find function."""
+        """Canonicalize children using the find function.
+
+        Args:
+            find: Function to find the canonical E-class ID.
+
+        Returns:
+            A new ENode with canonicalized children.
+        """
         return ENode(self.op, tuple(find(c) for c in self.children))
 
 
@@ -48,7 +72,7 @@ class EGraph:
     """E-Graph for representing equivalence classes of terms."""
 
     def __init__(self) -> None:
-        self.uf = UnionFind()
+        self.uf = UnionFind[EClassId]()
         self.next_id = 0
         self.classes: dict[EClassId, set[ENode]] = {}
         self.parents: dict[EClassId, set[tuple[ENode, EClassId]]] = defaultdict(set)
@@ -62,7 +86,14 @@ class EGraph:
         return eid
 
     def find(self, eclass: EClassId) -> EClassId:
-        """Find the canonical representative of an E-class."""
+        """Find the canonical representative of an E-class.
+
+        Args:
+            eclass: The E-class ID to find.
+
+        Returns:
+            The canonical E-class ID.
+        """
         return self.uf.find(eclass)
 
     def add(self, term: apyds.Term) -> EClassId:
@@ -110,7 +141,15 @@ class EGraph:
         return eid
 
     def merge(self, a: EClassId, b: EClassId) -> EClassId:
-        """Merge two E-classes and schedule rebuilding."""
+        """Merge two E-classes and schedule rebuilding.
+
+        Args:
+            a: The first E-class ID to merge.
+            b: The second E-class ID to merge.
+
+        Returns:
+            The canonical E-class ID of the merged class.
+        """
         ra, rb = self.find(a), self.find(b)
         if ra == rb:
             return ra
@@ -134,9 +173,21 @@ class EGraph:
             self.worklist.clear()
 
             for eclass in todo:
-                self.repair(eclass)
+                self._repair(eclass)
 
-    def repair(self, eclass: EClassId) -> None:
+    def are_equal(self, a: EClassId, b: EClassId) -> bool:
+        """Check if two E-class IDs are equivalent.
+
+        Args:
+            a: The first E-class ID to compare.
+            b: The second E-class ID to compare.
+
+        Returns:
+            True if both E-class IDs belong to the same equivalence class, False otherwise.
+        """
+        return self.find(a) == self.find(b)
+
+    def _repair(self, eclass: EClassId) -> None:
         """Repair congruence for an E-class by updating parent nodes."""
         new_parents: dict[ENode, EClassId] = {}
 
