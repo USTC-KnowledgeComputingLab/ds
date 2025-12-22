@@ -63,7 +63,7 @@ class EGraph:
         """Find the canonical representative of an E-class."""
         return self.uf.find(eclass)
 
-    def add(self, term) -> EClassId:
+    def add(self, term: apyds.Term) -> EClassId:
         """Add a term to the E-Graph and return its E-class ID.
 
         Args:
@@ -72,21 +72,14 @@ class EGraph:
         Returns:
             The E-class ID for the added term.
         """
-        if not isinstance(term, apyds.Term):
-            raise TypeError(f"Expected apyds.Term, got {type(term)}")
-
         enode = self._term_to_enode(term)
         return self._add_enode(enode)
 
-    def _term_to_enode(self, term) -> ENode:
+    def _term_to_enode(self, term: apyds.Term) -> ENode:
         """Convert an apyds.Term to an ENode."""
         inner = term.term
 
-        if isinstance(inner, apyds.Item):
-            return ENode(str(inner.name), ())
-        elif isinstance(inner, apyds.Variable):
-            return ENode(str(inner.name), ())
-        elif isinstance(inner, apyds.List):
+        if isinstance(inner, apyds.List):
             children = []
             for i in range(len(inner)):
                 child_term = inner[i]
@@ -94,7 +87,7 @@ class EGraph:
                 children.append(child_id)
             return ENode("()", tuple(children))
         else:
-            raise TypeError(f"Unexpected term type: {type(inner)}")
+            return ENode(str(inner), ())
 
     def _add_enode(self, enode: ENode) -> EClassId:
         """Add an ENode to the E-Graph."""
