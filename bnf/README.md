@@ -144,10 +144,10 @@ uv sync --extra dev
 uv build
 
 # Run tests
-pytest
+uv run pytest
 
 # Run with coverage
-pytest --cov
+uv run pytest --cov
 ```
 
 ### JavaScript Package
