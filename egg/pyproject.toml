@@ -2,6 +2,7 @@
 requires = [
   "setuptools~=80.9.0",
   "setuptools-scm~=9.2.2",
+  "cython~=3.0.11",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -27,6 +28,9 @@ root = ".."
 
 [tool.setuptools]
 packages = ["apyds_egg"]
+
+[tool.setuptools.package-data]
+apyds_egg = ["*.pyx", "*.pxd", "py.typed"]
 
 [project.optional-dependencies]
 dev = [

@@ -1,8 +1,12 @@
+# cython: language_level=3
+# cython: boundscheck=False
+# cython: wraparound=False
+# cython: cdivision=True
+
 from __future__ import annotations
 
 __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
 
-from dataclasses import dataclass
 from typing import NewType, Callable, TypeVar, Generic
 from collections import defaultdict
 import apyds
@@ -12,13 +16,15 @@ EClassId = NewType("EClassId", int)
 T = TypeVar("T")
 
 
-class UnionFind(Generic[T]):
+cdef class UnionFind:
     """Union-find data structure for managing disjoint sets."""
-
+    
+    cdef dict parent
+    
     def __init__(self) -> None:
-        self.parent: dict[T, T] = {}
+        self.parent = {}
 
-    def find(self, x: T) -> T:
+    cpdef object find(self, object x):
         """Find the canonical representative of x's set with path compression.
 
         Args:
@@ -33,7 +39,7 @@ class UnionFind(Generic[T]):
             self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
 
-    def union(self, a: T, b: T) -> T:
+    cpdef object union(self, object a, object b):
         """Union two sets and return the canonical representative.
 
         Args:
@@ -43,34 +49,63 @@ class UnionFind(Generic[T]):
         Returns:
             The canonical representative of the merged set.
         """
+        cdef object ra, rb
         ra, rb = self.find(a), self.find(b)
         if ra != rb:
             self.parent[rb] = ra
         return ra
 
 
-@dataclass(frozen=True)
-class ENode:
+cdef class ENode:
     """Node in the E-Graph with an operator and children."""
+    
+    cdef readonly str op
+    cdef readonly tuple children
+    cdef int _hash
+    cdef bint _hash_computed
+    
+    def __init__(self, str op, tuple children):
+        self.op = op
+        self.children = children
+        self._hash_computed = False
+    
+    def __hash__(self):
+        if not self._hash_computed:
+            self._hash = hash((self.op, self.children))
+            self._hash_computed = True
+        return self._hash
+    
+    def __eq__(self, other):
+        if not isinstance(other, ENode):
+            return False
+        return self.op == other.op and self.children == other.children
+    
+    def __repr__(self):
+        return f"ENode({self.op!r}, {self.children!r})"
 
-    op: str
-    children: tuple[EClassId, ...]
-
-    def canonicalize(self, find: Callable[[EClassId], EClassId]) -> ENode:
+    def canonicalize(self, object find_func):
         """Canonicalize children using the find function.
 
         Args:
-            find: Function to find the canonical E-class ID.
+            find_func: Function to find the canonical E-class ID.
 
         Returns:
             A new ENode with canonicalized children.
         """
-        return ENode(self.op, tuple(find(c) for c in self.children))
+        cdef tuple canon_children = tuple(find_func(c) for c in self.children)
+        return ENode(self.op, canon_children)
 
 
-class EGraph:
+cdef class EGraph:
     """E-Graph for representing equivalence classes of terms."""
-
+    
+    cdef int _next_id
+    cdef dict _hashcons
+    cdef UnionFind _unionfind
+    cdef dict _classes
+    cdef object _parents
+    cdef set _worklist
+    
     def __init__(self) -> None:
         # 1. 唯一性约束 (hashcons):
         #    ENode -> EClassId 的映射。确保具有相同算子且子项属于相同 E-Class 的节点在内存中是唯一的。
@@ -81,20 +116,45 @@ class EGraph:
         # 4. 逆向传播约束 (parents):
         #    EClassId (代表元) -> Set[(ENode, EClassId)] 的映射。记录哪些父节点依赖于该 E-Class。
         #    当两个 E-Class 合并时，必须通过此字段通知并更新所有父节点，以维护全等闭包。
-        self.next_id: int = 0
-        self.hashcons: dict[ENode, EClassId] = {}
-        self.unionfind: UnionFind[EClassId] = UnionFind()
-        self.classes: dict[EClassId, set[ENode]] = {}
-        self.parents: dict[EClassId, set[tuple[ENode, EClassId]]] = defaultdict(set)
-        self.worklist: set[EClassId] = set()
+        self._next_id = 0
+        self._hashcons = {}
+        self._unionfind = UnionFind()
+        self._classes = {}
+        self._parents = defaultdict(set)
+        self._worklist = set()
+    
+    # Expose internal state for compatibility
+    @property
+    def next_id(self):
+        return self._next_id
+    
+    @property
+    def hashcons(self):
+        return self._hashcons
+    
+    @property
+    def unionfind(self):
+        return self._unionfind
+    
+    @property
+    def classes(self):
+        return self._classes
+    
+    @property
+    def parents(self):
+        return self._parents
+    
+    @property
+    def worklist(self):
+        return self._worklist
 
-    def _fresh_id(self) -> EClassId:
+    cdef object _fresh_id(self):
         """Generate a fresh E-class ID."""
-        eid = EClassId(self.next_id)
-        self.next_id += 1
-        return eid
+        cdef int eid_val = self._next_id
+        self._next_id += 1
+        return EClassId(eid_val)
 
-    def find(self, eclass: EClassId) -> EClassId:
+    cpdef object find(self, object eclass):
         """Find the canonical representative of an E-class.
 
         Args:
@@ -103,9 +163,9 @@ class EGraph:
         Returns:
             The canonical E-class ID.
         """
-        return self.unionfind.find(eclass)
+        return self._unionfind.find(eclass)
 
-    def add(self, term: apyds.Term) -> EClassId:
+    cpdef object add(self, object term):
         """Add a term to the E-Graph and return its E-class ID.
 
         Args:
@@ -114,15 +174,18 @@ class EGraph:
         Returns:
             The E-class ID for the added term.
         """
-        enode = self._term_to_enode(term)
+        cdef ENode enode = self._term_to_enode(term)
         return self._add_enode(enode)
 
-    def _term_to_enode(self, term: apyds.Term) -> ENode:
+    cdef ENode _term_to_enode(self, object term):
         """Convert an apyds.Term to an ENode."""
-        inner = term.term
+        cdef object inner = term.term
+        cdef list children
+        cdef object child_term, child_id
+        cdef int i
 
         if isinstance(inner, apyds.List):
-            children: list[EClassId] = []
+            children = []
             for i in range(len(inner)):
                 child_term = inner[i]
                 child_id = self.add(child_term)
@@ -131,25 +194,26 @@ class EGraph:
         else:
             return ENode(str(inner), ())
 
-    def _add_enode(self, enode: ENode) -> EClassId:
+    cdef object _add_enode(self, ENode enode):
         """Add an ENode to the E-Graph."""
+        cdef object eid, c
         enode = enode.canonicalize(self.find)
 
-        if enode in self.hashcons:
-            return self.find(self.hashcons[enode])
+        if enode in self._hashcons:
+            return self.find(self._hashcons[enode])
 
         eid = self._fresh_id()
 
-        self.hashcons[enode] = eid
-        self.unionfind.parent[eid] = eid
-        self.classes[eid] = {enode}
+        self._hashcons[enode] = eid
+        self._unionfind.parent[eid] = eid
+        self._classes[eid] = {enode}
 
         for c in enode.children:
-            self.parents[c].add((enode, eid))
+            self._parents[c].add((enode, eid))
 
         return eid
 
-    def merge(self, a: EClassId, b: EClassId) -> EClassId:
+    cpdef object merge(self, object a, object b):
         """Merge two E-classes and defer congruence restoration.
 
         Args:
@@ -159,23 +223,24 @@ class EGraph:
         Returns:
             The canonical E-class ID of the merged class.
         """
+        cdef object ra, rb, r
         ra, rb = self.find(a), self.find(b)
         if ra == rb:
             return ra
 
-        r = self.unionfind.union(ra, rb)
+        r = self._unionfind.union(ra, rb)
 
-        self.classes[r] |= self.classes[rb]
-        del self.classes[rb]
+        self._classes[r] |= self._classes[rb]
+        del self._classes[rb]
 
-        self.parents[r] |= self.parents[rb]
-        del self.parents[rb]
+        self._parents[r] |= self._parents[rb]
+        del self._parents[rb]
 
-        self.worklist.add(r)
+        self._worklist.add(r)
 
         return r
 
-    def rebuild(self) -> None:
+    cpdef void rebuild(self):
         """Restore congruence by processing the worklist.
 
         This method implements the egg-style deferred rebuilding:
@@ -183,14 +248,17 @@ class EGraph:
         - Re-canonicalize parents and merge congruent ones
         - Continue until worklist is empty
         """
-        while self.worklist:
-            todo: set[EClassId] = {self.find(e) for e in self.worklist}
-            self.worklist.clear()
+        cdef set todo
+        cdef object eclass
+        
+        while self._worklist:
+            todo = {self.find(e) for e in self._worklist}
+            self._worklist.clear()
 
             for eclass in todo:
                 self._repair(eclass)
 
-    def _repair(self, eclass: EClassId) -> None:
+    cdef void _repair(self, object eclass):
         """Restore congruence for a single E-class.
 
         This method implements the egg-style repair algorithm:
@@ -198,10 +266,11 @@ class EGraph:
         - Merge congruent parents (which may add more work to worklist)
         - Update hashcons and parent tracking
         """
-        new_parents: dict[ENode, EClassId] = {}
+        cdef dict new_parents = {}
+        cdef object pnode, peclass, canon
 
-        for pnode, peclass in list(self.parents[eclass]):
-            self.hashcons.pop(pnode, None)
+        for pnode, peclass in list(self._parents[eclass]):
+            self._hashcons.pop(pnode, None)
 
             canon = pnode.canonicalize(self.find)
             peclass = self.find(peclass)
@@ -210,6 +279,6 @@ class EGraph:
                 self.merge(peclass, new_parents[canon])
             else:
                 new_parents[canon] = peclass
-                self.hashcons[canon] = peclass
+                self._hashcons[canon] = peclass
 
-        self.parents[eclass] = {(p, c) for p, c in new_parents.items()}
+        self._parents[eclass] = {(p, c) for p, c in new_parents.items()}
