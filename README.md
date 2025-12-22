@@ -38,7 +38,7 @@ The Python package wraps the C++ core via pybind11.
 pip install apyds
 ```
 
-Requires Python 3.10-3.14.
+Requires Python 3.11-3.14.
 
 ### C++ (Core Library)
 
@@ -299,7 +299,7 @@ See header files in `include/ds/` for detailed API documentation.
 ### Prerequisites
 
 - For TypeScript: Emscripten SDK
-- For Python: Python 3.10-3.14, C++20 compatible compiler, CMake 3.30+
+- For Python: Python 3.11-3.14, C++20 compatible compiler, CMake 3.30+
 - For C++: C++20 compatible compiler, CMake 3.30+
 
 ### Build All Components

@@ -15,7 +15,7 @@ This package enables you to write logical rules in a more natural, mathematical 
 pip install apyds-bnf
 ```
 
-Requires Python 3.10-3.14.
+Requires Python 3.11-3.14.
 
 ### JavaScript/TypeScript
 
