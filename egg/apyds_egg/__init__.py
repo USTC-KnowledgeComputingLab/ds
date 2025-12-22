@@ -72,11 +72,20 @@ class EGraph:
     """E-Graph for representing equivalence classes of terms."""
 
     def __init__(self) -> None:
-        self.uf = UnionFind[EClassId]()
-        self.next_id = 0
+        # 1. 唯一性约束 (hashcons):
+        #    ENode -> EClassId 的映射。确保具有相同算子且子项属于相同 E-Class 的节点在内存中是唯一的。
+        # 2. 等价性维护 (unionfind):
+        #    管理 EClassId 之间的并查集关系。通过 find 操作将逻辑上的多个 E-Class 映射到唯一的代表元。
+        # 3. 集合成员约束 (classes):
+        #    EClassId (代表元) -> Set[ENode] 的映射。存储当前等价类中包含的所有等价项。
+        # 4. 逆向传播约束 (parents):
+        #    EClassId (代表元) -> Set[(ENode, EClassId)] 的映射。记录哪些父节点依赖于该 E-Class。
+        #    当两个 E-Class 合并时，必须通过此字段通知并更新所有父节点，以维护全等闭包。
+        self.next_id: int = 0
+        self.hashcons: dict[ENode, EClassId] = {}
+        self.unionfind: UnionFind[EClassId] = UnionFind()
         self.classes: dict[EClassId, set[ENode]] = {}
         self.parents: dict[EClassId, set[tuple[ENode, EClassId]]] = defaultdict(set)
-        self.hashcons: dict[ENode, EClassId] = {}
 
     def _fresh_id(self) -> EClassId:
         """Generate a fresh E-class ID."""
@@ -93,7 +102,7 @@ class EGraph:
         Returns:
             The canonical E-class ID.
         """
-        return self.uf.find(eclass)
+        return self.unionfind.find(eclass)
 
     def add(self, term: apyds.Term) -> EClassId:
         """Add a term to the E-Graph and return its E-class ID.
@@ -112,7 +121,7 @@ class EGraph:
         inner = term.term
 
         if isinstance(inner, apyds.List):
-            children = []
+            children: list[EClassId] = []
             for i in range(len(inner)):
                 child_term = inner[i]
                 child_id = self.add(child_term)
@@ -130,9 +139,9 @@ class EGraph:
 
         eid = self._fresh_id()
 
-        self.uf.parent[eid] = eid
-        self.classes[eid] = {enode}
         self.hashcons[enode] = eid
+        self.unionfind.parent[eid] = eid
+        self.classes[eid] = {enode}
 
         for c in enode.children:
             self.parents[c].add((enode, eid))
@@ -153,7 +162,7 @@ class EGraph:
         if ra == rb:
             return ra
 
-        r = self.uf.union(ra, rb)
+        r = self.unionfind.union(ra, rb)
 
         self.classes[r] |= self.classes[rb]
         del self.classes[rb]
@@ -161,22 +170,9 @@ class EGraph:
         self.parents[r] |= self.parents[rb]
         del self.parents[rb]
 
-        # Immediately restore invariants
         self._repair(r)
 
         return r
-
-    def are_equal(self, a: EClassId, b: EClassId) -> bool:
-        """Check if two E-class IDs are equivalent.
-
-        Args:
-            a: The first E-class ID to compare.
-            b: The second E-class ID to compare.
-
-        Returns:
-            True if both E-class IDs belong to the same equivalence class, False otherwise.
-        """
-        return self.find(a) == self.find(b)
 
     def _repair(self, eclass: EClassId) -> None:
         """Immediately restore congruence by re-canonicalizing parents and merging congruent ones.
@@ -185,9 +181,6 @@ class EGraph:
         - Re-canonicalize all parent nodes
         - Merge congruent parents recursively
         - Continue until no more changes occur
-
-        Args:
-            eclass: The E-class ID to repair.
         """
         changed = True
         while changed:
@@ -195,14 +188,12 @@ class EGraph:
             new_parents: dict[ENode, EClassId] = {}
 
             for pnode, peclass in list(self.parents[eclass]):
-                # Remove old hashcons entry
                 self.hashcons.pop(pnode, None)
 
                 canon = pnode.canonicalize(self.find)
                 peclass = self.find(peclass)
 
                 if canon in new_parents:
-                    # Upward merge required
                     self.merge(peclass, new_parents[canon])
                     changed = True
                 else:
