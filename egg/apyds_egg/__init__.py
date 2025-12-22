@@ -77,7 +77,6 @@ class EGraph:
         self.classes: dict[EClassId, set[ENode]] = {}
         self.parents: dict[EClassId, set[tuple[ENode, EClassId]]] = defaultdict(set)
         self.hashcons: dict[ENode, EClassId] = {}
-        self.worklist: set[EClassId] = set()
 
     def _fresh_id(self) -> EClassId:
         """Generate a fresh E-class ID."""
@@ -141,7 +140,7 @@ class EGraph:
         return eid
 
     def merge(self, a: EClassId, b: EClassId) -> EClassId:
-        """Merge two E-classes and schedule rebuilding.
+        """Merge two E-classes and immediately restore congruence.
 
         Args:
             a: The first E-class ID to merge.
@@ -162,18 +161,19 @@ class EGraph:
         self.parents[r] |= self.parents[rb]
         del self.parents[rb]
 
-        self.worklist.add(r)
+        # Immediately restore invariants
+        self._repair(r)
 
         return r
 
     def rebuild(self) -> None:
-        """Restore congruence by processing the worklist."""
-        while self.worklist:
-            todo: set[EClassId] = {self.find(e) for e in self.worklist}
-            self.worklist.clear()
+        """Restore congruence (no-op in traditional E-Graph).
 
-            for eclass in todo:
-                self._repair(eclass)
+        In the traditional E-Graph implementation, congruence is maintained
+        immediately during merge operations, so this method is kept for
+        backward compatibility but does nothing.
+        """
+        pass
 
     def are_equal(self, a: EClassId, b: EClassId) -> bool:
         """Check if two E-class IDs are equivalent.
@@ -188,19 +188,34 @@ class EGraph:
         return self.find(a) == self.find(b)
 
     def _repair(self, eclass: EClassId) -> None:
-        """Repair congruence for an E-class by updating parent nodes."""
-        new_parents: dict[ENode, EClassId] = {}
+        """Immediately restore congruence by re-canonicalizing parents and merging congruent ones.
 
-        for pnode, peclass in list(self.parents[eclass]):
-            self.hashcons.pop(pnode, None)
+        This method implements the traditional E-Graph repair algorithm:
+        - Re-canonicalize all parent nodes
+        - Merge congruent parents recursively
+        - Continue until no more changes occur
 
-            canon = pnode.canonicalize(self.find)
-            peclass = self.find(peclass)
+        Args:
+            eclass: The E-class ID to repair.
+        """
+        changed = True
+        while changed:
+            changed = False
+            new_parents: dict[ENode, EClassId] = {}
 
-            if canon in new_parents:
-                self.merge(peclass, new_parents[canon])
-            else:
-                new_parents[canon] = peclass
-                self.hashcons[canon] = peclass
+            for pnode, peclass in list(self.parents[eclass]):
+                # Remove old hashcons entry
+                self.hashcons.pop(pnode, None)
 
-        self.parents[eclass] = {(p, c) for p, c in new_parents.items()}
+                canon = pnode.canonicalize(self.find)
+                peclass = self.find(peclass)
+
+                if canon in new_parents:
+                    # Upward merge required
+                    self.merge(peclass, new_parents[canon])
+                    changed = True
+                else:
+                    new_parents[canon] = peclass
+                    self.hashcons[canon] = peclass
+
+            self.parents[eclass] = {(p, c) for p, c in new_parents.items()}
