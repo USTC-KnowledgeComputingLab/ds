@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
 
 from dataclasses import dataclass
@@ -37,7 +39,7 @@ class ENode:
     op: str
     children: tuple[EClassId, ...]
 
-    def canonicalize(self, find: Callable[[EClassId], EClassId]) -> "ENode":
+    def canonicalize(self, find: Callable[[EClassId], EClassId]) -> ENode:
         """Canonicalize children using the find function."""
         return ENode(self.op, tuple(find(c) for c in self.children))
 

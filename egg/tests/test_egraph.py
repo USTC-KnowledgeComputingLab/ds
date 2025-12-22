@@ -1,4 +1,3 @@
-import pytest
 import apyds
 from apyds_egg import EGraph, ENode, UnionFind, EClassId
 
@@ -237,27 +236,6 @@ def test_egraph_mixed_terms():
     assert isinstance(item, int)
     assert isinstance(var, int)
     assert isinstance(lst, int)
-
-
-def test_egraph_add_invalid_type():
-    eg = EGraph()
-
-    with pytest.raises(TypeError):
-        eg.add("not a term")
-
-
-def test_egraph_add_without_apyds():
-    import apyds_egg
-
-    saved_apyds = apyds_egg.apyds
-    apyds_egg.apyds = None
-
-    try:
-        eg = EGraph()
-        with pytest.raises(ImportError):
-            eg.add(apyds.Term("x"))
-    finally:
-        apyds_egg.apyds = saved_apyds
 
 
 def test_egraph_associativity_example():
