@@ -3,12 +3,7 @@ __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
 from dataclasses import dataclass
 from typing import NewType, Callable
 from collections import defaultdict
-
-try:
-    import apyds
-except ImportError:
-    apyds = None
-
+import apyds
 
 EClassId = NewType("EClassId", int)
 
@@ -77,9 +72,6 @@ class EGraph:
         Returns:
             The E-class ID for the added term.
         """
-        if apyds is None:
-            raise ImportError("apyds is required to use EGraph.add")
-
         if not isinstance(term, apyds.Term):
             raise TypeError(f"Expected apyds.Term, got {type(term)}")
 
