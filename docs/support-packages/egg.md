@@ -49,7 +49,7 @@ assert eg.find(ax) == eg.find(bx)
 
 ### Congruence Closure
 
-The E-Graph automatically maintains congruence closure. When two E-Classes are merged, the `rebuild()` method ensures that all congruent terms remain in the same E-Class:
+The E-Graph automatically maintains congruence closure. When two E-classes are merged, the `rebuild()` method ensures that all congruent terms remain in the same E-class:
 
 ```python
 eg = EGraph()
@@ -104,17 +104,17 @@ assert uf.find(a) == uf.find(c)
 An E-Graph consists of several key components:
 
 - **E-Nodes**: Represent terms with an operator and children
-- **E-Classes**: Equivalence classes of E-Nodes
-- **Hash-consing (Hashcons)**: Ensures uniqueness of E-Nodes by mapping identical nodes to the same E-Class
-- **Union-Find**: Manages E-Class equivalence relationships
-- **Parents**: Tracks which terms depend on each E-Class
+- **E-classes**: Equivalence classes of E-Nodes
+- **Hash-consing (Hashcons)**: Ensures uniqueness of E-Nodes by mapping identical nodes to the same E-class
+- **Union-Find**: Manages E-class equivalence relationships
+- **Parents**: Tracks which terms depend on each E-class
 - **Worklist**: Manages deferred congruence rebuilding
 
 ### Deferred Rebuilding
 
 The implementation uses egg-style deferred rebuilding:
 
-1. **Merge**: Combine two E-Classes and add to worklist
+1. **Merge**: Combine two E-classes and add to worklist
 2. **Rebuild**: Process worklist to restore congruence
 3. **Repair**: Re-canonicalize parent nodes and merge congruent ones
 
@@ -124,10 +124,10 @@ This approach provides better performance than immediate rebuilding by batching 
 
 Terms are converted to E-Nodes and added to the E-Graph:
 
-- **Items (constants/functors) and Variables**: Atomic terms like `a`, `b`, or `` `x `` are represented as E-Nodes with no children
+- **Items (constants/functors) and Variables**: Atomic terms like `a`, `b`, or backtick-prefixed variables like `x` are represented as E-Nodes with no children
 - **Lists**: Compound terms like `(+ a b)` are represented as E-Nodes with operator `"()"` and children for each list element
 
-The hash-consing mechanism ensures that identical E-Nodes share the same E-Class ID.
+The hash-consing mechanism ensures that identical E-Nodes share the same E-class ID.
 
 ## API Reference
 
@@ -136,10 +136,10 @@ The hash-consing mechanism ensures that identical E-Nodes share the same E-Class
 Main class for E-Graph operations:
 
 - `__init__()`: Create a new empty E-Graph
-- `add(term: apyds.Term) -> EClassId`: Add a term and return its E-Class ID
-- `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-Classes
+- `add(term: apyds.Term) -> EClassId`: Add a term and return its E-class ID
+- `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
 - `rebuild() -> None`: Restore congruence closure by processing the worklist
-- `find(eclass: EClassId) -> EClassId`: Find the canonical E-Class representative
+- `find(eclass: EClassId) -> EClassId`: Find the canonical E-class representative
 
 ### UnionFind[T]
 
@@ -154,12 +154,12 @@ Generic Union-Find data structure:
 Immutable node in the E-Graph:
 
 - `op: str`: The operator/functor of the term
-- `children: tuple[EClassId, ...]`: Tuple of child E-Class IDs
+- `children: tuple[EClassId, ...]`: Tuple of child E-class IDs
 - `canonicalize(find: Callable[[EClassId], EClassId]) -> ENode`: Create a new E-Node with canonicalized children
 
 ### EClassId
 
-Type alias for `int` representing E-Class identifiers.
+Type alias for `int` representing E-class identifiers.
 
 ## Package Information
 

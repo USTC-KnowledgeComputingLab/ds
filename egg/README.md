@@ -63,9 +63,9 @@ assert eg.find(ax) == eg.find(bx)
 An E-Graph is a data structure that efficiently represents and maintains equivalence classes of terms. It consists of:
 
 - **E-Nodes**: Nodes representing terms with an operator and children
-- **E-Classes**: Equivalence classes of E-Nodes
-- **Union-Find**: Data structure for managing E-Class equivalence
-- **Congruence**: Two terms are congruent if they have the same operator and their children are in equivalent E-Classes
+- **E-classes**: Equivalence classes of E-Nodes
+- **Union-Find**: Data structure for managing E-class equivalence
+- **Congruence**: Two terms are congruent if they have the same operator and their children are in equivalent E-classes
 
 ### Union-Find
 
@@ -101,7 +101,7 @@ node = ENode("+", (a_id, b_id))
 
 ### Congruence Closure
 
-The E-Graph maintains congruence closure automatically. When two E-Classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-Class:
+The E-Graph maintains congruence closure automatically. When two E-classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-class:
 
 ```python
 eg = EGraph()
@@ -128,9 +128,9 @@ assert eg.find(fa) == eg.find(fb)
 
 - `__init__()`: Create a new E-Graph
 - `add(term: apyds.Term) -> EClassId`: Add a term to the E-Graph
-- `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-Classes
+- `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
 - `rebuild() -> None`: Restore congruence closure
-- `find(eclass: EClassId) -> EClassId`: Find canonical E-Class representative
+- `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
 
 ### UnionFind
 
@@ -141,12 +141,12 @@ assert eg.find(fa) == eg.find(fb)
 ### ENode
 
 - `op: str`: The operator of the term
-- `children: tuple[EClassId, ...]`: The children E-Class IDs
+- `children: tuple[EClassId, ...]`: The children E-class IDs
 - `canonicalize(find: Callable) -> ENode`: Canonicalize children
 
 ### EClassId
 
-- Type alias for `int` representing E-Class identifiers
+- Type alias for `int` representing E-class identifiers
 
 ## Building from Source
 
