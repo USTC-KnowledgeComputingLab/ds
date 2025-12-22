@@ -12,6 +12,7 @@ This package implements the egg-style E-Graph data structure with deferred congr
 - **Deferred Rebuilding**: egg-style deferred rebuilding for performance
 - **Python Integration**: Seamless integration with apyds terms
 - **Type-Safe**: Full type hints for Python 3.11+
+- **Cython-Optimized**: Core implementation compiled with Cython for improved performance
 
 ## Installation
 
@@ -106,6 +107,7 @@ assert eg.find(fa) == eg.find(fb)
 
 - Python 3.11-3.14
 - apyds package
+- Cython (for building from source)
 
 ### Python Package
 
@@ -115,7 +117,7 @@ cd egg
 # Install dependencies
 uv sync --extra dev
 
-# Build package
+# Build package (compiles Cython extensions)
 uv build
 
 # Run tests
@@ -123,6 +125,14 @@ uv run pytest
 
 # Run with coverage
 uv run pytest --cov
+```
+
+### Development Notes
+
+The core implementation is written in Cython (`.pyx` files) for performance optimization. The build process automatically compiles these to C extensions. When developing, you may need to rebuild after changes:
+
+```bash
+pip install -e .[dev]  # Reinstall in editable mode after changes
 ```
 
 ## License
