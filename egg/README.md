@@ -192,7 +192,7 @@ This project is licensed under the GNU Affero General Public License v3.0 or lat
 
 ## Repository
 
-- **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds) (in `/egg` directory)
+- **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds)
 - **Python Package**: [apyds-egg](https://pypi.org/project/apyds-egg/)
 
 ## Author

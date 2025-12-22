@@ -105,7 +105,7 @@ An E-Graph consists of several key components:
 
 - **E-Nodes**: Represent terms with an operator and children
 - **E-Classes**: Equivalence classes of E-Nodes
-- **Hashcons**: Ensures uniqueness of E-Nodes
+- **Hash-consing (Hashcons)**: Ensures uniqueness of E-Nodes by mapping identical nodes to the same E-Class
 - **Union-Find**: Manages E-Class equivalence relationships
 - **Parents**: Tracks which terms depend on each E-Class
 - **Worklist**: Manages deferred congruence rebuilding
@@ -124,10 +124,10 @@ This approach provides better performance than immediate rebuilding by batching 
 
 Terms are converted to E-Nodes and added to the E-Graph:
 
-- **Items and Variables**: Represented as E-Nodes with no children
-- **Lists**: Represented as E-Nodes with operator `"()"` and children for each list element
+- **Items (constants/functors) and Variables**: Atomic terms like `a`, `b`, or `` `x`` are represented as E-Nodes with no children
+- **Lists**: Compound terms like `(+ a b)` are represented as E-Nodes with operator `"()"` and children for each list element
 
-The hashcons ensures that identical E-Nodes share the same E-Class ID.
+The hash-consing mechanism ensures that identical E-Nodes share the same E-Class ID.
 
 ## API Reference
 
