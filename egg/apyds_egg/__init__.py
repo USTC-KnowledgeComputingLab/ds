@@ -1,9 +1,3 @@
-"""E-Graph implementation for apyds.
-
-Provides an efficient E-Graph (equality graph) data structure for representing
-equivalence classes of terms with deferred rebuilding for congruence closure.
-"""
-
 __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
 
 from dataclasses import dataclass
