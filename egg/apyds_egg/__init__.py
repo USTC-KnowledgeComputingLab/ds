@@ -166,15 +166,6 @@ class EGraph:
 
         return r
 
-    def rebuild(self) -> None:
-        """Restore congruence (no-op in traditional E-Graph).
-
-        In the traditional E-Graph implementation, congruence is maintained
-        immediately during merge operations, so this method is kept for
-        backward compatibility but does nothing.
-        """
-        pass
-
     def are_equal(self, a: EClassId, b: EClassId) -> bool:
         """Check if two E-class IDs are equivalent.
 
