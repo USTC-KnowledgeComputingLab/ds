@@ -2,7 +2,7 @@
 
 An E-Graph (Equality Graph) implementation for the DS deductive system, providing efficient management and manipulation of equivalence classes of terms.
 
-This package implements the egg-style E-Graph data structure with deferred congruence closure, enabling efficient equality reasoning. Based on the [egg library](https://egraphs-good.github.io/).
+This package implements the egg-style E-Graph data structure with deferred congruence closure, enabling efficient equality reasoning. Inspired by the [egg library](https://egraphs-good.github.io/).
 
 ## Features
 

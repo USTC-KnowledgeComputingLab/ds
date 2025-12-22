@@ -2,7 +2,7 @@
 
 The E-Graph support package provides efficient management and manipulation of equivalence classes of terms for the DS deductive system.
 
-An E-Graph (Equality Graph) is a data structure that efficiently represents equivalence classes of terms and automatically maintains congruence closure. This implementation follows the egg-style approach with deferred rebuilding for optimal performance. Based on the [egg library](https://egraphs-good.github.io/).
+An E-Graph (Equality Graph) is a data structure that efficiently represents equivalence classes of terms and automatically maintains congruence closure. This implementation follows the egg-style approach with deferred rebuilding for optimal performance. Inspired by the [egg library](https://egraphs-good.github.io/).
 
 ## Installation
 
