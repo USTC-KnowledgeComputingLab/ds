@@ -188,9 +188,9 @@ class EGraph:
             self.worklist.clear()
 
             for eclass in todo:
-                self.repair(eclass)
+                self._repair(eclass)
 
-    def repair(self, eclass: EClassId) -> None:
+    def _repair(self, eclass: EClassId) -> None:
         """Restore congruence for a single E-class.
 
         This method implements the egg-style repair algorithm:
