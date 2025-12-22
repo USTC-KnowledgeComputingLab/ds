@@ -139,6 +139,7 @@ def test_egraph_congruence():
     assert eg.find(ax) != eg.find(bx)
 
     eg.merge(a, b)
+    eg.rebuild()
 
     assert eg.find(ax) == eg.find(bx)
 
@@ -157,6 +158,7 @@ def test_egraph_congruence_nested():
     bcc = eg.add(apyds.Term("(g (f b c) c)"))
 
     eg.merge(a, b)
+    eg.rebuild()
 
     assert eg.find(ac) == eg.find(bc)
     assert eg.find(acc) == eg.find(bcc)
@@ -195,6 +197,7 @@ def test_egraph_complex_example():
     assert eg.find(ax) != eg.find(bx)
 
     eg.merge(a, b)
+    eg.rebuild()
 
     assert eg.find(ax) == eg.find(bx)
 

@@ -86,6 +86,7 @@ class EGraph:
         self.unionfind: UnionFind[EClassId] = UnionFind()
         self.classes: dict[EClassId, set[ENode]] = {}
         self.parents: dict[EClassId, set[tuple[ENode, EClassId]]] = defaultdict(set)
+        self.worklist: set[EClassId] = set()
 
     def _fresh_id(self) -> EClassId:
         """Generate a fresh E-class ID."""
@@ -149,7 +150,7 @@ class EGraph:
         return eid
 
     def merge(self, a: EClassId, b: EClassId) -> EClassId:
-        """Merge two E-classes and immediately restore congruence.
+        """Merge two E-classes and defer congruence restoration.
 
         Args:
             a: The first E-class ID to merge.
@@ -170,34 +171,45 @@ class EGraph:
         self.parents[r] |= self.parents[rb]
         del self.parents[rb]
 
-        self._repair(r)
+        self.worklist.add(r)
 
         return r
 
-    def _repair(self, eclass: EClassId) -> None:
-        """Immediately restore congruence by re-canonicalizing parents and merging congruent ones.
+    def rebuild(self) -> None:
+        """Restore congruence by processing the worklist.
 
-        This method implements the traditional E-Graph repair algorithm:
-        - Re-canonicalize all parent nodes
-        - Merge congruent parents recursively
-        - Continue until no more changes occur
+        This method implements the egg-style deferred rebuilding:
+        - Process all E-classes in the worklist
+        - Re-canonicalize parents and merge congruent ones
+        - Continue until worklist is empty
         """
-        changed = True
-        while changed:
-            changed = False
-            new_parents: dict[ENode, EClassId] = {}
+        while self.worklist:
+            todo: set[EClassId] = {self.find(e) for e in self.worklist}
+            self.worklist.clear()
 
-            for pnode, peclass in list(self.parents[eclass]):
-                self.hashcons.pop(pnode, None)
+            for eclass in todo:
+                self.repair(eclass)
 
-                canon = pnode.canonicalize(self.find)
-                peclass = self.find(peclass)
+    def repair(self, eclass: EClassId) -> None:
+        """Restore congruence for a single E-class.
 
-                if canon in new_parents:
-                    self.merge(peclass, new_parents[canon])
-                    changed = True
-                else:
-                    new_parents[canon] = peclass
-                    self.hashcons[canon] = peclass
+        This method implements the egg-style repair algorithm:
+        - Re-canonicalize all parent nodes
+        - Merge congruent parents (which may add more work to worklist)
+        - Update hashcons and parent tracking
+        """
+        new_parents: dict[ENode, EClassId] = {}
 
-            self.parents[eclass] = {(p, c) for p, c in new_parents.items()}
+        for pnode, peclass in list(self.parents[eclass]):
+            self.hashcons.pop(pnode, None)
+
+            canon = pnode.canonicalize(self.find)
+            peclass = self.find(peclass)
+
+            if canon in new_parents:
+                self.merge(peclass, new_parents[canon])
+            else:
+                new_parents[canon] = peclass
+                self.hashcons[canon] = peclass
+
+        self.parents[eclass] = {(p, c) for p, c in new_parents.items()}
