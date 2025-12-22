@@ -3,27 +3,29 @@ from __future__ import annotations
 __all__ = ["EClassId", "UnionFind", "ENode", "EGraph"]
 
 from dataclasses import dataclass
-from typing import NewType, Callable
+from typing import NewType, Callable, TypeVar, Generic
 from collections import defaultdict
 import apyds
 
 EClassId = NewType("EClassId", int)
 
+T = TypeVar("T")
 
-class UnionFind:
+
+class UnionFind(Generic[T]):
     """Union-find data structure for managing disjoint sets."""
 
     def __init__(self) -> None:
-        self.parent: dict[EClassId, EClassId] = {}
+        self.parent: dict[T, T] = {}
 
-    def find(self, x: EClassId) -> EClassId:
+    def find(self, x: T) -> T:
         """Find the canonical representative of x's set with path compression.
 
         Args:
-            x: The E-class ID to find.
+            x: The element to find.
 
         Returns:
-            The canonical E-class ID.
+            The canonical representative of x's set.
         """
         if x not in self.parent:
             self.parent[x] = x
@@ -31,15 +33,15 @@ class UnionFind:
             self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
 
-    def union(self, a: EClassId, b: EClassId) -> EClassId:
+    def union(self, a: T, b: T) -> T:
         """Union two sets and return the canonical representative.
 
         Args:
-            a: The first E-class ID.
-            b: The second E-class ID.
+            a: The first element.
+            b: The second element.
 
         Returns:
-            The canonical E-class ID of the merged set.
+            The canonical representative of the merged set.
         """
         ra, rb = self.find(a), self.find(b)
         if ra != rb:
@@ -70,7 +72,7 @@ class EGraph:
     """E-Graph for representing equivalence classes of terms."""
 
     def __init__(self) -> None:
-        self.uf = UnionFind()
+        self.uf = UnionFind[EClassId]()
         self.next_id = 0
         self.classes: dict[EClassId, set[ENode]] = {}
         self.parents: dict[EClassId, set[tuple[ENode, EClassId]]] = defaultdict(set)
