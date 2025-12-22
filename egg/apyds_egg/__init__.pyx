@@ -107,15 +107,19 @@ cdef class EGraph:
     cdef set _worklist
     
     def __init__(self) -> None:
-        # 1. 唯一性约束 (hashcons):
-        #    ENode -> EClassId 的映射。确保具有相同算子且子项属于相同 E-Class 的节点在内存中是唯一的。
-        # 2. 等价性维护 (unionfind):
-        #    管理 EClassId 之间的并查集关系。通过 find 操作将逻辑上的多个 E-Class 映射到唯一的代表元。
-        # 3. 集合成员约束 (classes):
-        #    EClassId (代表元) -> Set[ENode] 的映射。存储当前等价类中包含的所有等价项。
-        # 4. 逆向传播约束 (parents):
-        #    EClassId (代表元) -> Set[(ENode, EClassId)] 的映射。记录哪些父节点依赖于该 E-Class。
-        #    当两个 E-Class 合并时，必须通过此字段通知并更新所有父节点，以维护全等闭包。
+        # 1. Uniqueness constraint (hashcons):
+        #    ENode -> EClassId mapping. Ensures nodes with the same operator and children 
+        #    belonging to the same E-Class are unique in memory.
+        # 2. Equivalence maintenance (unionfind):
+        #    Manages union-find relationships between EClassIds. Maps multiple logical 
+        #    E-Classes to a unique representative through the find operation.
+        # 3. Set membership constraint (classes):
+        #    EClassId (representative) -> Set[ENode] mapping. Stores all equivalent terms 
+        #    in the current equivalence class.
+        # 4. Reverse propagation constraint (parents):
+        #    EClassId (representative) -> Set[(ENode, EClassId)] mapping. Records which 
+        #    parent nodes depend on this E-Class. When two E-Classes merge, must notify 
+        #    and update all parent nodes through this field to maintain congruence closure.
         self._next_id = 0
         self._hashcons = {}
         self._unionfind = UnionFind()
