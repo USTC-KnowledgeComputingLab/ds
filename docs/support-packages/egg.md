@@ -124,7 +124,7 @@ This approach provides better performance than immediate rebuilding by batching 
 
 Terms are converted to E-Nodes and added to the E-Graph:
 
-- **Items (constants/functors) and Variables**: Atomic terms like `a`, `b`, or `` `x`` are represented as E-Nodes with no children
+- **Items (constants/functors) and Variables**: Atomic terms like `a`, `b`, or `` `x `` are represented as E-Nodes with no children
 - **Lists**: Compound terms like `(+ a b)` are represented as E-Nodes with operator `"()"` and children for each list element
 
 The hash-consing mechanism ensures that identical E-Nodes share the same E-Class ID.
