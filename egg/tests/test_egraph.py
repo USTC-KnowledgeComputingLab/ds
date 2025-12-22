@@ -139,7 +139,6 @@ def test_egraph_congruence():
     assert eg.find(ax) != eg.find(bx)
 
     eg.merge(a, b)
-    eg.rebuild()
 
     assert eg.find(ax) == eg.find(bx)
 
@@ -158,7 +157,6 @@ def test_egraph_congruence_nested():
     bcc = eg.add(apyds.Term("(g (f b c) c)"))
 
     eg.merge(a, b)
-    eg.rebuild()
 
     assert eg.find(ac) == eg.find(bc)
     assert eg.find(acc) == eg.find(bcc)
@@ -177,11 +175,9 @@ def test_egraph_multiple_merges():
     assert eg.find(a) == eg.find(c)
 
 
-def test_egraph_rebuild_empty_worklist():
+def test_egraph_immediate_congruence():
     eg = EGraph()
     a = eg.add(apyds.Term("a"))
-
-    eg.rebuild()
 
     assert eg.find(a) == a
 
@@ -199,7 +195,6 @@ def test_egraph_complex_example():
     assert eg.find(ax) != eg.find(bx)
 
     eg.merge(a, b)
-    eg.rebuild()
 
     assert eg.find(ax) == eg.find(bx)
 
@@ -251,7 +246,6 @@ def test_egraph_associativity_example():
     assert eg.find(xy_z) != eg.find(x_yz)
 
     eg.merge(xy_z, x_yz)
-    eg.rebuild()
 
     assert eg.find(xy_z) == eg.find(x_yz)
 
@@ -302,7 +296,7 @@ def test_egraph_are_equal():
     assert eg.are_equal(a, b)
 
 
-def test_egraph_are_equal_after_rebuild():
+def test_egraph_are_equal_after_merge():
     eg = EGraph()
 
     x = eg.add(apyds.Term("x"))
@@ -317,7 +311,6 @@ def test_egraph_are_equal_after_rebuild():
 
     # Merge a and b
     eg.merge(a, b)
-    eg.rebuild()
 
-    # After rebuild, ax and bx should be equal due to congruence
+    # After merge, ax and bx should be equal due to congruence
     assert eg.are_equal(ax, bx)
