@@ -14,9 +14,15 @@ pip install apyds-egg
 
 Requires Python 3.11-3.14.
 
+### TypeScript/JavaScript
+
+```bash
+npm install atsds-egg
+```
+
 ## Usage
 
-### Basic Example
+### Python Example
 
 ```python
 import apyds
@@ -45,6 +51,37 @@ eg.rebuild()
 
 # Now (+ a x) and (+ b x) are in the same E-class
 assert eg.find(ax) == eg.find(bx)
+```
+
+### TypeScript Example
+
+```typescript
+import { Term } from "atsds";
+import { EGraph } from "atsds-egg";
+
+// Create an E-Graph
+const eg = new EGraph();
+
+// Add terms to the E-Graph
+const a = eg.add(new Term("a"));
+const b = eg.add(new Term("b"));
+const x = eg.add(new Term("x"));
+
+// Add compound terms
+const ax = eg.add(new Term("(+ a x)"));
+const bx = eg.add(new Term("(+ b x)"));
+
+// Initially, (+ a x) and (+ b x) are in different E-classes
+if (eg.find(ax) === eg.find(bx)) throw new Error("Should be different");
+
+// Merge a and b
+eg.merge(a, b);
+
+// Rebuild to restore congruence
+eg.rebuild();
+
+// Now (+ a x) and (+ b x) are in the same E-class
+if (eg.find(ax) !== eg.find(bx)) throw new Error("Should be same");
 ```
 
 ### Congruence Closure
@@ -120,4 +157,5 @@ Main class for E-Graph operations:
 ## Package Information
 
 - **Python Package**: [apyds-egg](https://pypi.org/project/apyds-egg/)
+- **npm Package**: [atsds-egg](https://www.npmjs.com/package/atsds-egg)
 - **Source Code**: [GitHub - egg directory](https://github.com/USTC-KnowledgeComputingLab/ds/tree/main/egg)

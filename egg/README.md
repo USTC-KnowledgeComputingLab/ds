@@ -23,6 +23,12 @@ pip install apyds-egg
 
 Requires Python 3.11-3.14.
 
+### TypeScript/JavaScript (npm)
+
+```bash
+npm install atsds-egg
+```
+
 ## Quick Start
 
 ### Python Example
@@ -54,6 +60,37 @@ eg.rebuild()
 
 # Now (+ a x) and (+ b x) are in the same E-class
 assert eg.find(ax) == eg.find(bx)
+```
+
+### TypeScript Example
+
+```typescript
+import { Term } from "atsds";
+import { EGraph } from "atsds-egg";
+
+// Create an E-Graph
+const eg = new EGraph();
+
+// Add terms to the E-Graph
+const a = eg.add(new Term("a"));
+const b = eg.add(new Term("b"));
+const x = eg.add(new Term("x"));
+
+// Add compound terms
+const ax = eg.add(new Term("(+ a x)"));
+const bx = eg.add(new Term("(+ b x)"));
+
+// Initially, (+ a x) and (+ b x) are in different E-classes
+if (eg.find(ax) === eg.find(bx)) throw new Error("Should be different");
+
+// Merge a and b
+eg.merge(a, b);
+
+// Rebuild to restore congruence
+eg.rebuild();
+
+// Now (+ a x) and (+ b x) are in the same E-class
+if (eg.find(ax) !== eg.find(bx)) throw new Error("Should be same");
 ```
 
 ## Core Concepts
@@ -105,7 +142,8 @@ assert eg.find(fa) == eg.find(fb)
 ### Prerequisites
 
 - Python 3.11-3.14
-- apyds package
+- Node.js and npm
+- apyds and atsds packages
 
 ### Python Package
 
@@ -125,6 +163,21 @@ uv run pytest
 uv run pytest --cov
 ```
 
+### TypeScript Package
+
+```bash
+cd egg
+
+# Install dependencies
+npm install
+
+# Build package
+npm run build
+
+# Run tests
+npm test
+```
+
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later).
@@ -133,6 +186,7 @@ This project is licensed under the GNU Affero General Public License v3.0 or lat
 
 - **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds) (in `/egg` directory)
 - **Python Package**: [apyds-egg](https://pypi.org/project/apyds-egg/)
+- **npm Package**: [atsds-egg](https://www.npmjs.com/package/atsds-egg)
 
 ## Author
 

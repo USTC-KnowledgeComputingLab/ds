@@ -347,7 +347,7 @@ Each example demonstrates logical inference using propositional logic axioms.
 ## Support Packages
 
 - **BNF Conversion Library** ([apyds-bnf](https://pypi.org/project/apyds-bnf/), [atsds-bnf](https://www.npmjs.com/package/atsds-bnf)): Bidirectional conversion between DS syntax formats. See [/bnf](/bnf) for details.
-- **E-Graph Library** ([apyds-egg](https://pypi.org/project/apyds-egg/)): E-Graph implementation for efficient equality reasoning. See [/egg](/egg) for details.
+- **E-Graph Library** ([apyds-egg](https://pypi.org/project/apyds-egg/), [atsds-egg](https://www.npmjs.com/package/atsds-egg)): E-Graph implementation for efficient equality reasoning. See [/egg](/egg) for details.
 
 ## Development
 
