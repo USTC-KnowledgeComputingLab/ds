@@ -64,7 +64,7 @@ jobs:
       - uses: actions/upload-artifact@v6
         with:
           name: dist
-          path: bnf/dist/*.whl
+          path: bnf/dist/
 
   upload:
     runs-on: ubuntu-latest
