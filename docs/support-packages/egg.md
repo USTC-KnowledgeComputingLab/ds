@@ -86,7 +86,9 @@ if (eg.find(ax) !== eg.find(bx)) throw new Error("Should be same");
 
 ### Congruence Closure
 
-The E-Graph automatically maintains congruence closure. When two E-classes are merged, the `rebuild()` method ensures that all congruent terms remain in the same E-class:
+The E-Graph automatically maintains congruence closure. When two E-classes are merged, the `rebuild()` method ensures that all congruent terms remain in the same E-class.
+
+#### Python Example
 
 ```python
 eg = EGraph()
@@ -108,6 +110,33 @@ eg.rebuild()
 # Now all derived terms are equivalent
 assert eg.find(fa) == eg.find(fb)
 assert eg.find(gfa) == eg.find(gfb)
+```
+
+#### TypeScript Example
+
+```typescript
+import { Term } from "atsds";
+import { EGraph } from "atsds-egg";
+
+const eg = new EGraph();
+
+// Add terms with nested structure
+const fa = eg.add(new Term("(f a)"));
+const fb = eg.add(new Term("(f b)"));
+const gfa = eg.add(new Term("(g (f a))"));
+const gfb = eg.add(new Term("(g (f b))"));
+
+// Merge a and b
+const a = eg.add(new Term("a"));
+const b = eg.add(new Term("b"));
+eg.merge(a, b);
+
+// Rebuild propagates equivalence
+eg.rebuild();
+
+// Now all derived terms are equivalent
+if (eg.find(fa) !== eg.find(fb)) throw new Error("fa != fb");
+if (eg.find(gfa) !== eg.find(gfb)) throw new Error("gfa != gfb");
 ```
 
 ## Core Concepts
@@ -144,15 +173,21 @@ The hash-consing mechanism ensures that identical E-Nodes share the same E-class
 
 ## API Reference
 
-### EGraph
+### Python (apyds-egg)
 
-Main class for E-Graph operations:
-
-- `__init__()`: Create a new empty E-Graph
-- `add(term: apyds.Term) -> EClassId`: Add a term and return its E-class ID
+- `EGraph()`: Create a new E-Graph
+- `add(term: apyds.Term) -> EClassId`: Add a term to the E-Graph
 - `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
-- `rebuild() -> None`: Restore congruence closure by processing the worklist
-- `find(eclass: EClassId) -> EClassId`: Find the canonical E-class representative
+- `rebuild() -> None`: Restore congruence closure
+- `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
+
+### TypeScript (atsds-egg)
+
+- `new EGraph()`: Create a new E-Graph
+- `add(term: atsds.Term): EClassId`: Add a term to the E-Graph
+- `merge(a: EClassId, b: EClassId): EClassId`: Merge two E-classes
+- `rebuild(): void`: Restore congruence closure
+- `find(eclass: EClassId): EClassId`: Find canonical E-class representative
 
 ## Package Information
 
