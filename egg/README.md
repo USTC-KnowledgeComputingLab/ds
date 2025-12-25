@@ -10,8 +10,6 @@ This package implements the egg-style E-Graph data structure with deferred congr
 - **Union-Find**: Path-compressed union-find for disjoint set management
 - **Congruence Closure**: Automatic maintenance of congruence relationships
 - **Deferred Rebuilding**: egg-style deferred rebuilding for performance
-- **Python Integration**: Seamless integration with apyds terms
-- **Type-Safe**: Full type hints for Python 3.11+
 
 ## Installation
 
@@ -22,6 +20,12 @@ pip install apyds-egg
 ```
 
 Requires Python 3.11-3.14.
+
+### TypeScript/JavaScript (npm)
+
+```bash
+npm install atsds-egg
+```
 
 ## Quick Start
 
@@ -56,6 +60,37 @@ eg.rebuild()
 assert eg.find(ax) == eg.find(bx)
 ```
 
+### TypeScript Example
+
+```typescript
+import { Term } from "atsds";
+import { EGraph } from "atsds-egg";
+
+// Create an E-Graph
+const eg = new EGraph();
+
+// Add terms to the E-Graph
+const a = eg.add(new Term("a"));
+const b = eg.add(new Term("b"));
+const x = eg.add(new Term("x"));
+
+// Add compound terms
+const ax = eg.add(new Term("(+ a x)"));
+const bx = eg.add(new Term("(+ b x)"));
+
+// Initially, (+ a x) and (+ b x) are in different E-classes
+if (eg.find(ax) === eg.find(bx)) throw new Error("Should be different");
+
+// Merge a and b
+eg.merge(a, b);
+
+// Rebuild to restore congruence
+eg.rebuild();
+
+// Now (+ a x) and (+ b x) are in the same E-class
+if (eg.find(ax) !== eg.find(bx)) throw new Error("Should be same");
+```
+
 ## Core Concepts
 
 ### E-Graph
@@ -69,7 +104,9 @@ An E-Graph is a data structure that efficiently represents and maintains equival
 
 ### Congruence Closure
 
-The E-Graph maintains congruence closure automatically. When two E-classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-class:
+The E-Graph maintains congruence closure automatically. When two E-classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-class.
+
+#### Python Example
 
 ```python
 eg = EGraph()
@@ -90,22 +127,55 @@ eg.rebuild()
 assert eg.find(fa) == eg.find(fb)
 ```
 
+#### TypeScript Example
+
+```typescript
+import { Term } from "atsds";
+import { EGraph } from "atsds-egg";
+
+const eg = new EGraph();
+
+// Add terms
+const fa = eg.add(new Term("(f a)"));
+const fb = eg.add(new Term("(f b)"));
+
+// Merge a and b
+const a = eg.add(new Term("a"));
+const b = eg.add(new Term("b"));
+eg.merge(a, b);
+
+// Rebuild maintains congruence
+eg.rebuild();
+
+// Now (f a) and (f b) are equivalent
+if (eg.find(fa) !== eg.find(fb)) throw new Error("Congruence failed");
+```
+
 ## API Overview
 
-### EGraph
+### Python (apyds-egg)
 
-- `__init__()`: Create a new E-Graph
+- `EGraph()`: Create a new E-Graph
 - `add(term: apyds.Term) -> EClassId`: Add a term to the E-Graph
 - `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
 - `rebuild() -> None`: Restore congruence closure
 - `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
+
+### TypeScript (atsds-egg)
+
+- `new EGraph()`: Create a new E-Graph
+- `add(term: atsds.Term): EClassId`: Add a term to the E-Graph
+- `merge(a: EClassId, b: EClassId): EClassId`: Merge two E-classes
+- `rebuild(): void`: Restore congruence closure
+- `find(eclass: EClassId): EClassId`: Find canonical E-class representative
 
 ## Building from Source
 
 ### Prerequisites
 
 - Python 3.11-3.14
-- apyds package
+- Node.js and npm
+- apyds and atsds packages
 
 ### Python Package
 
@@ -125,6 +195,21 @@ uv run pytest
 uv run pytest --cov
 ```
 
+### TypeScript Package
+
+```bash
+cd egg
+
+# Install dependencies
+npm install
+
+# Build package
+npm run build
+
+# Run tests
+npm test
+```
+
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later).
@@ -133,6 +218,7 @@ This project is licensed under the GNU Affero General Public License v3.0 or lat
 
 - **GitHub**: [USTC-KnowledgeComputingLab/ds](https://github.com/USTC-KnowledgeComputingLab/ds) (in `/egg` directory)
 - **Python Package**: [apyds-egg](https://pypi.org/project/apyds-egg/)
+- **npm Package**: [atsds-egg](https://www.npmjs.com/package/atsds-egg)
 
 ## Author
 
