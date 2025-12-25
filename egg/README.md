@@ -164,7 +164,7 @@ if (eg.find(fa) !== eg.find(fb)) throw new Error("Congruence failed");
 ### TypeScript (atsds-egg)
 
 - `new EGraph()`: Create a new E-Graph
-- `add(term: Term): EClassId`: Add a term to the E-Graph
+- `add(term: atsds.Term): EClassId`: Add a term to the E-Graph
 - `merge(a: EClassId, b: EClassId): EClassId`: Merge two E-classes
 - `rebuild(): void`: Restore congruence closure
 - `find(eclass: EClassId): EClassId`: Find canonical E-class representative
