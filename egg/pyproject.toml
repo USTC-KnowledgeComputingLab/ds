@@ -25,8 +25,8 @@ version_scheme = "no-guess-dev"
 fallback_version = "0.0.0"
 root = ".."
 
-[tool.setuptools]
-packages = ["apyds_egg"]
+[tool.setuptools.packages.find]
+include = ["apyds_egg"]
 
 [project.optional-dependencies]
 dev = [
