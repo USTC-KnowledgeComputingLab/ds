@@ -1,5 +1,3 @@
-import commonjs from "@rollup/plugin-commonjs";
-import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import copy from "rollup-plugin-copy";
@@ -15,8 +13,6 @@ export default [
             nodeResolve({
                 browser: true,
             }),
-            commonjs(),
-            json(),
             terser(),
             copy({
                 targets: [{ src: "atsds_bnf/index.d.mts", dest: "dist" }],
