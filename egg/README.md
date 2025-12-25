@@ -10,8 +10,6 @@ This package implements the egg-style E-Graph data structure with deferred congr
 - **Union-Find**: Path-compressed union-find for disjoint set management
 - **Congruence Closure**: Automatic maintenance of congruence relationships
 - **Deferred Rebuilding**: egg-style deferred rebuilding for performance
-- **Python Integration**: Seamless integration with apyds terms
-- **Type-Safe**: Full type hints for Python 3.11+
 
 ## Installation
 
@@ -106,7 +104,9 @@ An E-Graph is a data structure that efficiently represents and maintains equival
 
 ### Congruence Closure
 
-The E-Graph maintains congruence closure automatically. When two E-classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-class:
+The E-Graph maintains congruence closure automatically. When two E-classes are merged, the E-Graph rebuilds to ensure that congruent terms remain in the same E-class.
+
+#### Python Example
 
 ```python
 eg = EGraph()
@@ -127,15 +127,47 @@ eg.rebuild()
 assert eg.find(fa) == eg.find(fb)
 ```
 
+#### TypeScript Example
+
+```typescript
+import { Term } from "atsds";
+import { EGraph } from "atsds-egg";
+
+const eg = new EGraph();
+
+// Add terms
+const fa = eg.add(new Term("(f a)"));
+const fb = eg.add(new Term("(f b)"));
+
+// Merge a and b
+const a = eg.add(new Term("a"));
+const b = eg.add(new Term("b"));
+eg.merge(a, b);
+
+// Rebuild maintains congruence
+eg.rebuild();
+
+// Now (f a) and (f b) are equivalent
+if (eg.find(fa) !== eg.find(fb)) throw new Error("Congruence failed");
+```
+
 ## API Overview
 
-### EGraph
+### Python (apyds-egg)
 
-- `__init__()`: Create a new E-Graph
+- `EGraph()`: Create a new E-Graph
 - `add(term: apyds.Term) -> EClassId`: Add a term to the E-Graph
 - `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
 - `rebuild() -> None`: Restore congruence closure
 - `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
+
+### TypeScript (atsds-egg)
+
+- `new EGraph()`: Create a new E-Graph
+- `add(term: Term): EClassId`: Add a term to the E-Graph
+- `merge(a: EClassId, b: EClassId): EClassId`: Merge two E-classes
+- `rebuild(): void`: Restore congruence closure
+- `find(eclass: EClassId): EClassId`: Find canonical E-class representative
 
 ## Building from Source
 
