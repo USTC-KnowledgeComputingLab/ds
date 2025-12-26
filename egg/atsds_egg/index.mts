@@ -3,7 +3,16 @@
  * E-Graph (Equality Graph) for representing equivalence classes of terms.
  */
 
-import { List, type Term } from "atsds";
+import type { List, Term } from "atsds";
+
+function isList(obj: unknown): obj is List {
+    return (
+        typeof obj === "object" &&
+        obj !== null &&
+        typeof (obj as Record<string, unknown>).length === "function" &&
+        typeof (obj as Record<string, unknown>).getitem === "function"
+    );
+}
 
 // Branded type for EClassId to ensure type safety, even though it's a number at runtime.
 export type EClassId = number & { __brand: "EClassId" };
@@ -144,7 +153,7 @@ class EGraph {
     private termToEnode(term: Term): ENode {
         const inner = term.term();
 
-        if (inner instanceof List) {
+        if (isList(inner)) {
             const children: EClassId[] = [];
             for (let i = 0; i < inner.length(); i++) {
                 const childTerm = inner.getitem(i);
