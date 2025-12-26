@@ -24,7 +24,7 @@
         "all": "run-s build test"
     },
     "dependencies": {
-        "atsds": "^0.0.11"
+        "atsds": "*"
     },
     "devDependencies": {
         "@rollup/plugin-terser": "^0.4.4",
