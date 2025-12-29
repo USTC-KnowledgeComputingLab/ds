@@ -10,23 +10,6 @@ Terms are the basic building blocks of the deductive system. A term can be:
 - **Item**: Constants or functors, e.g., `a`, `father`, `!`
 - **List**: Ordered sequences in parentheses, e.g., `(a b c)`
 
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create different types of terms
-    var = apyds.Variable("`X")
-    item = apyds.Item("hello")
-    lst = apyds.List("(a b c)")
-    term = apyds.Term("(f `x a)")
-
-    print(f"Variable: {var}")      # `X
-    print(f"Item: {item}")         # hello
-    print(f"List: {lst}")          # (a b c)
-    print(f"Term: {term}")         # (f `x a)
-    ```
-
 === "TypeScript"
 
     ```typescript
@@ -42,6 +25,23 @@ Terms are the basic building blocks of the deductive system. A term can be:
     console.log(`Item: ${item.toString()}`);      // hello
     console.log(`List: ${lst.toString()}`);       // (a b c)
     console.log(`Term: ${term.toString()}`);      // (f `x a)
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create different types of terms
+    var = apyds.Variable("`X")
+    item = apyds.Item("hello")
+    lst = apyds.List("(a b c)")
+    term = apyds.Term("(f `x a)")
+
+    print(f"Variable: {var}")      # `X
+    print(f"Item: {item}")         # hello
+    print(f"List: {lst}")          # (a b c)
+    print(f"Term: {term}")         # (f `x a)
     ```
 
 === "C++"
@@ -62,6 +62,21 @@ Terms are the basic building blocks of the deductive system. A term can be:
 
 Rules represent logical inference steps. A rule has premises (conditions) and a conclusion.
 
+=== "TypeScript"
+
+    ```typescript
+    import { Rule } from "atsds";
+
+    // A fact (rule with no premises)
+    const fact = new Rule("(parent john mary)");
+    console.log(`Fact: ${fact.toString()}`);
+
+    // A rule with premises
+    const rule = new Rule("(father `X `Y)\n----------\n(parent `X `Y)\n");
+    console.log(`Rule premises: ${rule.length()}`);
+    console.log(`Rule conclusion: ${rule.conclusion().toString()}`);
+    ```
+
 === "Python"
 
     ```python
@@ -76,21 +91,6 @@ Rules represent logical inference steps. A rule has premises (conditions) and a 
     rule = apyds.Rule("(father `X `Y)\n----------\n(parent `X `Y)\n")
     print(f"Rule premises: {len(rule)}")
     print(f"Rule conclusion: {rule.conclusion}")
-    ```
-
-=== "TypeScript"
-
-    ```typescript
-    import { Rule } from "atsds";
-
-    // A fact (rule with no premises)
-    const fact = new Rule("(parent john mary)");
-    console.log(`Fact: ${fact.toString()}`);
-
-    // A rule with premises
-    const rule = new Rule("(father `X `Y)\n----------\n(parent `X `Y)\n");
-    console.log(`Rule premises: ${rule.length()}`);
-    console.log(`Rule conclusion: ${rule.conclusion().toString()}`);
     ```
 
 === "C++"
@@ -113,43 +113,6 @@ Rules represent logical inference steps. A rule has premises (conditions) and a 
 ## Using the Search Engine
 
 The search engine performs logical inference by matching rules with facts.
-
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create search engine
-    search = apyds.Search(1000, 10000)
-
-    # Add modus ponens: P -> Q, P |- Q
-    search.add("(`P -> `Q) `P `Q")
-
-    # Add axiom schemas
-    search.add("(`p -> (`q -> `p))")  # Axiom 1
-    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")  # Axiom 2
-    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")  # Axiom 3
-
-    # Add premise: !!X (double negation)
-    search.add("(! (! X))")
-
-    # Define target: X
-    target = apyds.Rule("X")
-
-    # Execute search
-    while True:
-        found = False
-        def callback(candidate):
-            global found
-            if candidate == target:
-                print(f"Found: {candidate}")
-                found = True
-                return True
-            return False
-        search.execute(callback)
-        if found:
-            break
-    ```
 
 === "TypeScript"
 
@@ -186,6 +149,43 @@ The search engine performs logical inference by matching rules with facts.
         });
         if (found) break;
     }
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create search engine
+    search = apyds.Search(1000, 10000)
+
+    # Add modus ponens: P -> Q, P |- Q
+    search.add("(`P -> `Q) `P `Q")
+
+    # Add axiom schemas
+    search.add("(`p -> (`q -> `p))")  # Axiom 1
+    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")  # Axiom 2
+    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")  # Axiom 3
+
+    # Add premise: !!X (double negation)
+    search.add("(! (! X))")
+
+    # Define target: X
+    target = apyds.Rule("X")
+
+    # Execute search
+    while True:
+        found = False
+        def callback(candidate):
+            global found
+            if candidate == target:
+                print(f"Found: {candidate}")
+                found = True
+                return True
+            return False
+        search.execute(callback)
+        if found:
+            break
     ```
 
 === "C++"

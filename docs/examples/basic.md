@@ -13,44 +13,6 @@ The classic example demonstrates double negation elimination using propositional
 
 Given the premise ¬¬X (double negation of X), we can derive X.
 
-=== "Python"
-
-    ```python
-    import apyds
-
-    # Create a search engine
-    search = apyds.Search(1000, 10000)
-
-    # Modus ponens: P -> Q, P |- Q
-    search.add("(`P -> `Q) `P `Q")
-    # Axiom schema 1: p -> (q -> p)
-    search.add("(`p -> (`q -> `p))")
-    # Axiom schema 2: (p -> (q -> r)) -> ((p -> q) -> (p -> r))
-    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")
-    # Axiom schema 3: (!p -> !q) -> (q -> p)
-    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")
-
-    # Premise: !!X
-    search.add("(! (! X))")
-
-    # Target: X (double negation elimination)
-    target = apyds.Rule("X")
-
-    # Execute search until target is found
-    while True:
-        found = False
-        def callback(candidate):
-            global found
-            if candidate == target:
-                print("Found:", candidate)
-                found = True
-                return True  # Stop search
-            return False  # Continue searching
-        search.execute(callback)
-        if found:
-            break
-    ```
-
 === "TypeScript"
 
     ```typescript
@@ -87,6 +49,44 @@ Given the premise ¬¬X (double negation of X), we can derive X.
         });
         if (found) break;
     }
+    ```
+
+=== "Python"
+
+    ```python
+    import apyds
+
+    # Create a search engine
+    search = apyds.Search(1000, 10000)
+
+    # Modus ponens: P -> Q, P |- Q
+    search.add("(`P -> `Q) `P `Q")
+    # Axiom schema 1: p -> (q -> p)
+    search.add("(`p -> (`q -> `p))")
+    # Axiom schema 2: (p -> (q -> r)) -> ((p -> q) -> (p -> r))
+    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")
+    # Axiom schema 3: (!p -> !q) -> (q -> p)
+    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")
+
+    # Premise: !!X
+    search.add("(! (! X))")
+
+    # Target: X (double negation elimination)
+    target = apyds.Rule("X")
+
+    # Execute search until target is found
+    while True:
+        found = False
+        def callback(candidate):
+            global found
+            if candidate == target:
+                print("Found:", candidate)
+                found = True
+                return True  # Stop search
+            return False  # Continue searching
+        search.execute(callback)
+        if found:
+            break
     ```
 
 === "C++"
@@ -140,21 +140,21 @@ Given the premise ¬¬X (double negation of X), we can derive X.
 Example files are provided in the repository under `examples/`:
 
 - `examples/main.py` - Python example
-- `examples/main.mjs` - TypeScript/JavaScript example
+- `examples/main.mjs` - TypeScript example
 - `examples/main.cc` - C++ example
+
+### TypeScript
+
+```bash
+npm install atsds
+node examples/main.mjs
+```
 
 ### Python
 
 ```bash
 pip install apyds
 python examples/main.py
-```
-
-### TypeScript/JavaScript
-
-```bash
-npm install atsds
-node examples/main.mjs
 ```
 
 ### C++

@@ -9,6 +9,12 @@ This package enables you to write logical rules in a more natural, mathematical 
 
 ## Installation
 
+=== "TypeScript"
+
+    ```bash
+    npm install atsds-bnf
+    ```
+
 === "Python"
 
     ```bash
@@ -17,35 +23,7 @@ This package enables you to write logical rules in a more natural, mathematical 
 
     Requires Python 3.11-3.14.
 
-=== "TypeScript"
-
-    ```bash
-    npm install atsds-bnf
-    ```
-
 ## Usage
-
-=== "Python"
-
-    ```python
-    from apyds_bnf import parse, unparse
-
-    # Parse: Convert from readable Dsp to DS format
-    dsp_input = "a, b => c"
-    ds_output = parse(dsp_input)
-    print(ds_output)
-    # Output:
-    # a
-    # b
-    # ----
-    # c
-
-    # Unparse: Convert from DS format to readable Dsp
-    ds_input = "a\nb\n----\nc\n"
-    dsp_output = unparse(ds_input)
-    print(dsp_output)
-    # Output: a, b => c
-    ```
 
 === "TypeScript"
 
@@ -67,6 +45,28 @@ This package enables you to write logical rules in a more natural, mathematical 
     const dsp_output = unparse(ds_input);
     console.log(dsp_output);
     // Output: a, b => c
+    ```
+
+=== "Python"
+
+    ```python
+    from apyds_bnf import parse, unparse
+
+    # Parse: Convert from readable Dsp to DS format
+    dsp_input = "a, b => c"
+    ds_output = parse(dsp_input)
+    print(ds_output)
+    # Output:
+    # a
+    # b
+    # ----
+    # c
+
+    # Unparse: Convert from DS format to readable Dsp
+    ds_input = "a\nb\n----\nc\n"
+    dsp_output = unparse(ds_input)
+    print(dsp_output)
+    # Output: a, b => c
     ```
 
 ## Syntax Formats
