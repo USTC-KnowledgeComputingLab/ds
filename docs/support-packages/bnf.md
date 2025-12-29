@@ -9,65 +9,65 @@ This package enables you to write logical rules in a more natural, mathematical 
 
 ## Installation
 
-### Python
+=== "Python"
 
-```bash
-pip install apyds-bnf
-```
+    ```bash
+    pip install apyds-bnf
+    ```
 
-Requires Python 3.11-3.14.
+    Requires Python 3.11-3.14.
 
-### JavaScript/TypeScript
+=== "TypeScript"
 
-```bash
-npm install atsds-bnf
-```
+    ```bash
+    npm install atsds-bnf
+    ```
 
 ## Usage
 
-### Python Example
+=== "Python"
 
-```python
-from apyds_bnf import parse, unparse
+    ```python
+    from apyds_bnf import parse, unparse
 
-# Parse: Convert from readable Dsp to DS format
-dsp_input = "a, b => c"
-ds_output = parse(dsp_input)
-print(ds_output)
-# Output:
-# a
-# b
-# ----
-# c
+    # Parse: Convert from readable Dsp to DS format
+    dsp_input = "a, b => c"
+    ds_output = parse(dsp_input)
+    print(ds_output)
+    # Output:
+    # a
+    # b
+    # ----
+    # c
 
-# Unparse: Convert from DS format to readable Dsp
-ds_input = "a\nb\n----\nc\n"
-dsp_output = unparse(ds_input)
-print(dsp_output)
-# Output: a, b => c
-```
+    # Unparse: Convert from DS format to readable Dsp
+    ds_input = "a\nb\n----\nc\n"
+    dsp_output = unparse(ds_input)
+    print(dsp_output)
+    # Output: a, b => c
+    ```
 
-### JavaScript/TypeScript Example
+=== "TypeScript"
 
-```javascript
-import { parse, unparse } from "atsds-bnf";
+    ```javascript
+    import { parse, unparse } from "atsds-bnf";
 
-// Parse: Convert from readable Dsp to DS format
-const dsp_input = "a, b => c";
-const ds_output = parse(dsp_input);
-console.log(ds_output);
-// Output:
-// a
-// b
-// ----
-// c
+    // Parse: Convert from readable Dsp to DS format
+    const dsp_input = "a, b => c";
+    const ds_output = parse(dsp_input);
+    console.log(ds_output);
+    // Output:
+    // a
+    // b
+    // ----
+    // c
 
-// Unparse: Convert from DS format to readable Dsp
-const ds_input = "a\nb\n----\nc\n";
-const dsp_output = unparse(ds_input);
-console.log(dsp_output);
-// Output: a, b => c
-```
+    // Unparse: Convert from DS format to readable Dsp
+    const ds_input = "a\nb\n----\nc\n";
+    const dsp_output = unparse(ds_input);
+    console.log(dsp_output);
+    // Output: a, b => c
+    ```
 
 ## Syntax Formats
 
