@@ -3,6 +3,7 @@ import path from "node:path";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+    base: "/ds/",
     title: "DS - A Deductive System",
     description:
         "A deductive system for logical inference, implemented in C++ with bindings for Python and TypeScript/JavaScript",
