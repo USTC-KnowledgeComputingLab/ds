@@ -8,7 +8,6 @@ on:
 
 env:
   EM_CACHE_FOLDER: 'emsdk-cache'
-  NODE_LATEST_VERSION: '24'
 
 jobs:
   jest:
@@ -62,13 +61,13 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_LATEST_VERSION }}
+          node-version: latest
           cache: 'npm'
 
       - uses: actions/cache@v5
         with:
           path: ${{ env.EM_CACHE_FOLDER }}
-          key: jest-em-cache-${{ runner.os }}-${{ env.NODE_LATEST_VERSION }}
+          key: jest-em-cache-${{ runner.os }}
 
       - uses: pyodide/setup-emsdk@v15
         with:
