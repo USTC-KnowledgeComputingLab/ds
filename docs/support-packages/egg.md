@@ -164,23 +164,21 @@ The hash-consing mechanism ensures that identical E-Nodes share the same E-class
 
 ## API Reference
 
-::: code-group
-# TypeScript (atsds-egg)
-:::
-    - `new EGraph()`: Create a new E-Graph
-    - `add(term: atsds.Term): EClassId`: Add a term to the E-Graph
-    - `merge(a: EClassId, b: EClassId): EClassId`: Merge two E-classes
-    - `rebuild(): void`: Restore congruence closure
-    - `find(eclass: EClassId): EClassId`: Find canonical E-class representative
+### TypeScript (atsds-egg)
 
-::: code-group
-# Python (apyds-egg)
-:::
-    - `EGraph()`: Create a new E-Graph
-    - `add(term: apyds.Term) -> EClassId`: Add a term to the E-Graph
-    - `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
-    - `rebuild() -> None`: Restore congruence closure
-    - `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
+- `new EGraph()`: Create a new E-Graph
+- `add(term: atsds.Term): EClassId`: Add a term to the E-Graph
+- `merge(a: EClassId, b: EClassId): EClassId`: Merge two E-classes
+- `rebuild(): void`: Restore congruence closure
+- `find(eclass: EClassId): EClassId`: Find canonical E-class representative
+
+### Python (apyds-egg)
+
+- `EGraph()`: Create a new E-Graph
+- `add(term: apyds.Term) -> EClassId`: Add a term to the E-Graph
+- `merge(a: EClassId, b: EClassId) -> EClassId`: Merge two E-classes
+- `rebuild() -> None`: Restore congruence closure
+- `find(eclass: EClassId) -> EClassId`: Find canonical E-class representative
 
 ## Package Information
 
