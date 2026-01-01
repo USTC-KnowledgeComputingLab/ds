@@ -33,7 +33,7 @@ Or explicitly:
 (parent john mary)
 ```
 
-::: info Rule Format Details
+::: tip Rule Format Details
 - Premises are separated by newlines
 - The separator line must contain at least 4 dashes (`----`) between premises and conclusion
 - Whitespace around premises and conclusion is trimmed
