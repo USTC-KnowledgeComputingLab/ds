@@ -59,11 +59,6 @@ export default defineConfig({
         ],
 
         socialLinks: [{ icon: "github", link: "https://github.com/USTC-KnowledgeComputingLab/ds" }],
-
-        footer: {
-            message: "Released under the AGPL-3.0-or-later License.",
-            copyright: "Copyright © 2026 Hao Zhang",
-        },
     },
     vite: {
         build: {
