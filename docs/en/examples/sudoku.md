@@ -13,7 +13,7 @@ The Sudoku solver encodes Sudoku rules as logical inference rules in the DS syst
 ## Interactive Demo
 
 <script setup>
-import Sudoku from './Sudoku.vue'
+import Sudoku from '../../examples/Sudoku.vue'
 </script>
 
 <ClientOnly>
