@@ -62,6 +62,10 @@ export default defineConfig({
                         ],
                     },
                 ],
+                footer: {
+                    message: "Released under the GNU Affero General Public License v3.0 or later.",
+                    copyright: "Copyright © 2025-present Hao Zhang",
+                },
             },
         },
         zh: {
@@ -116,6 +120,10 @@ export default defineConfig({
                         ],
                     },
                 ],
+                footer: {
+                    message: "基于 GNU Affero General Public License v3.0 或更高版本发布。",
+                    copyright: "版权所有 © 2025-至今 张浩",
+                },
             },
         },
     },

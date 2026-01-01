@@ -64,7 +64,3 @@ int main() {
 - **[核心概念](concepts/terms.md)** - 了解 Term、Rule 和推理
 - **[API 参考](api/typescript.md)** - 完整的 API 文档
 - **[示例](examples/basic.md)** - 可运行的代码示例
-
-## 许可证
-
-本项目采用 GNU 通用公共许可证 v3.0 或更高版本授权。

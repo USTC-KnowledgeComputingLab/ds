@@ -364,7 +364,7 @@ Pre-commit hooks are configured in `.pre-commit-config.yaml`.
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 or later. See [LICENSE.md](LICENSE.md) for details.
+This project is licensed under the GNU Affero General Public License v3.0 or later. See [LICENSE.md](LICENSE.md) for details.
 
 ## Documentation
 

@@ -64,7 +64,3 @@ int main() {
 - **[Core Concepts](concepts/terms.md)** - Learn about terms, rules, and inference
 - **[API Reference](api/typescript.md)** - Complete API documentation
 - **[Examples](examples/basic.md)** - Working code examples
-
-## License
-
-This project is licensed under the GNU General Public License v3.0 or later.
