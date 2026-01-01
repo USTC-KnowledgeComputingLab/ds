@@ -106,9 +106,10 @@ coverage/
 biome.jsonc-backup/
 
 ########################################
-# MkDocs
+# VitePress
 ########################################
-site/
+.vitepress/dist
+.vitepress/cache
 
 ########################################
 # IDE: VSCode / JetBrains / Vim / Emacs
