@@ -15,11 +15,17 @@ hero:
 
 features:
   - title: Multi-Language Support
-    details: Use the same deductive system in C++, Python, or TypeScript/JavaScript.
+    details: Seamlessly use the same deductive system in C++, Python, or TypeScript/JavaScript.
+  - title: WebAssembly Performance
+    details: Run high-performance deductive system in the browser or Node.js via Emscripten.
+  - title: Rich Logical Terms
+    details: Comprehensive support for variables, items, and nested lists.
   - title: Rule-Based Inference
-    details: Define rules and facts, and perform logical deduction with ease.
-  - title: WebAssembly
-    details: Run inference in the browser or Node.js environments via Emscripten.
+    details: Flexible framework for defining rules and facts to perform complex logical deduction.
+  - title: Unification Engine
+    details: Powerful built-in mechanisms for term unification and rule matching.
+  - title: Automated Search
+    details: Built-in search engine for iterative inference.
 ---
 
 ## Supported Languages
@@ -34,7 +40,6 @@ console.log(term.toString());
 ```
 ```python [Python]
 import apyds
-print(f"Version: {apyds.__version__}")
 
 term = apyds.Term("(hello world)")
 print(term)  # (hello world)
@@ -57,7 +62,7 @@ int main() {
 - **[Installation](getting-started/installation.md)** - Install DS for your preferred language
 - **[Quick Start](getting-started/quickstart.md)** - Get up and running in minutes
 - **[Core Concepts](concepts/terms.md)** - Learn about terms, rules, and inference
-- **[API Reference](api/python.md)** - Complete API documentation
+- **[API Reference](api/typescript.md)** - Complete API documentation
 - **[Examples](examples/basic.md)** - Working code examples
 
 ## License

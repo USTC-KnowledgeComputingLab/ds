@@ -181,7 +181,6 @@ console.log(term.toString());
 ```
 ```python [Python]
 import apyds
-print(f"Version: {apyds.__version__}")
 
 term = apyds.Term("(hello world)")
 print(term)  # (hello world)

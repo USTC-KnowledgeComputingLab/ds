@@ -10,13 +10,12 @@ A deductive system for logical inference, implemented in C++. The library provid
 
 ## Features
 
-- **Multi-Language Support**: Use the same deductive system in C++, Python, or TypeScript/JavaScript
-- **Logical Terms**: Work with variables, items (constants/functors), and lists
-- **Rule-Based Inference**: Define rules and facts, perform logical deduction
-- **Unification and Matching**: Unify terms and match rules
-- **Search Engine**: Built-in search mechanism for iterative inference
-- **WebAssembly**: Run inference in the browser or Node.js environments
-- **Type-Safe**: Strong typing support in TypeScript and Python
+- **Multi-Language Support**: Seamlessly use the same deductive system in C++, Python, or TypeScript/JavaScript.
+- **WebAssembly Performance**: Run high-performance deductive system in the browser or Node.js via Emscripten.
+- **Rich Logical Terms**: Comprehensive support for variables, items, and nested lists.
+- **Rule-Based Inference**: Flexible framework for defining rules and facts to perform complex logical deduction.
+- **Unification Engine**: Powerful built-in mechanisms for term unification and rule matching.
+- **Automated Search**: Built-in search engine for iterative inference.
 
 ## Installation
 
