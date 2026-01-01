@@ -65,9 +65,6 @@ export default defineConfig({
             copyright: "Copyright © 2026 Hao Zhang",
         },
     },
-    markdown: {
-        math: true,
-    },
     vite: {
         build: {
             target: "esnext",
