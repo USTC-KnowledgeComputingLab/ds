@@ -41,7 +41,7 @@ Items can represent:
 - **Functors**: Symbols that combine other terms, like `father`, `->`, `!`
 - **Operators**: Special symbols used in logical expressions, like `->` for implication or `!` for negation
 
-::: note Item Characters
+::: tip Item Characters
 Items can contain any characters except backtick, whitespace and parentheses. Special symbols like `->`, `!`, `<-`, `&&`, `||` are commonly used as logical operators.
 
 :::
@@ -63,7 +63,7 @@ Lists are the primary way to build complex structures in the deductive system. T
 - **Nested structures**: `(! (! X))` - "not not X" (double negation)
 - **Data collections**: `(1 2 3 4 5)` - a list of numbers
 
-::: example List Nesting
+::: tip List Nesting
 Lists can be nested to any depth:
 ```
 ((a b) (c d) (e f))
