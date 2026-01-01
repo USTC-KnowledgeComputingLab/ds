@@ -214,10 +214,3 @@ int main() {
 }
 ```
 :::
-
-## Next Steps
-
-- Learn more about [Terms](../concepts/terms.md)
-- Understand [Rules](../concepts/rules.md)
-- Explore the [Search Engine](../concepts/search.md)
-- Check the [API Reference](../api/python.md)

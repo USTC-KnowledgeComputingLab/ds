@@ -267,7 +267,3 @@ search.reset();
 4. **Early Termination**: Return `true` from callback to stop as soon as target is found
 5. **Deduplication**: The engine automatically deduplicates facts, avoiding redundant computation
 
-## See Also
-
-- [Terms](terms.md) - Building blocks for the search
-- [Rules](rules.md) - How rules are structured and matched

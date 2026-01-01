@@ -347,7 +347,3 @@ with apyds.scoped_buffer_size(8192):
 ```
 :::
 
-## See Also
-
-- [Rules](rules.md) - How to create and work with inference rules
-- [Search Engine](search.md) - Performing logical inference

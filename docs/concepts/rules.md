@@ -357,7 +357,3 @@ int main() {
 ```
 :::
 
-## See Also
-
-- [Terms](terms.md) - Building blocks for rules
-- [Search Engine](search.md) - Performing inference with rules
