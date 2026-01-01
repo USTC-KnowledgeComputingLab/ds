@@ -57,7 +57,7 @@ export default defineConfig({
                     {
                         text: "Examples",
                         items: [
-                            { text: "Basis Examples", link: "/en/examples/basic" },
+                            { text: "Basic Examples", link: "/en/examples/basic" },
                             { text: "Sudoku", link: "/en/examples/sudoku" },
                         ],
                     },
