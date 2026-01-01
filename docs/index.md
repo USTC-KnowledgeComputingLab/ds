@@ -1,52 +1,56 @@
-# DS - A Deductive System
+---
+layout: home
 
-A deductive system for logical inference, implemented in C++. The library provides bindings for Python (via pybind11) and TypeScript/JavaScript (via Emscripten/WebAssembly).
+hero:
+  name: "DS"
+  text: "A Deductive System"
+  tagline: A deductive system for logical inference, implemented in C++ with bindings for Python and TypeScript/JavaScript
+  actions:
+    - theme: brand
+      text: Quick Start
+      link: /getting-started/quickstart
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/USTC-KnowledgeComputingLab/ds
 
-## Features
-
-- **Multi-Language Support**: Use the same deductive system in C++, Python, or TypeScript/JavaScript
-- **Logical Terms**: Work with variables, items (constants/functors), and lists
-- **Rule-Based Inference**: Define rules and facts, perform logical deduction
-- **Unification and Matching**: Unify terms and match rules
-- **Search Engine**: Built-in search mechanism for iterative inference
-- **WebAssembly**: Run inference in the browser or Node.js environments
-- **Type-Safe**: Strong typing support in TypeScript and Python
+features:
+  - title: Multi-Language Support
+    details: Use the same deductive system in C++, Python, or TypeScript/JavaScript.
+  - title: Rule-Based Inference
+    details: Define rules and facts, and perform logical deduction with ease.
+  - title: WebAssembly
+    details: Run inference in the browser or Node.js environments via Emscripten.
+---
 
 ## Supported Languages
 
-=== "TypeScript"
+::: code-group
+```typescript [TypeScript]
+import { Term } from "atsds";
 
-    ```typescript
-    import { Term } from "atsds";
-    
-    const term = new Term("(hello world)");
-    console.log(term.toString());
-    // Output: (hello world)
-    ```
+const term = new Term("(hello world)");
+console.log(term.toString());
+// Output: (hello world)
+```
+```python [Python]
+import apyds
+print(f"Version: {apyds.__version__}")
 
-=== "Python"
+term = apyds.Term("(hello world)")
+print(term)  # (hello world)
+```
+```cpp [C++]
+#include <ds/ds.hh>
+#include <ds/utility.hh>
+#include <iostream>
 
-    ```python
-    import apyds
-    print(f"Version: {apyds.__version__}")
-    
-    term = apyds.Term("(hello world)")
-    print(term)  # (hello world)
-    ```
-
-=== "C++"
-
-    ```cpp
-    #include <ds/ds.hh>
-    #include <ds/utility.hh>
-    #include <iostream>
-    
-    int main() {
-        auto term = ds::text_to_term("(hello world)", 1000);
-        std::cout << ds::term_to_text(term.get(), 1000).get() << std::endl;
-        return 0;
-    }
-    ```
+int main() {
+    auto term = ds::text_to_term("(hello world)", 1000);
+    std::cout << ds::term_to_text(term.get(), 1000).get() << std::endl;
+    return 0;
+}
+```
+:::
 
 ## Quick Links
 

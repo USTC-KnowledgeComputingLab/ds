@@ -11,49 +11,44 @@ The search engine:
 3. Notifies you of each new inference via a callback
 4. Automatically prevents duplicate inferences
 
-!!! info "How It Works"
-    The search engine uses a forward-chaining inference approach:
-    
-    1. When you call `execute()`, the engine tries to match the first premise of each rule with existing facts
-    2. When a match is found, variables in the rule are substituted and a new rule (with one fewer premise) is created
-    3. If the new rule has no premises, it becomes a new fact
-    4. The callback is invoked for each newly derived rule
-    5. Duplicate rules are automatically filtered out
+::: info How It Works
+The search engine uses a forward-chaining inference approach:
 
+1. When you call `execute()`, the engine tries to match the first premise of each rule with existing facts
+2. When a match is found, variables in the rule are substituted and a new rule (with one fewer premise) is created
+3. If the new rule has no premises, it becomes a new fact
+4. The callback is invoked for each newly derived rule
+5. Duplicate rules are automatically filtered out
+
+:::
 ## Creating a Search Engine
 
-=== "TypeScript"
+::: code-group
+```typescript [TypeScript]
+import { Search } from "atsds";
 
-    ```typescript
-    import { Search } from "atsds";
+// Create with default sizes
+const search = new Search();
 
-    // Create with default sizes
-    const search = new Search();
+// Create with custom sizes
+const search2 = new Search(1000, 10000);
+```
+```python [Python]
+import apyds
 
-    // Create with custom sizes
-    const search2 = new Search(1000, 10000);
-    ```
+# Create with default sizes
+search = apyds.Search()
 
-=== "Python"
+# Create with custom sizes
+search = apyds.Search(limit_size=1000, buffer_size=10000)
+```
+```cpp [C++]
+#include <ds/search.hh>
 
-    ```python
-    import apyds
-
-    # Create with default sizes
-    search = apyds.Search()
-
-    # Create with custom sizes
-    search = apyds.Search(limit_size=1000, buffer_size=10000)
-    ```
-
-=== "C++"
-
-    ```cpp
-    #include <ds/search.hh>
-
-    // Create search engine
-    ds::search_t search(1000, 10000);
-    ```
+// Create search engine
+ds::search_t search(1000, 10000);
+```
+:::
 
 ### Parameters
 
@@ -64,99 +59,87 @@ The search engine:
 
 Use the `add()` method to add rules and facts to the knowledge base.
 
-=== "TypeScript"
+::: code-group
+```typescript [TypeScript]
+import { Search } from "atsds";
 
-    ```typescript
-    import { Search } from "atsds";
+const search = new Search();
 
-    const search = new Search();
+// Add a fact
+search.add("(parent john mary)");
 
-    // Add a fact
-    search.add("(parent john mary)");
+// Add a rule with premises
+search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
+```
+```python [Python]
+import apyds
 
-    // Add a rule with premises
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
-    ```
+search = apyds.Search()
 
-=== "Python"
+# Add a fact
+search.add("(parent john mary)")
 
-    ```python
-    import apyds
+# Add a rule with premises
+search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
+```
+```cpp [C++]
+ds::search_t search(1000, 10000);
 
-    search = apyds.Search()
+// Add a fact
+search.add("(parent john mary)");
 
-    # Add a fact
-    search.add("(parent john mary)")
-
-    # Add a rule with premises
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
-    ```
-
-=== "C++"
-
-    ```cpp
-    ds::search_t search(1000, 10000);
-
-    // Add a fact
-    search.add("(parent john mary)");
-
-    // Add a rule
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
-    ```
+// Add a rule
+search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
+```
+:::
 
 ## Executing Search
 
 The `execute()` method performs one round of inference. It matches all rules against all facts and generates new conclusions.
 
-=== "TypeScript"
+::: code-group
+```typescript [TypeScript]
+import { Search } from "atsds";
 
-    ```typescript
-    import { Search } from "atsds";
+const search = new Search();
+search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
+search.add("(father john mary)");
 
-    const search = new Search();
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
-    search.add("(father john mary)");
+const count = search.execute((rule) => {
+    console.log(`Found: ${rule.toString()}`);
+    return false;  // Continue searching
+});
 
-    const count = search.execute((rule) => {
-        console.log(`Found: ${rule.toString()}`);
-        return false;  // Continue searching
-    });
+console.log(`Generated ${count} new facts`);
+```
+```python [Python]
+import apyds
 
-    console.log(`Generated ${count} new facts`);
-    ```
+search = apyds.Search()
+search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
+search.add("(father john mary)")
 
-=== "Python"
+def callback(rule):
+    print(f"Found: {rule}")
+    return False  # Continue searching
 
-    ```python
-    import apyds
+# Execute one round
+count = search.execute(callback)
+print(f"Generated {count} new facts")
+```
+```cpp [C++]
+ds::search_t search(1000, 10000);
+search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
+search.add("(father john mary)");
 
-    search = apyds.Search()
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n")
-    search.add("(father john mary)")
+auto count = search.execute([](ds::rule_t* rule) {
+    printf("Found: %s\n", ds::rule_to_text(rule, 1000).get());
+    return false;  // Continue searching
+});
 
-    def callback(rule):
-        print(f"Found: {rule}")
-        return False  # Continue searching
-
-    # Execute one round
-    count = search.execute(callback)
-    print(f"Generated {count} new facts")
-    ```
-
-=== "C++"
-
-    ```cpp
-    ds::search_t search(1000, 10000);
-    search.add("(father `X `Y)\n----------\n(parent `X `Y)\n");
-    search.add("(father john mary)");
-
-    auto count = search.execute([](ds::rule_t* rule) {
-        printf("Found: %s\n", ds::rule_to_text(rule, 1000).get());
-        return false;  // Continue searching
-    });
-
-    printf("Generated %lu new facts\n", count);
-    ```
+printf("Generated %lu new facts\n", count);
+```
+:::
 
 ### Callback Function
 
@@ -169,65 +152,62 @@ The callback receives each newly inferred rule and should return:
 
 To search until a specific target is found:
 
-=== "TypeScript"
+::: code-group
+```typescript [TypeScript]
+import { Rule, Search } from "atsds";
 
-    ```typescript
-    import { Rule, Search } from "atsds";
+const search = new Search(1000, 10000);
 
-    const search = new Search(1000, 10000);
+// Set up propositional logic
+search.add("(`P -> `Q) `P `Q");
+search.add("(`p -> (`q -> `p))");
+search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))");
+search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
+search.add("(! (! X))");
 
-    // Set up propositional logic
-    search.add("(`P -> `Q) `P `Q");
-    search.add("(`p -> (`q -> `p))");
-    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))");
-    search.add("(((! `p) -> (! `q)) -> (`q -> `p))");
-    search.add("(! (! X))");
+const target = new Rule("X");
 
-    const target = new Rule("X");
+while (true) {
+    let found = false;
+    search.execute((candidate) => {
+        if (candidate.key() === target.key()) {
+            console.log("Found:", candidate.toString());
+            found = true;
+            return true;
+        }
+        return false;
+    });
+    if (found) break;
+}
+```
+```python [Python]
+import apyds
 
-    while (true) {
-        let found = false;
-        search.execute((candidate) => {
-            if (candidate.key() === target.key()) {
-                console.log("Found:", candidate.toString());
-                found = true;
-                return true;
-            }
-            return false;
-        });
-        if (found) break;
-    }
-    ```
+search = apyds.Search(1000, 10000)
 
-=== "Python"
+# Set up propositional logic
+search.add("(`P -> `Q) `P `Q")  # Modus ponens
+search.add("(`p -> (`q -> `p))")  # Axiom 1
+search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")  # Axiom 2
+search.add("(((! `p) -> (! `q)) -> (`q -> `p))")  # Axiom 3
+search.add("(! (! X))")  # Premise
 
-    ```python
-    import apyds
+target = apyds.Rule("X")
 
-    search = apyds.Search(1000, 10000)
-
-    # Set up propositional logic
-    search.add("(`P -> `Q) `P `Q")  # Modus ponens
-    search.add("(`p -> (`q -> `p))")  # Axiom 1
-    search.add("((`p -> (`q -> `r)) -> ((`p -> `q) -> (`p -> `r)))")  # Axiom 2
-    search.add("(((! `p) -> (! `q)) -> (`q -> `p))")  # Axiom 3
-    search.add("(! (! X))")  # Premise
-
-    target = apyds.Rule("X")
-
-    while True:
-        found = False
-        def check(candidate):
-            global found
-            if candidate == target:
-                print(f"Found: {candidate}")
-                found = True
-                return True
-            return False
-        search.execute(check)
-        if found:
-            break
-    ```
+while True:
+    found = False
+    def check(candidate):
+        global found
+        if candidate == target:
+            print(f"Found: {candidate}")
+            found = True
+            return True
+        return False
+    search.execute(check)
+    if found:
+        break
+```
+:::
 
 ## Configuration Methods
 
@@ -235,67 +215,49 @@ To search until a specific target is found:
 
 Controls the maximum size for each stored rule/fact:
 
-=== "TypeScript"
-
-    ```typescript
-    search.set_limit_size(2000);
-    ```
-
-=== "Python"
-
-    ```python
-    search.set_limit_size(2000)
-    ```
-
-=== "C++"
-
-    ```cpp
-    search.set_limit_size(2000);
-    ```
+::: code-group
+```typescript [TypeScript]
+search.set_limit_size(2000);
+```
+```python [Python]
+search.set_limit_size(2000)
+```
+```cpp [C++]
+search.set_limit_size(2000);
+```
+:::
 
 ### Set Buffer Size
 
 Controls the internal buffer size for operations:
 
-=== "TypeScript"
-
-    ```typescript
-    search.set_buffer_size(20000);
-    ```
-
-=== "Python"
-
-    ```python
-    search.set_buffer_size(20000)
-    ```
-
-=== "C++"
-
-    ```cpp
-    search.set_buffer_size(20000);
-    ```
+::: code-group
+```typescript [TypeScript]
+search.set_buffer_size(20000);
+```
+```python [Python]
+search.set_buffer_size(20000)
+```
+```cpp [C++]
+search.set_buffer_size(20000);
+```
+:::
 
 ### Reset
 
 Clears all rules and facts:
 
-=== "TypeScript"
-
-    ```typescript
-    search.reset();
-    ```
-
-=== "Python"
-
-    ```python
-    search.reset()
-    ```
-
-=== "C++"
-
-    ```cpp
-    search.reset();
-    ```
+::: code-group
+```typescript [TypeScript]
+search.reset();
+```
+```python [Python]
+search.reset()
+```
+```cpp [C++]
+search.reset();
+```
+:::
 
 ## Performance Considerations
 

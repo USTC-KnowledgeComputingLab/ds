@@ -238,7 +238,7 @@ import { ref, nextTick, useTemplateRef } from "vue";
 import { render } from "ejs";
 import { Search } from "atsds";
 
-const rule_data_url = "./Sudoku.ejs";
+const rule_data_url = "/examples/Sudoku.ejs";
 const logRef = useTemplateRef("logRef");
 const example = `  945    
   4      
@@ -255,10 +255,12 @@ const log = ref("");
 const run = ref(false);
 const inputRef = ref(Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => null)));
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 function focusInput(event) {
     event.target.select();
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 function blurInput(rowIndex, colIndex) {
     const value = grid.value[rowIndex][colIndex];
     if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(value)) {
@@ -266,6 +268,7 @@ function blurInput(rowIndex, colIndex) {
     }
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 function keyDownInput(event, row, col) {
     const { key } = event;
     let newRow = row;
@@ -293,12 +296,14 @@ function keyDownInput(event, row, col) {
     }
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 function refInput(el, row, col) {
     inputRef.value[row][col] = el;
 }
 
 let generator = null;
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 function clearSudoku() {
     grid.value = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => ""));
     log.value = "";
@@ -306,6 +311,7 @@ function clearSudoku() {
     generator = null;
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 async function solveSudoku() {
     if (!generator) {
         generator = search();
@@ -325,6 +331,7 @@ async function solveSudoku() {
     }
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 async function updateSudoku() {
     if (!generator) {
         generator = search();

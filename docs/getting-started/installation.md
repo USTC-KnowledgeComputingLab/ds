@@ -171,36 +171,30 @@ ctest
 
 ## Verifying Installation
 
-=== "TypeScript"
+::: code-group
+```typescript [TypeScript]
+import { Term } from "atsds";
 
-    ```typescript
-    import { Term } from "atsds";
-    
-    const term = new Term("(hello world)");
-    console.log(term.toString());
-    // Output: (hello world)
-    ```
+const term = new Term("(hello world)");
+console.log(term.toString());
+// Output: (hello world)
+```
+```python [Python]
+import apyds
+print(f"Version: {apyds.__version__}")
 
-=== "Python"
+term = apyds.Term("(hello world)")
+print(term)  # (hello world)
+```
+```cpp [C++]
+#include <ds/ds.hh>
+#include <ds/utility.hh>
+#include <iostream>
 
-    ```python
-    import apyds
-    print(f"Version: {apyds.__version__}")
-    
-    term = apyds.Term("(hello world)")
-    print(term)  # (hello world)
-    ```
-
-=== "C++"
-
-    ```cpp
-    #include <ds/ds.hh>
-    #include <ds/utility.hh>
-    #include <iostream>
-    
-    int main() {
-        auto term = ds::text_to_term("(hello world)", 1000);
-        std::cout << ds::term_to_text(term.get(), 1000).get() << std::endl;
-        return 0;
-    }
-    ```
+int main() {
+    auto term = ds::text_to_term("(hello world)", 1000);
+    std::cout << ds::term_to_text(term.get(), 1000).get() << std::endl;
+    return 0;
+}
+```
+:::
