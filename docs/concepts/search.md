@@ -11,7 +11,7 @@ The search engine:
 3. Notifies you of each new inference via a callback
 4. Automatically prevents duplicate inferences
 
-::: info How It Works
+::: tip How It Works
 The search engine uses a forward-chaining inference approach:
 
 1. When you call `execute()`, the engine tries to match the first premise of each rule with existing facts
