@@ -235,10 +235,11 @@ textarea:focus {
 
 <script setup>
 import { ref, nextTick, useTemplateRef } from "vue";
+import { withBase } from "vitepress";
 import { render } from "ejs";
 import { Search } from "atsds";
 
-const rule_data_url = "/examples/Sudoku.ejs";
+const rule_data_url = withBase("/examples/Sudoku.ejs");
 const logRef = useTemplateRef("logRef");
 const example = `  945    
   4      
