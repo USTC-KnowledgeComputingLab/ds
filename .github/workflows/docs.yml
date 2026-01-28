@@ -13,6 +13,7 @@ concurrency:
 
 env:
   EM_CACHE_FOLDER: 'emsdk-cache'
+  NODE_LATEST_VERSION: '24'
 
 jobs:
   build:
@@ -22,6 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
+          node-version: ${{ env.NODE_LATEST_VERSION }}
           cache: 'npm'
 
       - uses: actions/cache@v5
