@@ -6,6 +6,9 @@ on:
   - pull_request
   - push
 
+env:
+  PYTHON_LATEST_VERSION: '3.14'
+
 jobs:
   pytest:
     runs-on: ubuntu-latest
@@ -45,6 +48,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v7
         with:
+          python-version: ${{ env.PYTHON_LATEST_VERSION }}
           enable-cache: true
 
       - name: build
