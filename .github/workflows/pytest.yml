@@ -48,7 +48,6 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: latest
           cache: 'pip'
 
       - name: install cibuildwheel
@@ -76,7 +75,6 @@ jobs:
 
       - uses: astral-sh/setup-uv@v7
         with:
-          python-version: latest
           enable-cache: true
 
       - name: build sdist

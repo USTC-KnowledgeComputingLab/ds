@@ -51,7 +51,6 @@ jobs:
 
       - uses: astral-sh/setup-uv@v7
         with:
-          python-version: latest
           enable-cache: true
 
       - name: build
