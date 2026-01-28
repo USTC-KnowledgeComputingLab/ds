@@ -61,7 +61,6 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: latest
           cache: 'npm'
 
       - uses: actions/cache@v5
