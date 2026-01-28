@@ -236,7 +236,7 @@ textarea:focus {
 <script setup>
 import { ref, nextTick, useTemplateRef } from "vue";
 import { withBase } from "vitepress";
-import { render } from "ejs";
+import ejs from "ejs";
 import { Search } from "atsds";
 
 const rule_data_url = withBase("/examples/Sudoku.ejs");
@@ -353,7 +353,7 @@ async function* search() {
     addLog("Loading Sudoku grid...");
     run.value = true;
     const response = await fetch(rule_data_url);
-    const text = render(await response.text());
+    const text = ejs.render(await response.text());
     const sections = text.split(/\n\n/);
     const data = sections.filter((section) => section.trim().length > 0).map((section) => section.trim());
     for (let row = 0; row < 9; row++) {
