@@ -60,7 +60,7 @@ jobs:
       - name: build wheels
         run: python -m cibuildwheel
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.os }}
           path: wheelhouse/*.whl
@@ -85,7 +85,7 @@ jobs:
       - name: build sdist
         run: uv build --sdist
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: sdist
           path: dist/*.tar.gz

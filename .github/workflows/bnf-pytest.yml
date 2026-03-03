@@ -61,7 +61,7 @@ jobs:
         working-directory: bnf
         run: uv build
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: bnf/dist/
