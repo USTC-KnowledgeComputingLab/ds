@@ -3,15 +3,16 @@
 本页记录了 `atsds` 包的 TypeScript API。文档由 TypeScript 源代码生成。
 
 ```typescript
-import { 
+import {
     buffer_size,
     String_,
-    Variable, 
-    Item, 
-    List, 
-    Term, 
-    Rule, 
-    Search 
+    Variable,
+    Item,
+    List,
+    Term,
+    Rule,
+    Search,
+    Chain
 } from "atsds";
 ```
 
@@ -476,20 +477,102 @@ search.execute((candidate) => {
 
 ---
 
+## Chain
+
+Chain engine for the deductive system. Similar to Search, but matches all premises of a rule in a single cycle.
+
+### 构造函数
+
+```typescript
+constructor(limit_size?: number, buffer_size?: number)
+```
+
+**参数：**
+
+- `limit_size` (可选)：用于存储 Rule/事实的缓冲区大小（默认值：1000）
+- `buffer_size` (可选)：用于内部操作的缓冲区大小（默认值：10000）
+
+### 方法
+
+#### set_limit_size()
+
+设置存储最终对象的缓冲区大小。
+
+```typescript
+set_limit_size(limit_size: number): void
+```
+
+#### set_buffer_size()
+
+设置内部操作的缓冲区大小。
+
+```typescript
+set_buffer_size(buffer_size: number): void
+```
+
+#### reset()
+
+重置搜索引擎，清除所有 Rule 和事实。
+
+```typescript
+reset(): void
+```
+
+#### add()
+
+向知识库添加 Rule 或事实。
+
+```typescript
+add(text: string): boolean
+```
+
+**返回值：** 如果添加成功则返回 true，否则返回 false。
+
+#### execute()
+
+执行搜索引擎，并为每个推导出的 Rule 调用回调。
+
+```typescript
+execute(callback: (candidate: Rule) => boolean): number
+```
+
+**参数：**
+
+- `callback`：对每个候选 Rule 调用的函数。返回 false 继续，返回 true 停止。
+
+**返回值：** 处理的 Rule 数量。
+
+**示例：**
+
+```typescript
+const chain = new Chain();
+chain.add("p q r");  // p, q |- r (two premises)
+chain.add("p");
+chain.add("q");
+
+chain.execute((candidate) => {
+    console.log(candidate.toString());
+    return false;  // Continue searching
+});
+```
+
+---
+
 ## 完整示例
 
 这是一个演示大多数 TypeScript API 的完整示例：
 
 ```typescript
-import { 
-    buffer_size, 
-    String_, 
-    Variable, 
-    Item, 
-    List, 
-    Term, 
-    Rule, 
-    Search 
+import {
+    buffer_size,
+    String_,
+    Variable,
+    Item,
+    List,
+    Term,
+    Rule,
+    Search,
+    Chain
 } from "atsds";
 
 // Configure buffer size
@@ -550,4 +633,16 @@ for (let i = 0; i < 3; i++) {
 const rule1 = new Rule("(a b c)");
 const rule2 = rule1.copy();
 console.log(`\nRule comparison: ${rule1.key() === rule2.key()}`);  // true
+
+// Chain engine (matches all premises in a single cycle)
+const chain = new Chain(1000, 10000);
+chain.add("p q r");  // p, q |- r (two premises)
+chain.add("p");
+chain.add("q");
+
+console.log("\nRunning chain inference:");
+chain.execute((r) => {
+    console.log(`  Derived: ${r.toString()}`);
+    return false;
+});
 ```

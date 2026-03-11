@@ -16,6 +16,7 @@ A deductive system for logical inference, implemented in C++. The library provid
 - **Rule-Based Inference**: Flexible framework for defining rules and facts to perform complex logical deduction.
 - **Unification Engine**: Powerful built-in mechanisms for term unification and rule matching.
 - **Automated Search**: Built-in search engine for iterative inference.
+- **Chain Inference**: Chain engine that matches all premises of a rule in a single cycle.
 
 ## Installation
 
@@ -266,6 +267,7 @@ console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
 - `Term`: General term class (variable, item, or list)
 - `Rule`: Logical rule class
 - `Search`: Search engine for inference
+- `Chain`: Chain engine for inference (matches all premises in a single cycle)
 
 ### Python
 
@@ -278,6 +280,7 @@ console.log(mp.match(pq).toString()); // "(! (! `x))\n----------\n`x\n"
 - `Term`: General term class
 - `Rule`: Logical rule class
 - `Search`: Search engine for inference
+- `Chain`: Chain engine for inference (matches all premises in a single cycle)
 
 ### C++ (Core)
 
@@ -290,6 +293,7 @@ All classes are in the `ds` namespace:
 - `term_t`: General terms
 - `rule_t`: Logical rules
 - `search_t`: Search engine (in `<ds/search.hh>`)
+- `chain_t`: Chain engine (in `<ds/chain.hh>`)
 
 See header files in `include/ds/` for detailed API documentation.
 

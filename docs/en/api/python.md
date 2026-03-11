@@ -13,6 +13,7 @@ from apyds import (
     Term,
     Rule,
     Search,
+    Chain,
 )
 ```
 
@@ -479,6 +480,88 @@ search.execute(callback)
 
 ---
 
+## Chain
+
+Chain engine for the deductive system. Similar to Search, but matches all premises of a rule in a single cycle.
+
+### Constructor
+
+```python
+def __init__(self, limit_size: int = 1000, buffer_size: int = 10000)
+```
+
+**Parameters:**
+
+- `limit_size` (optional): Size of the buffer for storing rules/facts (default: 1000)
+- `buffer_size` (optional): Size of the buffer for internal operations (default: 10000)
+
+### Methods
+
+#### set_limit_size()
+
+Set the size of the buffer for storing final objects.
+
+```python
+def set_limit_size(self, limit_size: int) -> None
+```
+
+#### set_buffer_size()
+
+Set the buffer size for internal operations.
+
+```python
+def set_buffer_size(self, buffer_size: int) -> None
+```
+
+#### reset()
+
+Reset the chain engine, clearing all rules and facts.
+
+```python
+def reset(self) -> None
+```
+
+#### add()
+
+Add a rule or fact to the knowledge base.
+
+```python
+def add(self, text: str) -> bool
+```
+
+**Returns:** True if successfully added, False otherwise.
+
+#### execute()
+
+Execute the chain engine with a callback for each inferred rule.
+
+```python
+def execute(self, callback: Callable[[Rule], bool]) -> int
+```
+
+**Parameters:**
+
+- `callback`: Function called for each candidate rule. Return False to continue, True to stop.
+
+**Returns:** The number of rules processed.
+
+**Example:**
+
+```python
+chain = Chain()
+chain.add("p q r")  # p, q |- r (two premises)
+chain.add("p")
+chain.add("q")
+
+def callback(candidate):
+    print(candidate)
+    return False  # Continue searching
+
+chain.execute(callback)
+```
+
+---
+
 ## Complete Example
 
 Here's a complete example demonstrating most of the API:
@@ -535,4 +618,13 @@ for i in range(3):
 with apyds.scoped_buffer_size(4096):
     big_term = apyds.Term("(a b c d e f g h i j)")
     print(f"\nBig term: {big_term}")
+
+# Chain engine (matches all premises in a single cycle)
+chain = apyds.Chain(1000, 10000)
+chain.add("p q r")  # p, q |- r (two premises)
+chain.add("p")
+chain.add("q")
+
+print("\nRunning chain inference:")
+chain.execute(lambda r: print(f"  Derived: {r}") or False)
 ```

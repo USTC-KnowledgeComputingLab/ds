@@ -9,6 +9,7 @@ All classes and functions are in the `ds` namespace.
 ```cpp
 #include <ds/ds.hh>        // All basic types
 #include <ds/search.hh>    // Search engine
+#include <ds/chain.hh>     // Chain engine
 #include <ds/utility.hh>   // Helper functions
 ```
 
@@ -487,6 +488,73 @@ length_t execute(const std::function<bool(rule_t*)>& callback);
 
 ---
 
+## chain_t
+
+Chain engine class. Defined in `<ds/chain.hh>`.
+
+Manages a knowledge base and performs logical inference. Unlike `search_t`, `chain_t` matches all premises of a rule in a single cycle.
+
+### Constructor
+
+```cpp
+chain_t(length_t limit_size, length_t buffer_size);
+```
+
+**Parameters:**
+
+- `limit_size`: Maximum size for each stored rule/fact
+- `buffer_size`: Size of the internal buffer for operations
+
+### Methods
+
+#### set_limit_size()
+
+Set the maximum rule/fact size.
+
+```cpp
+void set_limit_size(length_t limit_size);
+```
+
+#### set_buffer_size()
+
+Set the internal buffer size.
+
+```cpp
+void set_buffer_size(length_t buffer_size);
+```
+
+#### reset()
+
+Clear all rules and facts.
+
+```cpp
+void reset();
+```
+
+#### add()
+
+Add a rule or fact from text.
+
+```cpp
+bool add(std::string_view text);
+```
+
+#### execute()
+
+Execute one round of chain inference.
+
+```cpp
+length_t execute(const std::function<bool(rule_t*)>& callback);
+```
+
+**Parameters:**
+
+- `callback`: Function called for each new inference. Return false to continue, true to stop.
+
+**Returns:** The number of new inferences generated.
+
+---
+
 ## Utility Functions
 
 Helper functions in `<ds/utility.hh>`.
@@ -616,7 +684,19 @@ int main() {
     if (found) {
         std::cout << "Target found!" << std::endl;
     }
-    
+
+    // Chain engine (matches all premises in a single cycle)
+    ds::chain_t chain(1000, 10000);
+    chain.add("p q r");  // p, q |- r (two premises)
+    chain.add("p");
+    chain.add("q");
+
+    std::cout << "\nRunning chain inference:" << std::endl;
+    chain.execute([&](ds::rule_t* candidate) {
+        std::cout << "  Derived: " << ds::rule_to_text(candidate, buffer_size).get();
+        return false;
+    });
+
     return 0;
 }
 ```
