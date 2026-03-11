@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-  "setuptools>=80.9,<80.11",
+  "setuptools>=80.9,<82.1",
   "setuptools-scm~=9.2.2",
 ]
 build-backend = "setuptools.build_meta"
@@ -30,7 +30,7 @@ include = ["apyds_bnf"]
 
 [project.optional-dependencies]
 dev = [
-  "ruff~=0.14.10",
+  "ruff>=0.14.10,<0.16.0",
   "pytest~=9.0.2",
   "pytest-cov~=7.0.0",
 ]
