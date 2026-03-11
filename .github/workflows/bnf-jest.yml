@@ -8,6 +8,7 @@ on:
 
 env:
   NODE_LATEST_VERSION: '24'
+  ANTLR4_TOOLS_ANTLR_VERSION: '4.13.2'
 
 jobs:
   jest:
