@@ -13,6 +13,7 @@ __all__ = [
     "Term",
     "Rule",
     "Search",
+    "Chain",
 ]
 
 from .buffer_size import buffer_size, scoped_buffer_size
@@ -23,3 +24,4 @@ from .list_t import List
 from .term_t import Term
 from .rule_t import Rule
 from .search_t import Search
+from .chain_t import Chain

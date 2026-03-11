@@ -621,3 +621,80 @@ export class Search {
         });
     }
 }
+
+/**
+ * Chain engine for the deductive system.
+ * Similar to Search, but matches all premises of a rule in a single cycle.
+ *
+ * @example
+ * ```typescript
+ * const chain = new Chain();
+ * chain.add("p q r");  // p, q |- r (two premises)
+ * chain.add("p");
+ * chain.add("q");
+ * chain.execute((rule) => {
+ *   console.log(rule.toString());  // Will find r in a single cycle
+ *   return false; // Return false to continue, true to stop
+ * });
+ * ```
+ */
+export class Chain {
+    _chain: dst.Chain;
+
+    /**
+     * Creates a new chain engine instance.
+     *
+     * @param limit_size - Size of the buffer for storing the final objects (rules/facts) in the knowledge base (default: 1000).
+     * @param buffer_size - Size of the buffer for internal operations like conversions and transformations (default: 10000).
+     */
+    constructor(limit_size: number = 1000, buffer_size: number = 10000) {
+        this._chain = new ds.Chain(limit_size, buffer_size);
+    }
+
+    /**
+     * Set the size of the buffer for storing final objects.
+     *
+     * @param limit_size - The new limit size for storing rules/facts.
+     */
+    set_limit_size(limit_size: number): void {
+        this._chain.set_limit_size(limit_size);
+    }
+
+    /**
+     * Set the buffer size for internal operations.
+     *
+     * @param buffer_size - The new buffer size.
+     */
+    set_buffer_size(buffer_size: number): void {
+        this._chain.set_buffer_size(buffer_size);
+    }
+
+    /**
+     * Reset the chain engine, clearing all rules and facts.
+     */
+    reset(): void {
+        this._chain.reset();
+    }
+
+    /**
+     * Add a rule or fact to the knowledge base.
+     *
+     * @param text - The rule or fact as a string.
+     * @returns True if successfully added, false otherwise.
+     */
+    add(text: string): boolean {
+        return this._chain.add(text);
+    }
+
+    /**
+     * Execute the chain engine with a callback for each inferred rule.
+     *
+     * @param callback - Function called for each candidate rule. Return false to continue, true to stop.
+     * @returns The number of rules processed.
+     */
+    execute(callback: (candidate: Rule) => boolean): number {
+        return this._chain.execute((candidate: dst.Rule): boolean => {
+            return callback(new Rule(candidate).copy());
+        });
+    }
+}
