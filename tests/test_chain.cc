@@ -131,7 +131,10 @@ TEST_F(TestChain, set_max_depth_removes_existing_rules) {
     search->add("p q r"); // 2 个 premises
     search->set_max_depth(2);
     // 现在只有 2 个 premises 的 rule 应该存在
+    // 添加 facts 来测试 rule 是否还在
+    search->add("p");
+    search->add("q");
     auto count = search->execute([](ds::rule_t* rule) { return false; });
-    // 应该有结果，因为 "p q r" 还存在
+    // 应该有结果，因为 "p q r" 还存在（3 个 premises 的 rule 被移除了）
     EXPECT_GT(count, 0);
 }

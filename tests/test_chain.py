@@ -126,6 +126,9 @@ def test_set_max_depth_removes_existing_rules() -> None:
     chain.add("p q r")  # 2 个 premises
     chain.set_max_depth(2)
     # 现在只有 2 个 premises 的 rule 应该存在
+    # 添加 facts 来测试 rule 是否还在
+    chain.add("p")
+    chain.add("q")
     count = chain.execute(lambda rule: False)
-    # 应该有结果，因为 "p q r" 还存在
+    # 应该有结果，因为 "p q r" 还存在（3 个 premises 的 rule 被移除了）
     assert count > 0

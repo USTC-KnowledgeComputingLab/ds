@@ -119,7 +119,10 @@ test("set_max_depth_removes_existing_rules", () => {
     newChain.add("p q r"); // 2 premises
     newChain.set_max_depth(2);
     // Now only the rule with 2 premises should exist
+    // Add facts to test if the rule still exists
+    newChain.add("p");
+    newChain.add("q");
     const count = newChain.execute((rule) => false);
-    // Should have results because "p q r" still exists
+    // Should have results because "p q r" still exists (3 premises rule was removed)
     expect(count).toBeGreaterThan(0);
 });
