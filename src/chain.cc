@@ -28,7 +28,6 @@ namespace ds {
 
     void chain_t::set_limit_size(length_t _limit_size) {
         limit_size = _limit_size;
-        max_depth = 1;
         done_cycle = 0;
         last_fact_cycle = 0;
     }
@@ -66,7 +65,7 @@ namespace ds {
         done_cycle = 0;
         current_cycle = 0;
         last_fact_cycle = 0;
-        max_depth = 1;
+        max_depth = 8;
         rules.clear();
         facts.clear();
         buffers.clear();
