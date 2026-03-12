@@ -138,7 +138,7 @@ namespace ds {
 
                 // 复制中间结果
                 auto next_rule = std::unique_ptr<rule_t>(reinterpret_cast<rule_t*>(operator new(match_buffer->data_size())));
-                memcpy(next_rule.get(), match_buffer.get(), match_buffer->data_size());
+                memcpy(next_rule.get(), match_buffer, match_buffer->data_size());
 
                 // 如果 next_rule 没有 premises 了，说明匹配完成，直接处理结果
                 if (next_rule->premises_count() == 0) {
