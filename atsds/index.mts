@@ -629,7 +629,7 @@ export class Search {
  * @example
  * ```typescript
  * const chain = new Chain();
- * chain.add("p q r");  // p, q |- r (two premises)
+ * chain.add("p q r");
  * chain.add("p");
  * chain.add("q");
  * chain.execute((rule) => {
@@ -667,17 +667,6 @@ export class Chain {
      */
     set_buffer_size(buffer_size: number): void {
         this._chain.set_buffer_size(buffer_size);
-    }
-
-    /**
-     * Set the maximum recursion depth (i.e., maximum number of premises allowed for a single rule).
-     *
-     * @param max_depth - The maximum recursion depth.
-     * @note Rules with premises count exceeding this value will be rejected when added.
-     * @note After modifying this value, existing rules with premises count exceeding the new max_depth will be removed.
-     */
-    set_max_depth(max_depth: number): void {
-        this._chain.set_max_depth(max_depth);
     }
 
     /**

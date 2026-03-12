@@ -10,37 +10,37 @@ class TestChain : public ::testing::Test {
     TestChain() { }
     ~TestChain() override { }
     void SetUp() override {
-        search = new ds::chain_t(limit_size, buffer_size);
+        chain = new ds::chain_t(limit_size, buffer_size);
     }
     void TearDown() override {
-        delete search;
+        delete chain;
     }
 
-    ds::chain_t* search;
+    ds::chain_t* chain;
 };
 
 TEST_F(TestChain, reset_parameters) {
-    search->set_limit_size(50);
-    search->set_buffer_size(500);
-    search->reset();
+    chain->set_limit_size(50);
+    chain->set_buffer_size(500);
+    chain->reset();
 }
 
 TEST_F(TestChain, add_rule_and_fact) {
-    EXPECT_TRUE(search->add("test rule"));
-    EXPECT_TRUE(search->add("fact"));
+    EXPECT_TRUE(chain->add("test rule"));
+    EXPECT_TRUE(chain->add("fact"));
 }
 
 TEST_F(TestChain, add_fail) {
-    search->set_limit_size(10);
-    EXPECT_FALSE(search->add("a-long-facts-that-exceeds-limit"));
+    chain->set_limit_size(10);
+    EXPECT_FALSE(chain->add("a-long-facts-that-exceeds-limit"));
 }
 
 TEST_F(TestChain, execute_single_premise) {
-    search->add("p q");
-    search->add("p");
+    chain->add("p q");
+    chain->add("p");
     auto target = ds::text_to_rule("q", limit_size);
     bool success = false;
-    auto count = search->execute([&success, &target](ds::rule_t* rule) {
+    auto count = chain->execute([&success, &target](ds::rule_t* rule) {
         if (memcmp(rule, target.get(), rule->data_size()) == 0) {
             success = true;
             return true;
@@ -52,17 +52,14 @@ TEST_F(TestChain, execute_single_premise) {
 }
 
 TEST_F(TestChain, execute_multiple_premises_chain) {
-    // p q r 表示：p, q |- r (两个 premises)
-    // 在单轮中应该同时匹配 p 和 q，直接得到 r
-    search->add("p q r");
-    search->add("p");
-    search->add("q");
+    chain->add("p q r");
+    chain->add("p");
+    chain->add("q");
     auto target = ds::text_to_rule("r", limit_size);
     bool success = false;
-    auto count = search->execute([&success, &target](ds::rule_t* rule) {
+    auto count = chain->execute([&success, &target](ds::rule_t* rule) {
         if (memcmp(rule, target.get(), rule->data_size()) == 0) {
             success = true;
-            return true;
         }
         return false;
     });
@@ -71,29 +68,22 @@ TEST_F(TestChain, execute_multiple_premises_chain) {
 }
 
 TEST_F(TestChain, execute_multiple_premises_partial) {
-    // p q r 表示：p, q |- r (两个 premises)
-    // 只有 p，没有 q，在 chain_t 中不会产生部分结果
-    // 因为 chain_t 的设计是在单轮内匹配所有 premises
-    search->add("p q r");
-    search->add("p");
-    auto count = search->execute([](ds::rule_t* rule) { return false; });
-    // 没有匹配完所有 premises，不会产生任何结果
+    chain->add("p q r");
+    chain->add("p");
+    auto count = chain->execute([](ds::rule_t* rule) { return false; });
     EXPECT_EQ(count, 0);
 }
 
 TEST_F(TestChain, execute_three_premises) {
-    // p q r s 表示：p, q, r |- s (三个 premises)
-    // 在单轮中应该同时匹配 p, q, r，直接得到 s
-    search->add("p q r s");
-    search->add("p");
-    search->add("q");
-    search->add("r");
+    chain->add("p q r s");
+    chain->add("p");
+    chain->add("q");
+    chain->add("r");
     auto target = ds::text_to_rule("s", limit_size);
     bool success = false;
-    auto count = search->execute([&success, &target](ds::rule_t* rule) {
+    auto count = chain->execute([&success, &target](ds::rule_t* rule) {
         if (memcmp(rule, target.get(), rule->data_size()) == 0) {
             success = true;
-            return true;
         }
         return false;
     });
@@ -102,39 +92,57 @@ TEST_F(TestChain, execute_three_premises) {
 }
 
 TEST_F(TestChain, execute_duplicated_fact) {
-    search->add("p r");
-    search->add("q r");
-    search->add("p");
-    search->add("q");
-    auto count = search->execute([](ds::rule_t* rule) { return false; });
+    chain->add("p r");
+    chain->add("q r");
+    chain->add("p");
+    chain->add("q");
+    auto count = chain->execute([](ds::rule_t* rule) { return false; });
     EXPECT_EQ(count, 1);
 }
 
 TEST_F(TestChain, execute_exceed) {
-    search->set_limit_size(100);
-    EXPECT_TRUE(search->add("(2 `x) (`x `x`)"));
-    EXPECT_TRUE(search->add("(2 a-very-long-fact-that-exceeds-half-of-the-limit-size)"));
-    auto count = search->execute([](ds::rule_t* rule) { return false; });
+    chain->set_limit_size(100);
+    EXPECT_TRUE(chain->add("(2 `x) (`x `x`)"));
+    EXPECT_TRUE(chain->add("(2 a-very-long-fact-that-exceeds-half-of-the-limit-size)"));
+    auto count = chain->execute([](ds::rule_t* rule) { return false; });
     EXPECT_EQ(count, 0);
 }
 
-TEST_F(TestChain, set_max_depth) {
-    search->set_max_depth(2);
-    // rule 有 3 个 premises，超过 max_depth，应该被拒绝
-    EXPECT_FALSE(search->add("p q r s"));
-    // rule 有 2 个 premises，等于 max_depth，应该被接受
-    EXPECT_TRUE(search->add("p q r"));
+TEST_F(TestChain, dont_generate_duplicated_fact) {
+    EXPECT_TRUE(chain->add("aaaaa bbbbb"));
+    EXPECT_TRUE(chain->add("aaaaa"));
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 0);
 }
 
-TEST_F(TestChain, set_max_depth_removes_existing_rules) {
-    search->add("p q r s"); // 3 个 premises
-    search->add("p q r"); // 2 个 premises
-    search->set_max_depth(2);
-    // 现在只有 2 个 premises 的 rule 应该存在
-    // 添加 facts 来测试 rule 是否还在
-    search->add("p");
-    search->add("q");
-    auto count = search->execute([](ds::rule_t* rule) { return false; });
-    // 应该有结果，因为 "p q r" 还存在（3 个 premises 的 rule 被移除了）
-    EXPECT_GT(count, 0);
+TEST_F(TestChain, execute_exceed_by_too_many_premises) {
+    chain->set_limit_size(100);
+    chain->set_buffer_size(1000);
+    EXPECT_TRUE(chain->add("aaaaa bbbbb ccccc ddddd eeeee fffff"));
+    EXPECT_TRUE(chain->add("aaaaa"));
+    EXPECT_TRUE(chain->add("bbbbb"));
+    EXPECT_TRUE(chain->add("ccccc"));
+    EXPECT_TRUE(chain->add("ddddd"));
+    EXPECT_TRUE(chain->add("eeeee"));
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
+    chain->reset();
+    chain->set_limit_size(100);
+    chain->set_buffer_size(1000);
+    EXPECT_TRUE(chain->add("aaaaa bbbbb ccccc ddddd eeeee fffff"));
+    EXPECT_TRUE(chain->add("aaaaa"));
+    EXPECT_TRUE(chain->add("bbbbb"));
+    EXPECT_TRUE(chain->add("ccccc"));
+    EXPECT_TRUE(chain->add("ddddd"));
+    EXPECT_TRUE(chain->add("eeeee"));
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
+    chain->reset();
+    chain->set_limit_size(100);
+    chain->set_buffer_size(100);
+    EXPECT_TRUE(chain->add("aaaaa bbbbb ccccc ddddd eeeee fffff"));
+    EXPECT_TRUE(chain->add("aaaaa"));
+    EXPECT_TRUE(chain->add("bbbbb"));
+    EXPECT_TRUE(chain->add("ccccc"));
+    EXPECT_TRUE(chain->add("ddddd"));
+    EXPECT_TRUE(chain->add("eeeee"));
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 0);
 }

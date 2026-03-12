@@ -39,8 +39,6 @@ test("execute_single_premise", () => {
 });
 
 test("execute_multiple_premises_chain", () => {
-    // p q r means: p, q |- r (two premises)
-    // In chain_t, both premises are matched in a single cycle
     chain.add("p q r");
     chain.add("p");
     chain.add("q");
@@ -49,7 +47,6 @@ test("execute_multiple_premises_chain", () => {
     const count = chain.execute((rule) => {
         if (rule.key() === target.key()) {
             success = true;
-            return true;
         }
         return false;
     });
@@ -58,19 +55,13 @@ test("execute_multiple_premises_chain", () => {
 });
 
 test("execute_multiple_premises_partial", () => {
-    // p q r means: p, q |- r (two premises)
-    // Only p, no q - chain_t won't produce partial results
-    // because it's designed to match all premises in a single cycle
     chain.add("p q r");
     chain.add("p");
     const count = chain.execute((rule) => false);
-    // No result because not all premises are matched
     expect(count).toBe(0);
 });
 
 test("execute_three_premises", () => {
-    // p q r s means: p, q, r |- s (three premises)
-    // In chain_t, all three premises are matched in a single cycle
     chain.add("p q r s");
     chain.add("p");
     chain.add("q");
@@ -80,7 +71,6 @@ test("execute_three_premises", () => {
     const count = chain.execute((rule) => {
         if (rule.key() === target.key()) {
             success = true;
-            return true;
         }
         return false;
     });
@@ -105,24 +95,42 @@ test("execute_exceed", () => {
     expect(count).toBe(0);
 });
 
-test("set_max_depth", () => {
-    chain.set_max_depth(2);
-    // rule has 3 premises, exceeds max_depth, should be rejected
-    expect(chain.add("p q r s")).toBe(false);
-    // rule has 2 premises, equals max_depth, should be accepted
-    expect(chain.add("p q r")).toBe(true);
+test("dont_generate_duplicated_fact", () => {
+    expect(chain.add("aaaaa bbbbb")).toBe(true);
+    expect(chain.add("aaaaa")).toBe(true);
+    expect(chain.execute((rule) => false)).toBe(1);
+    expect(chain.execute((rule) => false)).toBe(0);
 });
 
-test("set_max_depth_removes_existing_rules", () => {
+test("execute_exceed_by_too_many_premises", () => {
     const newChain = new Chain(100, 1000);
-    newChain.add("p q r s"); // 3 premises
-    newChain.add("p q r"); // 2 premises
-    newChain.set_max_depth(2);
-    // Now only the rule with 2 premises should exist
-    // Add facts to test if the rule still exists
-    newChain.add("p");
-    newChain.add("q");
-    const count = newChain.execute((rule) => false);
-    // Should have results because "p q r" still exists (3 premises rule was removed)
-    expect(count).toBeGreaterThan(0);
+    expect(newChain.add("aaaaa bbbbb ccccc ddddd eeeee fffff")).toBe(true);
+    expect(newChain.add("aaaaa")).toBe(true);
+    expect(newChain.add("bbbbb")).toBe(true);
+    expect(newChain.add("ccccc")).toBe(true);
+    expect(newChain.add("ddddd")).toBe(true);
+    expect(newChain.add("eeeee")).toBe(true);
+    expect(newChain.execute((rule) => false)).toBe(1);
+
+    newChain.reset();
+    newChain.set_limit_size(100);
+    newChain.set_buffer_size(1000);
+    expect(newChain.add("aaaaa bbbbb ccccc ddddd eeeee fffff")).toBe(true);
+    expect(newChain.add("aaaaa")).toBe(true);
+    expect(newChain.add("bbbbb")).toBe(true);
+    expect(newChain.add("ccccc")).toBe(true);
+    expect(newChain.add("ddddd")).toBe(true);
+    expect(newChain.add("eeeee")).toBe(true);
+    expect(newChain.execute((rule) => false)).toBe(1);
+
+    newChain.reset();
+    newChain.set_limit_size(100);
+    newChain.set_buffer_size(100);
+    expect(newChain.add("aaaaa bbbbb ccccc ddddd eeeee fffff")).toBe(true);
+    expect(newChain.add("aaaaa")).toBe(true);
+    expect(newChain.add("bbbbb")).toBe(true);
+    expect(newChain.add("ccccc")).toBe(true);
+    expect(newChain.add("ddddd")).toBe(true);
+    expect(newChain.add("eeeee")).toBe(true);
+    expect(newChain.execute((rule) => false)).toBe(0);
 });

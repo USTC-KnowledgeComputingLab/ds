@@ -42,8 +42,6 @@ def test_execute_single_premise(chain: apyds.Chain) -> None:
 
 
 def test_execute_multiple_premises_chain(chain: apyds.Chain) -> None:
-    # p q r means: p, q |- r (two premises)
-    # In chain_t, both premises are matched in a single cycle
     chain.add("p q r")
     chain.add("p")
     chain.add("q")
@@ -54,7 +52,6 @@ def test_execute_multiple_premises_chain(chain: apyds.Chain) -> None:
         nonlocal success
         if rule == target:
             success = True
-            return True
         return False
 
     count = chain.execute(callback)
@@ -63,19 +60,13 @@ def test_execute_multiple_premises_chain(chain: apyds.Chain) -> None:
 
 
 def test_execute_multiple_premises_partial(chain: apyds.Chain) -> None:
-    # p q r means: p, q |- r (two premises)
-    # Only p, no q - chain_t won't produce partial results
-    # because it's designed to match all premises in a single cycle
     chain.add("p q r")
     chain.add("p")
     count = chain.execute(lambda rule: False)
-    # No result because not all premises are matched
     assert count == 0
 
 
 def test_execute_three_premises(chain: apyds.Chain) -> None:
-    # p q r s means: p, q, r |- s (three premises)
-    # In chain_t, all three premises are matched in a single cycle
     chain.add("p q r s")
     chain.add("p")
     chain.add("q")
@@ -87,7 +78,6 @@ def test_execute_three_premises(chain: apyds.Chain) -> None:
         nonlocal success
         if rule == target:
             success = True
-            return True
         return False
 
     count = chain.execute(callback)
@@ -112,23 +102,41 @@ def test_execute_exceed(chain: apyds.Chain) -> None:
     assert count == 0
 
 
-def test_set_max_depth(chain: apyds.Chain) -> None:
-    chain.set_max_depth(2)
-    # rule 有 3 个 premises，超过 max_depth，应该被拒绝
-    assert not chain.add("p q r s")
-    # rule 有 2 个 premises，等于 max_depth，应该被接受
-    assert chain.add("p q r")
+def test_dont_generate_duplicated_fact(chain: apyds.Chain) -> None:
+    assert chain.add("aaaaa bbbbb")
+    assert chain.add("aaaaa")
+    assert chain.execute(lambda rule: False) == 1
+    assert chain.execute(lambda rule: False) == 0
 
 
-def test_set_max_depth_removes_existing_rules() -> None:
+def test_execute_exceed_by_too_many_premises() -> None:
     chain = apyds.Chain(100, 1000)
-    chain.add("p q r s")  # 3 个 premises
-    chain.add("p q r")  # 2 个 premises
-    chain.set_max_depth(2)
-    # 现在只有 2 个 premises 的 rule 应该存在
-    # 添加 facts 来测试 rule 是否还在
-    chain.add("p")
-    chain.add("q")
-    count = chain.execute(lambda rule: False)
-    # 应该有结果，因为 "p q r" 还存在（3 个 premises 的 rule 被移除了）
-    assert count > 0
+    assert chain.add("aaaaa bbbbb ccccc ddddd eeeee fffff")
+    assert chain.add("aaaaa")
+    assert chain.add("bbbbb")
+    assert chain.add("ccccc")
+    assert chain.add("ddddd")
+    assert chain.add("eeeee")
+    assert chain.execute(lambda rule: False) == 1
+
+    chain.reset()
+    chain.set_limit_size(100)
+    chain.set_buffer_size(1000)
+    assert chain.add("aaaaa bbbbb ccccc ddddd eeeee fffff")
+    assert chain.add("aaaaa")
+    assert chain.add("bbbbb")
+    assert chain.add("ccccc")
+    assert chain.add("ddddd")
+    assert chain.add("eeeee")
+    assert chain.execute(lambda rule: False) == 1
+
+    chain.reset()
+    chain.set_limit_size(100)
+    chain.set_buffer_size(100)
+    assert chain.add("aaaaa bbbbb ccccc ddddd eeeee fffff")
+    assert chain.add("aaaaa")
+    assert chain.add("bbbbb")
+    assert chain.add("ccccc")
+    assert chain.add("ddddd")
+    assert chain.add("eeeee")
+    assert chain.execute(lambda rule: False) == 0
