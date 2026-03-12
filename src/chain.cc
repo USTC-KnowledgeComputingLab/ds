@@ -65,6 +65,7 @@ namespace ds {
 
     length_t chain_t::execute(const std::function<bool(rule_t*)>& callback) {
         std::set<std::unique_ptr<rule_t>, less_t> temp_facts;
+        std::set<std::unique_ptr<rule_t>, less_t> temp_rules;
 
         bool break_all = false;
 
@@ -84,6 +85,21 @@ namespace ds {
                     break_all = true;
                 }
                 return;
+            } else {
+                do {
+                    if (rule->data_size() > limit_size) {
+                        break;
+                    }
+                    auto new_rule = std::unique_ptr<rule_t>(reinterpret_cast<rule_t*>(operator new(rule->data_size())));
+                    memcpy(new_rule->head(), rule->head(), rule->data_size());
+                    if (rules.find(new_rule) != rules.end() || temp_rules.find(new_rule) != temp_rules.end()) {
+                        break;
+                    }
+                    temp_rules.emplace(std::move(new_rule));
+                    if (callback(rule)) {
+                        break_all = true;
+                    }
+                } while (false);
             }
 
             for (auto& [fact, facts_cycle] : facts) {
