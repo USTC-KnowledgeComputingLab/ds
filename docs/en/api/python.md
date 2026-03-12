@@ -513,6 +513,18 @@ Set the buffer size for internal operations.
 def set_buffer_size(self, buffer_size: int) -> None
 ```
 
+#### set_max_depth()
+
+Set the maximum recursion depth (i.e., maximum number of premises allowed for a single rule).
+
+```python
+def set_max_depth(self, max_depth: int) -> None
+```
+
+**Notes:**
+- Rules with premises count exceeding this value will be rejected when added.
+- After modifying this value, existing rules with premises count exceeding the new max_depth will be removed.
+
 #### reset()
 
 Reset the chain engine, clearing all rules and facts.

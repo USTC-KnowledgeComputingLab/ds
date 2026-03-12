@@ -117,3 +117,21 @@ TEST_F(TestChain, execute_exceed) {
     auto count = search->execute([](ds::rule_t* rule) { return false; });
     EXPECT_EQ(count, 0);
 }
+
+TEST_F(TestChain, set_max_depth) {
+    search->set_max_depth(2);
+    // rule 有 3 个 premises，超过 max_depth，应该被拒绝
+    EXPECT_FALSE(search->add("p q r s"));
+    // rule 有 2 个 premises，等于 max_depth，应该被接受
+    EXPECT_TRUE(search->add("p q r"));
+}
+
+TEST_F(TestChain, set_max_depth_removes_existing_rules) {
+    search->add("p q r s"); // 3 个 premises
+    search->add("p q r"); // 2 个 premises
+    search->set_max_depth(2);
+    // 现在只有 2 个 premises 的 rule 应该存在
+    auto count = search->execute([](ds::rule_t* rule) { return false; });
+    // 应该有结果，因为 "p q r" 还存在
+    EXPECT_GT(count, 0);
+}

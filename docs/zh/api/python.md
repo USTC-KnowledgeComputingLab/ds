@@ -521,6 +521,18 @@ def set_limit_size(self, limit_size: int) -> None
 def set_buffer_size(self, buffer_size: int) -> None
 ```
 
+#### set_max_depth()
+
+设置链式匹配的最大递归深度（即单个 rule 允许的最大 premise 数目）。
+
+```python
+def set_max_depth(self, max_depth: int) -> None
+```
+
+**注意：**
+- 当 premises 数目超过此值的 rule 被添加时，会被拒绝添加。
+- 修改此值后，会检查现有的所有 rules，premises 数目超过新 max_depth 的 rules 会被移除。
+
 #### reset()
 
 重置搜索引擎，清除所有 Rule 和事实。

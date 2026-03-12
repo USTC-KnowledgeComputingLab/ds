@@ -52,6 +52,18 @@ class Chain:
         """
         self._chain.set_buffer_size(buffer_size)
 
+    def set_max_depth(self, max_depth: int) -> None:
+        """Set the maximum recursion depth (i.e., maximum number of premises allowed for a single rule).
+
+        Args:
+            max_depth: The maximum recursion depth.
+
+        Note:
+            Rules with premises count exceeding this value will be rejected when added.
+            After modifying this value, existing rules with premises count exceeding the new max_depth will be removed.
+        """
+        self._chain.set_max_depth(max_depth)
+
     def reset(self) -> None:
         """Reset the chain engine, clearing all rules and facts."""
         self._chain.reset()

@@ -670,6 +670,17 @@ export class Chain {
     }
 
     /**
+     * Set the maximum recursion depth (i.e., maximum number of premises allowed for a single rule).
+     *
+     * @param max_depth - The maximum recursion depth.
+     * @note Rules with premises count exceeding this value will be rejected when added.
+     * @note After modifying this value, existing rules with premises count exceeding the new max_depth will be removed.
+     */
+    set_max_depth(max_depth: number): void {
+        this._chain.set_max_depth(max_depth);
+    }
+
+    /**
      * Reset the chain engine, clearing all rules and facts.
      */
     reset(): void {

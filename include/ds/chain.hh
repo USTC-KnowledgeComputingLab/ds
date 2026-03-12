@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <string_view>
+#include <vector>
 
 #include <ds/rule.hh>
 
@@ -27,20 +28,26 @@ namespace ds {
         length_t limit_size;
         /// @brief 在搜索过程中使用的缓冲区最大长度。
         length_t buffer_size;
+        /// @brief 链式匹配的最大递归深度，即单个 rule 允许的最大 premise 数目。
+        /// @note premises 数目超过此值的 rule 将无法被完整匹配，只能匹配前 max_depth 个 premises。
+        length_t max_depth;
 
-        /// @brief 已经完成的 cycle，表示在此与此之前的所有 rules 和 facts 都已经被处理过。
+        /// @brief 已经完成的 cycle，表示在此之前的所有 rules 都已经被处理过。
+        /// @note 如果高于 last_fact_cycle，则说明所有的 facts 都已经被处理过。
         length_t done_cycle;
-        /// @brief rules 库和 facts 库中最大的 cycle，此变量在更新 rules 和 facts 前设置。
+        /// @brief rules 库中最大的 cycle，此变量在更新 rules 前设置。
+        /// @note 也会在添加 fact 时设置给 fact，但 chain 模式下不会利用 fact 的 cycle 进行判断。
         length_t current_cycle;
+        /// @brief facts 库的最后更新时间，用于避免重复计算。
+        length_t last_fact_cycle;
         /// @brief 用于存储规则的 map，键为 rule_t 的智能指针，值为其对应的 cycle。
         std::map<std::unique_ptr<rule_t>, length_t, less_t> rules;
         /// @brief 用于存储事实的 map，键为 rule_t 的智能指针，值为其对应的 cycle。
         std::map<std::unique_ptr<rule_t>, length_t, less_t> facts;
 
-        /// @brief 用于存储搜索过程中使用的缓冲区。
-        std::unique_ptr<rule_t> buffer;
-        /// @brief 用于存储链式匹配过程中使用的中间结果缓冲区。
-        std::unique_ptr<rule_t> chain_buffer;
+        /// @brief 用于存储链式匹配过程中使用的缓冲区（按深度层级存储）。
+        /// @note buffers[i] 用于存储匹配第 i 个 premise 时的中间结果。
+        std::vector<std::unique_ptr<rule_t>> buffers;
       public:
         /// @brief 构造函数，用于初始化搜索对象
         /// @param _limit_size 每个有效 rule_t 的最大长度。
@@ -55,12 +62,19 @@ namespace ds {
         /// @param _buffer_size 在搜索过程中使用的缓冲区最大长度。
         void set_buffer_size(length_t _buffer_size);
 
+        /// @brief 设置链式匹配的最大递归深度（即单个 rule 允许的最大 premise 数目）。
+        /// @param _max_depth 最大递归深度。
+        /// @note 当 premises 数目超过此值的 rule 被添加时，会被拒绝添加。
+        /// @note 修改此值后，会检查现有的所有 rules， premises 数目超过新 max_depth 的 rules 会被移除。
+        void set_max_depth(length_t _max_depth);
+
         /// @brief 重置搜索过程中的所有状态。
         void reset();
 
         /// @brief 向本搜索对象添加一个 rule 或 fact。
         /// @param text 描述 rule 或 fact 的文本。
         /// @return 如果添加成功则返回 true，否则返回 false。
+        /// @note 如果添加的是 rule 且 premises 数目超过 max_depth，则失败。
         bool add(std::string_view text);
 
         /// @brief 执行一轮搜索操作，遍历所有规则和事实，并对每个匹配的规则执行回调函数。

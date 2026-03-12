@@ -523,6 +523,18 @@ Set the internal buffer size.
 void set_buffer_size(length_t buffer_size);
 ```
 
+#### set_max_depth()
+
+Set the maximum recursion depth (i.e., maximum number of premises allowed for a single rule).
+
+```cpp
+void set_max_depth(length_t max_depth);
+```
+
+**Notes:**
+- Rules with premises count exceeding this value will be rejected when added.
+- After modifying this value, existing rules with premises count exceeding the new max_depth will be removed.
+
 #### reset()
 
 Clear all rules and facts.

@@ -200,6 +200,7 @@ EMSCRIPTEN_BINDINGS(ds) {
     chain_t.constructor<ds::length_t, ds::length_t>();
     chain_t.function("set_limit_size", &ds::chain_t::set_limit_size);
     chain_t.function("set_buffer_size", &ds::chain_t::set_buffer_size);
+    chain_t.function("set_max_depth", &ds::chain_t::set_max_depth);
     chain_t.function("reset", &ds::chain_t::reset);
     // 因为 embind 的限制，这里无法使用 string_view 和 function。
     chain_t.function("add", &chain_add, em::allow_raw_pointers());

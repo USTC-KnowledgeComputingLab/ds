@@ -510,6 +510,18 @@ set_limit_size(limit_size: number): void
 set_buffer_size(buffer_size: number): void
 ```
 
+#### set_max_depth()
+
+设置链式匹配的最大递归深度（即单个 rule 允许的最大 premise 数目）。
+
+```typescript
+set_max_depth(max_depth: number): void
+```
+
+**注意：**
+- 当 premises 数目超过此值的 rule 被添加时，会被拒绝添加。
+- 修改此值后，会检查现有的所有 rules，premises 数目超过新 max_depth 的 rules 会被移除。
+
 #### reset()
 
 重置搜索引擎，清除所有 Rule 和事实。

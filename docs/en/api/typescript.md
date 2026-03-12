@@ -509,6 +509,18 @@ Set the buffer size for internal operations.
 set_buffer_size(buffer_size: number): void
 ```
 
+#### set_max_depth()
+
+Set the maximum recursion depth (i.e., maximum number of premises allowed for a single rule).
+
+```typescript
+set_max_depth(max_depth: number): void
+```
+
+**Notes:**
+- Rules with premises count exceeding this value will be rejected when added.
+- After modifying this value, existing rules with premises count exceeding the new max_depth will be removed.
+
 #### reset()
 
 Reset the chain engine, clearing all rules and facts.

@@ -174,6 +174,7 @@ PYBIND11_MODULE(_ds, m, py::mod_gil_not_used()) {
     chain_t.def(py::init<ds::length_t, ds::length_t>());
     chain_t.def("set_limit_size", &ds::chain_t::set_limit_size);
     chain_t.def("set_buffer_size", &ds::chain_t::set_buffer_size);
+    chain_t.def("set_max_depth", &ds::chain_t::set_max_depth);
     chain_t.def("reset", &ds::chain_t::reset);
     chain_t.def("add", &ds::chain_t::add);
     chain_t.def("execute", &ds::chain_t::execute);

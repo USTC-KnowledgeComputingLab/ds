@@ -104,3 +104,22 @@ test("execute_exceed", () => {
     const count = chain.execute((rule) => false);
     expect(count).toBe(0);
 });
+
+test("set_max_depth", () => {
+    chain.set_max_depth(2);
+    // rule has 3 premises, exceeds max_depth, should be rejected
+    expect(chain.add("p q r s")).toBe(false);
+    // rule has 2 premises, equals max_depth, should be accepted
+    expect(chain.add("p q r")).toBe(true);
+});
+
+test("set_max_depth_removes_existing_rules", () => {
+    const newChain = new Chain(100, 1000);
+    newChain.add("p q r s"); // 3 premises
+    newChain.add("p q r"); // 2 premises
+    newChain.set_max_depth(2);
+    // Now only the rule with 2 premises should exist
+    const count = newChain.execute((rule) => false);
+    // Should have results because "p q r" still exists
+    expect(count).toBeGreaterThan(0);
+});

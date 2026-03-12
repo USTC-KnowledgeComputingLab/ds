@@ -110,3 +110,22 @@ def test_execute_exceed(chain: apyds.Chain) -> None:
     assert chain.add("(2 a-very-long-fact-that-exceeds-half-of-the-limit-size)")
     count = chain.execute(lambda rule: False)
     assert count == 0
+
+
+def test_set_max_depth(chain: apyds.Chain) -> None:
+    chain.set_max_depth(2)
+    # rule 有 3 个 premises，超过 max_depth，应该被拒绝
+    assert not chain.add("p q r s")
+    # rule 有 2 个 premises，等于 max_depth，应该被接受
+    assert chain.add("p q r")
+
+
+def test_set_max_depth_removes_existing_rules() -> None:
+    chain = apyds.Chain(100, 1000)
+    chain.add("p q r s")  # 3 个 premises
+    chain.add("p q r")  # 2 个 premises
+    chain.set_max_depth(2)
+    # 现在只有 2 个 premises 的 rule 应该存在
+    count = chain.execute(lambda rule: False)
+    # 应该有结果，因为 "p q r" 还存在
+    assert count > 0
