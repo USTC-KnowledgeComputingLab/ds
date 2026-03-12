@@ -13,6 +13,7 @@ from apyds import (
     Term,
     Rule,
     Search,
+    Chain,
 )
 ```
 
@@ -475,6 +476,92 @@ def callback(candidate):
     return False  # Continue searching
 
 search.execute(callback)
+```
+
+---
+
+## Chain
+
+Chain engine for the deductive system.
+
+Similar to `Search`, but matches all premises of a rule in a single cycle.
+
+### Constructor
+
+```python
+def __init__(self, limit_size: int = 1000, buffer_size: int = 10000)
+```
+
+**Parameters:**
+
+- `limit_size` (optional): Size of the buffer for storing rules/facts (default: 1000)
+- `buffer_size` (optional): Size of the buffer for internal operations (default: 10000)
+
+### Methods
+
+#### set_limit_size()
+
+Set the size of the buffer for storing final objects.
+
+```python
+def set_limit_size(self, limit_size: int) -> None
+```
+
+#### set_buffer_size()
+
+Set the buffer size for internal operations.
+
+```python
+def set_buffer_size(self, buffer_size: int) -> None
+```
+
+#### reset()
+
+Reset the chain engine, clearing all rules and facts.
+
+```python
+def reset(self) -> None
+```
+
+#### add()
+
+Add a rule or fact to the knowledge base.
+
+```python
+def add(self, text: str) -> bool
+```
+
+**Returns:** True if successfully added, False otherwise.
+
+#### execute()
+
+Execute the chain engine with a callback for each inferred rule.
+
+```python
+def execute(self, callback: Callable[[Rule], bool]) -> int
+```
+
+**Parameters:**
+
+- `callback`: Function called for each candidate rule. Return False to continue, True to stop.
+
+**Returns:** The number of rules processed.
+
+**Note:** Unlike `Search.execute()`, `Chain.execute()` matches all premises of a rule completely in a single cycle.
+
+**Example:**
+
+```python
+chain = Chain(100, 1000)
+chain.add("p q r")  # p and q imply r
+chain.add("p")      # fact: p
+chain.add("q")      # fact: q
+
+def callback(candidate):
+    print(candidate)
+    return False  # Continue searching
+
+chain.execute(callback)  # Will find r in a single cycle
 ```
 
 ---

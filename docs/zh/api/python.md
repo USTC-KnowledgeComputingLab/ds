@@ -13,6 +13,7 @@ from apyds import (
     Term,
     Rule,
     Search,
+    Chain,
 )
 ```
 
@@ -483,6 +484,92 @@ def callback(candidate):
     return False  # Continue searching
 
 search.execute(callback)
+```
+
+---
+
+## Chain
+
+演绎系统的链式引擎。
+
+与 `Search` 类似，但在单轮中会将 rule 的所有 premises 全部匹配完成。
+
+### 构造函数
+
+```python
+def __init__(self, limit_size: int = 1000, buffer_size: int = 10000)
+```
+
+**参数：**
+
+- `limit_size` (可选)：用于存储 Rule/事实的缓冲区大小（默认值：1000）
+- `buffer_size` (可选)：用于内部操作的缓冲区大小（默认值：10000）
+
+### 方法
+
+#### set_limit_size()
+
+设置存储最终对象的缓冲区大小。
+
+```python
+def set_limit_size(self, limit_size: int) -> None
+```
+
+#### set_buffer_size()
+
+设置内部操作的缓冲区大小。
+
+```python
+def set_buffer_size(self, buffer_size: int) -> None
+```
+
+#### reset()
+
+重置链式引擎，清除所有 Rule 和事实。
+
+```python
+def reset(self) -> None
+```
+
+#### add()
+
+向知识库添加 Rule 或事实。
+
+```python
+def add(self, text: str) -> bool
+```
+
+**返回值：** 如果添加成功则返回 True，否则返回 False。
+
+#### execute()
+
+执行链式引擎，并为每个推导出的 Rule 调用回调。
+
+```python
+def execute(self, callback: Callable[[Rule], bool]) -> int
+```
+
+**参数：**
+
+- `callback`：对每个候选 Rule 调用的函数。返回 False 继续，返回 True 停止。
+
+**返回值：** 处理的 Rule 数量。
+
+**注意：** 与 `Search.execute()` 不同，`Chain.execute()` 在单轮中会将 rule 的所有 premises 全部匹配完成。
+
+**示例：**
+
+```python
+chain = Chain(100, 1000)
+chain.add("p q r")  # p 和 q 推出 r
+chain.add("p")      # 事实：p
+chain.add("q")      # 事实：q
+
+def callback(candidate):
+    print(candidate)
+    return False  # 继续搜索
+
+chain.execute(callback)  # 将在单轮中找到 r
 ```
 
 ---

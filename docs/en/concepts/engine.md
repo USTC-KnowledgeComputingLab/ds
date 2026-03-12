@@ -267,3 +267,49 @@ search.reset();
 4. **Early Termination**: Return `true` from callback to stop as soon as target is found
 5. **Deduplication**: The engine automatically deduplicates facts, avoiding redundant computation
 
+## Chain Engine
+
+In addition to `Search`, the DS library also provides a `Chain` engine type with an identical API interface.
+
+::: code-group
+```typescript [TypeScript]
+import { Chain } from "atsds";
+
+const chain = new Chain(1000, 10000);
+chain.add("p q r");
+chain.add("p");
+chain.add("q");
+chain.execute((rule) => {
+    console.log(rule.toString());
+    return false;
+});
+```
+```python [Python]
+import apyds
+
+chain = apyds.Chain(1000, 10000)
+chain.add("p q r")
+chain.add("p")
+chain.add("q")
+chain.execute(lambda rule: print(rule) or False)
+```
+```cpp [C++]
+#include <ds/chain.hh>
+
+ds::chain_t chain(1000, 10000);
+chain.add("p q r");
+chain.add("p");
+chain.add("q");
+chain.execute([](ds::rule_t* rule) {
+    printf("%s\n", ds::rule_to_text(rule, 1000).get());
+    return false;
+});
+```
+:::
+
+The `Chain` engine provides the same methods as `Search`:
+- `constructor(limit_size, buffer_size)` / `chain_t(limit_size, buffer_size)`
+- `set_limit_size()` / `set_buffer_size()` / `reset()`
+- `add()` / `execute()`
+
+**Key difference:** In a single `execute()` cycle, `Chain` matches **all premises** of each rule completely, while `Search` matches premises one at a time. This means `Chain` can derive conclusions from multi-premise rules in a single cycle.

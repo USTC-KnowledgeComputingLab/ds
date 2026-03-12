@@ -9,6 +9,7 @@ All classes and functions are in the `ds` namespace.
 ```cpp
 #include <ds/ds.hh>        // All basic types
 #include <ds/search.hh>    // Search engine
+#include <ds/chain.hh>     // Chain engine
 #include <ds/utility.hh>   // Helper functions
 ```
 
@@ -484,6 +485,75 @@ length_t execute(const std::function<bool(rule_t*)>& callback);
 - `callback`: Function called for each new inference. Return false to continue, true to stop.
 
 **Returns:** The number of new inferences generated.
+
+---
+
+## chain_t
+
+Chain engine class. Defined in `<ds/chain.hh>`.
+
+Similar to `search_t`, but matches all premises of a rule in a single cycle.
+
+### Constructor
+
+```cpp
+chain_t(length_t limit_size, length_t buffer_size);
+```
+
+**Parameters:**
+
+- `limit_size`: Maximum size for each stored rule/fact
+- `buffer_size`: Size of the internal buffer for operations
+
+### Methods
+
+#### set_limit_size()
+
+Set the maximum rule/fact size.
+
+```cpp
+void set_limit_size(length_t limit_size);
+```
+
+#### set_buffer_size()
+
+Set the internal buffer size.
+
+```cpp
+void set_buffer_size(length_t buffer_size);
+```
+
+#### reset()
+
+Clear all rules and facts.
+
+```cpp
+void reset();
+```
+
+#### add()
+
+Add a rule or fact from text.
+
+```cpp
+bool add(std::string_view text);
+```
+
+#### execute()
+
+Execute one round of chain inference, matching all premises of each rule.
+
+```cpp
+length_t execute(const std::function<bool(rule_t*)>& callback);
+```
+
+**Parameters:**
+
+- `callback`: Function called for each new inference. Return false to continue, true to stop.
+
+**Returns:** The number of new inferences generated.
+
+**Note:** Unlike `search_t::execute()`, `chain_t::execute()` matches all premises of a rule completely in a single cycle.
 
 ---
 
