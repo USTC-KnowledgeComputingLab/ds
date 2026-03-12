@@ -9,7 +9,6 @@
 ```cpp
 #include <ds/ds.hh>        // 所有基本类型
 #include <ds/search.hh>    // 搜索引擎
-#include <ds/chain.hh>     // 链式引擎
 #include <ds/utility.hh>   // 辅助函数
 ```
 
@@ -488,85 +487,6 @@ length_t execute(const std::function<bool(rule_t*)>& callback);
 
 ---
 
-## chain_t
-
-链式引擎类。定义在 `<ds/chain.hh>` 中。
-
-管理知识库并执行逻辑推理。与 `search_t` 不同，`chain_t` 在单轮中会将 rule 的所有 premises 全部匹配完成。
-
-### 构造函数
-
-```cpp
-chain_t(length_t limit_size, length_t buffer_size);
-```
-
-**参数：**
-
-- `limit_size`：每个存储的 Rule/事实的最大大小
-- `buffer_size`：操作的内部缓冲区大小
-
-### 方法
-
-#### set_limit_size()
-
-设置最大 Rule/事实大小。
-
-```cpp
-void set_limit_size(length_t limit_size);
-```
-
-#### set_buffer_size()
-
-设置内部缓冲区大小。
-
-```cpp
-void set_buffer_size(length_t buffer_size);
-```
-
-#### set_max_depth()
-
-设置链式匹配的最大递归深度（即单个 rule 允许的最大 premise 数目）。
-
-```cpp
-void set_max_depth(length_t max_depth);
-```
-
-**注意：**
-- 当 premises 数目超过此值的 rule 被添加时，会被拒绝添加。
-- 修改此值后，会检查现有的所有 rules，premises 数目超过新 max_depth 的 rules 会被移除。
-
-#### reset()
-
-清除所有 Rule 和事实。
-
-```cpp
-void reset();
-```
-
-#### add()
-
-从文本添加 Rule 或事实。
-
-```cpp
-bool add(std::string_view text);
-```
-
-#### execute()
-
-执行一轮链式推理。
-
-```cpp
-length_t execute(const std::function<bool(rule_t*)>& callback);
-```
-
-**参数：**
-
-- `callback`：对每个新推理调用的函数。返回 false 继续，返回 true 停止。
-
-**返回值：** 生成的新推理数量。
-
----
-
 ## 辅助函数
 
 `<ds/utility.hh>` 中的辅助函数。
@@ -696,19 +616,7 @@ int main() {
     if (found) {
         std::cout << "Target found!" << std::endl;
     }
-
-    // Chain engine (matches all premises in a single cycle)
-    ds::chain_t chain(1000, 10000);
-    chain.add("p q r");  // p, q |- r (two premises)
-    chain.add("p");
-    chain.add("q");
-
-    std::cout << "\nRunning chain inference:" << std::endl;
-    chain.execute([&](ds::rule_t* candidate) {
-        std::cout << "  Derived: " << ds::rule_to_text(candidate, buffer_size).get();
-        return false;
-    });
-
+    
     return 0;
 }
 ```

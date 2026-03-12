@@ -13,7 +13,6 @@ from apyds import (
     Term,
     Rule,
     Search,
-    Chain,
 )
 ```
 
@@ -488,100 +487,6 @@ search.execute(callback)
 
 ---
 
-## Chain
-
-Chain engine for the deductive system. Similar to Search, but matches all premises of a rule in a single cycle.
-
-### 构造函数
-
-```python
-def __init__(self, limit_size: int = 1000, buffer_size: int = 10000)
-```
-
-**参数：**
-
-- `limit_size` (可选)：用于存储 Rule/事实的缓冲区大小（默认值：1000）
-- `buffer_size` (可选)：用于内部操作的缓冲区大小（默认值：10000）
-
-### 方法
-
-#### set_limit_size()
-
-设置存储最终对象的缓冲区大小。
-
-```python
-def set_limit_size(self, limit_size: int) -> None
-```
-
-#### set_buffer_size()
-
-设置内部操作的缓冲区大小。
-
-```python
-def set_buffer_size(self, buffer_size: int) -> None
-```
-
-#### set_max_depth()
-
-设置链式匹配的最大递归深度（即单个 rule 允许的最大 premise 数目）。
-
-```python
-def set_max_depth(self, max_depth: int) -> None
-```
-
-**注意：**
-- 当 premises 数目超过此值的 rule 被添加时，会被拒绝添加。
-- 修改此值后，会检查现有的所有 rules，premises 数目超过新 max_depth 的 rules 会被移除。
-
-#### reset()
-
-重置搜索引擎，清除所有 Rule 和事实。
-
-```python
-def reset(self) -> None
-```
-
-#### add()
-
-向知识库添加 Rule 或事实。
-
-```python
-def add(self, text: str) -> bool
-```
-
-**返回值：** 如果添加成功则返回 True，否则返回 False。
-
-#### execute()
-
-执行搜索引擎，并为每个推导出的 Rule 调用回调。
-
-```python
-def execute(self, callback: Callable[[Rule], bool]) -> int
-```
-
-**参数：**
-
-- `callback`：对每个候选 Rule 调用的函数。返回 False 继续，返回 True 停止。
-
-**返回值：** 处理的 Rule 数量。
-
-**示例：**
-
-```python
-chain = Chain()
-chain.add("p q r")  # p, q |- r (two premises)
-chain.add("p")
-chain.add("q")
-
-def callback(candidate):
-    print(candidate)
-    return False  # Continue searching
-
-chain.execute(callback)
-```
-
----
-
 
 ## 完整示例
 
@@ -639,13 +544,4 @@ for i in range(3):
 with apyds.scoped_buffer_size(4096):
     big_term = apyds.Term("(a b c d e f g h i j)")
     print(f"\nBig term: {big_term}")
-
-# Chain engine (matches all premises in a single cycle)
-chain = apyds.Chain(1000, 10000)
-chain.add("p q r")  # p, q |- r (two premises)
-chain.add("p")
-chain.add("q")
-
-print("\nRunning chain inference:")
-chain.execute(lambda r: print(f"  Derived: {r}") or False)
 ```
