@@ -36,7 +36,7 @@ export default defineConfig({
                         items: [
                             { text: "Terms", link: "/en/concepts/terms" },
                             { text: "Rules", link: "/en/concepts/rules" },
-                            { text: "Search Engine", link: "/en/concepts/search" },
+                            { text: "Engine", link: "/en/concepts/engine" },
                         ],
                     },
                     {
@@ -94,7 +94,7 @@ export default defineConfig({
                         items: [
                             { text: "Term", link: "/zh/concepts/terms" },
                             { text: "Rule", link: "/zh/concepts/rules" },
-                            { text: "搜索引擎", link: "/zh/concepts/search" },
+                            { text: "引擎", link: "/zh/concepts/engine" },
                         ],
                     },
                     {

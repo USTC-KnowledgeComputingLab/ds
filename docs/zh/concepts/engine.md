@@ -266,3 +266,50 @@ search.reset();
 3. **迭代执行**：循环调用 `execute()` 以继续推理直到收敛
 4. **提前终止**：从回调返回 `true` 以在找到目标后立即停止
 5. **去重**：引擎自动对事实进行去重，避免冗余计算
+
+## Chain 引擎
+
+除了 `Search` 之外，DS 库还提供了一个 `Chain` 引擎类型，其 API 接口与 `Search` 完全相同。
+
+::: code-group
+```typescript [TypeScript]
+import { Chain } from "atsds";
+
+const chain = new Chain(1000, 10000);
+chain.add("p q r");
+chain.add("p");
+chain.add("q");
+chain.execute((rule) => {
+    console.log(rule.toString());
+    return false;
+});
+```
+```python [Python]
+import apyds
+
+chain = apyds.Chain(1000, 10000)
+chain.add("p q r")
+chain.add("p")
+chain.add("q")
+chain.execute(lambda rule: print(rule) or False)
+```
+```cpp [C++]
+#include <ds/chain.hh>
+
+ds::chain_t chain(1000, 10000);
+chain.add("p q r");
+chain.add("p");
+chain.add("q");
+chain.execute([](ds::rule_t* rule) {
+    printf("%s\n", ds::rule_to_text(rule, 1000).get());
+    return false;
+});
+```
+:::
+
+`Chain` 引擎提供与 `Search` 相同的方法：
+- `constructor(limit_size, buffer_size)` / `chain_t(limit_size, buffer_size)`
+- `set_limit_size()` / `set_buffer_size()` / `reset()`
+- `add()` / `execute()`
+
+**主要区别：** 在单次 `execute()` 循环中，`Chain` 会**完全匹配**每个规则的所有 premises，而 `Search` 一次只匹配一个 premise。这意味着 `Chain` 可以在单轮中从多前提规则推导出结论。

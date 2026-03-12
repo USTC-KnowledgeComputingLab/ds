@@ -8,6 +8,7 @@ __all__ = [
     "Term",
     "Rule",
     "Search",
+    "Chain",
 ]
 
-from ._ds import String, Variable, Item, List, Term, Rule, Search
+from ._ds import String, Variable, Item, List, Term, Rule, Search, Chain

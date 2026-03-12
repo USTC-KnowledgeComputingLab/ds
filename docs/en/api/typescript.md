@@ -3,15 +3,16 @@
 This page documents the TypeScript API for the `atsds` package. The documentation is generated from the TypeScript source code.
 
 ```typescript
-import { 
+import {
     buffer_size,
-    String_, 
-    Variable, 
-    Item, 
-    List, 
-    Term, 
-    Rule, 
-    Search 
+    String_,
+    Variable,
+    Item,
+    List,
+    Term,
+    Rule,
+    Search,
+    Chain
 } from "atsds";
 ```
 
@@ -470,6 +471,91 @@ search.add("(! (! X))");
 search.execute((candidate) => {
     console.log(candidate.toString());
     return false;  // Continue searching
+});
+```
+
+---
+
+## Chain
+
+Chain engine for the deductive system.
+
+Similar to `Search`, but matches all premises of a rule in a single cycle.
+
+### Constructor
+
+```typescript
+constructor(limit_size?: number, buffer_size?: number)
+```
+
+**Parameters:**
+
+- `limit_size` (optional): Size of the buffer for storing rules/facts (default: 1000)
+- `buffer_size` (optional): Size of the buffer for internal operations (default: 10000)
+
+### Methods
+
+#### set_limit_size()
+
+Set the size of the buffer for storing final objects.
+
+```typescript
+set_limit_size(limit_size: number): void
+```
+
+#### set_buffer_size()
+
+Set the buffer size for internal operations.
+
+```typescript
+set_buffer_size(buffer_size: number): void
+```
+
+#### reset()
+
+Reset the chain engine, clearing all rules and facts.
+
+```typescript
+reset(): void
+```
+
+#### add()
+
+Add a rule or fact to the knowledge base.
+
+```typescript
+add(text: string): boolean
+```
+
+**Returns:** True if successfully added, false otherwise.
+
+#### execute()
+
+Execute the chain engine with a callback for each inferred rule.
+
+```typescript
+execute(callback: (candidate: Rule) => boolean): number
+```
+
+**Parameters:**
+
+- `callback`: Function called for each candidate rule. Return false to continue, true to stop.
+
+**Returns:** The number of rules processed.
+
+**Note:** Unlike `Search.execute()`, `Chain.execute()` matches all premises of a rule completely in a single cycle.
+
+**Example:**
+
+```typescript
+const chain = new Chain(100, 1000);
+chain.add("p q r");  // p and q imply r
+chain.add("p");      // fact: p
+chain.add("q");      // fact: q
+
+chain.execute((rule) => {
+    console.log(rule.toString());  // Will find r in a single cycle
+    return false;
 });
 ```
 

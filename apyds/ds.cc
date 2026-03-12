@@ -1,3 +1,4 @@
+#include <ds/chain.hh>
 #include <ds/ds.hh>
 #include <ds/search.hh>
 #include <pybind11/functional.h>
@@ -168,4 +169,12 @@ PYBIND11_MODULE(_ds, m, py::mod_gil_not_used()) {
     search_t.def("reset", &ds::search_t::reset);
     search_t.def("add", &ds::search_t::add);
     search_t.def("execute", &ds::search_t::execute);
+
+    auto chain_t = py::class_<ds::chain_t>(m, "Chain");
+    chain_t.def(py::init<ds::length_t, ds::length_t>());
+    chain_t.def("set_limit_size", &ds::chain_t::set_limit_size);
+    chain_t.def("set_buffer_size", &ds::chain_t::set_buffer_size);
+    chain_t.def("reset", &ds::chain_t::reset);
+    chain_t.def("add", &ds::chain_t::add);
+    chain_t.def("execute", &ds::chain_t::execute);
 }

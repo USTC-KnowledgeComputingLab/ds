@@ -1,3 +1,4 @@
+#include <ds/chain.hh>
 #include <ds/ds.hh>
 #include <ds/search.hh>
 #include <emscripten/bind.h>
@@ -133,6 +134,14 @@ auto search_execute(ds::search_t* search, const em::val& callback) -> ds::length
     return search->execute([&callback](ds::rule_t* candidate) -> bool { return callback(candidate, em::allow_raw_pointers()).as<bool>(); });
 }
 
+auto chain_add(ds::chain_t* chain, const std::string& text) -> bool {
+    return chain->add(text);
+}
+
+auto chain_execute(ds::chain_t* chain, const em::val& callback) -> ds::length_t {
+    return chain->execute([&callback](ds::rule_t* candidate) -> bool { return callback(candidate, em::allow_raw_pointers()).as<bool>(); });
+}
+
 EMSCRIPTEN_BINDINGS(ds) {
     em::register_vector<std::uint8_t>("Buffer");
 
@@ -186,4 +195,13 @@ EMSCRIPTEN_BINDINGS(ds) {
     // 因为embind的限制，这里无法使用string_view和function。
     search_t.function("add", &search_add, em::allow_raw_pointers());
     search_t.function("execute", &search_execute, em::allow_raw_pointers());
+
+    auto chain_t = em::class_<ds::chain_t>("Chain");
+    chain_t.constructor<ds::length_t, ds::length_t>();
+    chain_t.function("set_limit_size", &ds::chain_t::set_limit_size);
+    chain_t.function("set_buffer_size", &ds::chain_t::set_buffer_size);
+    chain_t.function("reset", &ds::chain_t::reset);
+    // 因为 embind 的限制，这里无法使用 string_view 和 function。
+    chain_t.function("add", &chain_add, em::allow_raw_pointers());
+    chain_t.function("execute", &chain_execute, em::allow_raw_pointers());
 }
