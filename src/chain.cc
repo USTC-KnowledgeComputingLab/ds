@@ -63,28 +63,40 @@ namespace ds {
         }
     }
 
-    length_t chain_t::execute(const std::function<bool(rule_t*)>& callback) {
+    ds::generator<rule_t*> chain_t::iterator() {
         std::set<std::unique_ptr<rule_t>, less_t> temp_facts;
         std::set<std::unique_ptr<rule_t>, less_t> temp_rules;
 
-        bool break_all = false;
+        // RAII guard，确保无论是否提前退出，清理代码都会执行
+        struct guard_t {
+            std::function<void()> cleanup;
+            ~guard_t() {
+                cleanup();
+            }
+        } guard{[&]() {
+            ++current_cycle;
+            if (!temp_facts.empty()) {
+                last_fact_cycle = current_cycle;
+            }
+            for (auto it = temp_facts.begin(); it != temp_facts.end();) {
+                auto node = temp_facts.extract(it++);
+                facts.emplace(std::move(node.value()), current_cycle);
+            }
+        }};
 
-        std::function<void(rule_t*, rule_t*, std::byte*)> chain_recursive;
-        chain_recursive = [&](rule_t* rule, rule_t* workspace, std::byte* tail) -> void {
+        auto chain_recursive = [&](auto& self, rule_t* rule, rule_t* workspace, std::byte* tail) -> ds::generator<rule_t*> {
             if (rule->premises_count() == 0) {
                 if (rule->data_size() > limit_size) {
-                    return;
+                    co_return;
                 }
                 auto new_fact = std::unique_ptr<rule_t>(reinterpret_cast<rule_t*>(operator new(rule->data_size())));
                 memcpy(new_fact->head(), rule->head(), rule->data_size());
                 if (facts.find(new_fact) != facts.end() || temp_facts.find(new_fact) != temp_facts.end()) {
-                    return;
+                    co_return;
                 }
                 temp_facts.emplace(std::move(new_fact));
-                if (callback(rule)) {
-                    break_all = true;
-                }
-                return;
+                co_yield rule;
+                co_return;
             } else {
                 do {
                     if (rule->data_size() > limit_size) {
@@ -96,9 +108,7 @@ namespace ds {
                         break;
                     }
                     temp_rules.emplace(std::move(new_rule));
-                    if (callback(rule)) {
-                        break_all = true;
-                    }
+                    co_yield rule;
                 } while (false);
             }
 
@@ -107,7 +117,9 @@ namespace ds {
                 if (!workspace->valid()) {
                     continue;
                 }
-                chain_recursive(workspace, reinterpret_cast<rule_t*>(workspace->tail()), tail);
+                for (auto yielded : self(self, workspace, reinterpret_cast<rule_t*>(workspace->tail()), tail)) {
+                    co_yield yielded;
+                }
             }
         };
 
@@ -116,21 +128,23 @@ namespace ds {
                 continue;
             }
 
-            chain_recursive(rule.get(), buffer.get(), reinterpret_cast<std::byte*>(buffer.get()) + buffer_size);
-
-            if (break_all) {
-                break;
+            for (auto yielded :
+                 chain_recursive(chain_recursive, rule.get(), buffer.get(), reinterpret_cast<std::byte*>(buffer.get()) + buffer_size)) {
+                co_yield yielded;
             }
         }
 
-        if (!break_all) {
-            done_cycle = current_cycle;
-        }
-        ++current_cycle;
-        length_t count = temp_rules.size() + temp_facts.size();
-        for (auto it = temp_facts.begin(); it != temp_facts.end();) {
-            auto node = temp_facts.extract(it++);
-            facts.emplace(std::move(node.value()), current_cycle);
+        done_cycle = current_cycle;
+        co_return;
+    }
+
+    length_t chain_t::execute(const std::function<bool(rule_t*)>& callback) {
+        length_t count = 0;
+        for (auto* rule : iterator()) {
+            ++count;
+            if (callback(rule)) {
+                break;
+            }
         }
         return count;
     }

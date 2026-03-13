@@ -146,3 +146,17 @@ TEST_F(TestChain, execute_exceed_by_too_many_premises) {
     EXPECT_TRUE(chain->add("eeeee"));
     EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
 }
+
+TEST_F(TestChain, iterator) {
+    chain->add("a");
+    chain->add("b");
+    chain->add("a b c");
+    const char* expected[] = {"b\n----\nc\n", "----\nc\n"};
+    int count = 0;
+    for (auto rule : chain->iterator()) {
+        EXPECT_LT(count, 2);
+        EXPECT_STREQ(ds::rule_to_text(rule, limit_size).get(), expected[count]);
+        ++count;
+    }
+    EXPECT_EQ(count, 2);
+}

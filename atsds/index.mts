@@ -620,6 +620,29 @@ export class Search {
             return callback(new Rule(candidate).copy());
         });
     }
+
+    /**
+     * Iterate over inferred rules.
+     *
+     * @returns An iterator over Rule objects.
+     *
+     * @example
+     * ```typescript
+     * for (const rule of search) {
+     *     console.log(rule.toString());
+     * }
+     * ```
+     */
+    *[Symbol.iterator](): Iterator<Rule> {
+        const iterator = this._search.iter();
+        while (true) {
+            const candidate = iterator.next();
+            if (candidate === null) {
+                break;
+            }
+            yield new Rule(candidate);
+        }
+    }
 }
 
 /**
@@ -696,5 +719,28 @@ export class Chain {
         return this._chain.execute((candidate: dst.Rule): boolean => {
             return callback(new Rule(candidate).copy());
         });
+    }
+
+    /**
+     * Iterate over inferred rules.
+     *
+     * @returns An iterator over Rule objects.
+     *
+     * @example
+     * ```typescript
+     * for (const rule of chain) {
+     *     console.log(rule.toString());
+     * }
+     * ```
+     */
+    *[Symbol.iterator](): Iterator<Rule> {
+        const iterator = this._chain.iter();
+        while (true) {
+            const candidate = iterator.next();
+            if (candidate === null) {
+                break;
+            }
+            yield new Rule(candidate);
+        }
     }
 }

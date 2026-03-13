@@ -102,3 +102,17 @@ TEST_F(TestSearch, execute_exceed) {
     auto count = search->execute([](ds::rule_t* rule) { return false; });
     EXPECT_EQ(count, 0);
 }
+
+TEST_F(TestSearch, iterator) {
+    search->add("a");
+    search->add("b");
+    search->add("a b c");
+    const char* expected[] = {"b\n----\nc\n"};
+    int count = 0;
+    for (auto rule : search->iterator()) {
+        EXPECT_LT(count, 1);
+        EXPECT_STREQ(ds::rule_to_text(rule, limit_size).get(), expected[count]);
+        ++count;
+    }
+    EXPECT_EQ(count, 1);
+}

@@ -88,3 +88,17 @@ test("execute_exceed", () => {
     const count = search.execute((rule) => false);
     expect(count).toBe(0);
 });
+
+test("iterator", () => {
+    search.add("a");
+    search.add("b");
+    search.add("a b c");
+    const expected = ["b\n----\nc\n"];
+    let count = 0;
+    for (const rule of search) {
+        expect(count).toBeLessThan(expected.length);
+        expect(rule.toString()).toBe(expected[count]);
+        count++;
+    }
+    expect(count).toBe(expected.length);
+});

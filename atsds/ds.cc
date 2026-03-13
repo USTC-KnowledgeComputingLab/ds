@@ -1,9 +1,35 @@
 #include <ds/chain.hh>
 #include <ds/ds.hh>
+#include <ds/generator.hh>
 #include <ds/search.hh>
 #include <emscripten/bind.h>
 
 namespace em = emscripten;
+
+class Iterator {
+  public:
+    explicit Iterator(ds::generator<ds::rule_t*> _generator) : generator(std::move(_generator)), initialized(false), iterator(nullptr) { }
+
+    ds::rule_t* next() {
+        if (initialized) {
+            ++*iterator;
+        } else {
+            iterator = std::make_unique<iterator_t>(generator.begin());
+            initialized = true;
+        }
+        if (*iterator == nullptr) {
+            return nullptr;
+        }
+        ds::rule_t* result = **iterator;
+        return result;
+    }
+
+  private:
+    ds::generator<ds::rule_t*> generator;
+    bool initialized;
+    using iterator_t = decltype(generator.begin());
+    std::unique_ptr<iterator_t> iterator;
+};
 
 // 由于embind的限制，这里无法使用string_view。
 // 为了保持一致性，一律使用复制。
@@ -134,12 +160,20 @@ auto search_execute(ds::search_t* search, const em::val& callback) -> ds::length
     return search->execute([&callback](ds::rule_t* candidate) -> bool { return callback(candidate, em::allow_raw_pointers()).as<bool>(); });
 }
 
+auto search_iter(ds::search_t* search) -> std::unique_ptr<Iterator> {
+    return std::make_unique<Iterator>(std::move(search->iterator()));
+}
+
 auto chain_add(ds::chain_t* chain, const std::string& text) -> bool {
     return chain->add(text);
 }
 
 auto chain_execute(ds::chain_t* chain, const em::val& callback) -> ds::length_t {
     return chain->execute([&callback](ds::rule_t* candidate) -> bool { return callback(candidate, em::allow_raw_pointers()).as<bool>(); });
+}
+
+auto chain_iter(ds::chain_t* chain) -> std::unique_ptr<Iterator> {
+    return std::make_unique<Iterator>(std::move(chain->iterator()));
 }
 
 EMSCRIPTEN_BINDINGS(ds) {
@@ -195,6 +229,7 @@ EMSCRIPTEN_BINDINGS(ds) {
     // 因为embind的限制，这里无法使用string_view和function。
     search_t.function("add", &search_add, em::allow_raw_pointers());
     search_t.function("execute", &search_execute, em::allow_raw_pointers());
+    search_t.function("iter", &search_iter, em::return_value_policy::take_ownership());
 
     auto chain_t = em::class_<ds::chain_t>("Chain");
     chain_t.constructor<ds::length_t, ds::length_t>();
@@ -204,4 +239,8 @@ EMSCRIPTEN_BINDINGS(ds) {
     // 因为 embind 的限制，这里无法使用 string_view 和 function。
     chain_t.function("add", &chain_add, em::allow_raw_pointers());
     chain_t.function("execute", &chain_execute, em::allow_raw_pointers());
+    chain_t.function("iter", &chain_iter, em::return_value_policy::take_ownership());
+
+    auto iterator_t = em::class_<Iterator>("Iterator");
+    iterator_t.function("next", &Iterator::next, em::return_value_policy::reference());
 }
