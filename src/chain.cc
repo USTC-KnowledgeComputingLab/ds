@@ -127,7 +127,7 @@ namespace ds {
             done_cycle = current_cycle;
         }
         ++current_cycle;
-        length_t count = temp_facts.size();
+        length_t count = temp_rules.size() + temp_facts.size();
         for (auto it = temp_facts.begin(); it != temp_facts.end();) {
             auto node = temp_facts.extract(it++);
             facts.emplace(std::move(node.value()), current_cycle);
