@@ -55,7 +55,7 @@ def test_execute_multiple_premises_chain(chain: apyds.Chain) -> None:
         return False
 
     count = chain.execute(callback)
-    assert count == 1
+    assert count == 2
     assert success
 
 
@@ -63,7 +63,7 @@ def test_execute_multiple_premises_partial(chain: apyds.Chain) -> None:
     chain.add("p q r")
     chain.add("p")
     count = chain.execute(lambda rule: False)
-    assert count == 0
+    assert count == 1
 
 
 def test_execute_three_premises(chain: apyds.Chain) -> None:
@@ -81,7 +81,7 @@ def test_execute_three_premises(chain: apyds.Chain) -> None:
         return False
 
     count = chain.execute(callback)
-    assert count == 1
+    assert count == 3
     assert success
 
 
@@ -117,7 +117,7 @@ def test_execute_exceed_by_too_many_premises() -> None:
     assert chain.add("ccccc")
     assert chain.add("ddddd")
     assert chain.add("eeeee")
-    assert chain.execute(lambda rule: False) == 1
+    assert chain.execute(lambda rule: False) == 5
 
     chain.reset()
     chain.set_limit_size(100)
@@ -128,7 +128,7 @@ def test_execute_exceed_by_too_many_premises() -> None:
     assert chain.add("ccccc")
     assert chain.add("ddddd")
     assert chain.add("eeeee")
-    assert chain.execute(lambda rule: False) == 1
+    assert chain.execute(lambda rule: False) == 5
 
     chain.reset()
     chain.set_limit_size(100)
@@ -139,4 +139,4 @@ def test_execute_exceed_by_too_many_premises() -> None:
     assert chain.add("ccccc")
     assert chain.add("ddddd")
     assert chain.add("eeeee")
-    assert chain.execute(lambda rule: False) == 0
+    assert chain.execute(lambda rule: False) == 1

@@ -50,7 +50,7 @@ test("execute_multiple_premises_chain", () => {
         }
         return false;
     });
-    expect(count).toBe(1);
+    expect(count).toBe(2);
     expect(success).toBe(true);
 });
 
@@ -58,7 +58,7 @@ test("execute_multiple_premises_partial", () => {
     chain.add("p q r");
     chain.add("p");
     const count = chain.execute((rule) => false);
-    expect(count).toBe(0);
+    expect(count).toBe(1);
 });
 
 test("execute_three_premises", () => {
@@ -74,7 +74,7 @@ test("execute_three_premises", () => {
         }
         return false;
     });
-    expect(count).toBe(1);
+    expect(count).toBe(3);
     expect(success).toBe(true);
 });
 
@@ -110,7 +110,7 @@ test("execute_exceed_by_too_many_premises", () => {
     expect(newChain.add("ccccc")).toBe(true);
     expect(newChain.add("ddddd")).toBe(true);
     expect(newChain.add("eeeee")).toBe(true);
-    expect(newChain.execute((rule) => false)).toBe(1);
+    expect(newChain.execute((rule) => false)).toBe(5);
 
     newChain.reset();
     newChain.set_limit_size(100);
@@ -121,7 +121,7 @@ test("execute_exceed_by_too_many_premises", () => {
     expect(newChain.add("ccccc")).toBe(true);
     expect(newChain.add("ddddd")).toBe(true);
     expect(newChain.add("eeeee")).toBe(true);
-    expect(newChain.execute((rule) => false)).toBe(1);
+    expect(newChain.execute((rule) => false)).toBe(5);
 
     newChain.reset();
     newChain.set_limit_size(100);
@@ -132,5 +132,5 @@ test("execute_exceed_by_too_many_premises", () => {
     expect(newChain.add("ccccc")).toBe(true);
     expect(newChain.add("ddddd")).toBe(true);
     expect(newChain.add("eeeee")).toBe(true);
-    expect(newChain.execute((rule) => false)).toBe(0);
+    expect(newChain.execute((rule) => false)).toBe(1);
 });

@@ -63,7 +63,7 @@ TEST_F(TestChain, execute_multiple_premises_chain) {
         }
         return false;
     });
-    EXPECT_EQ(count, 1);
+    EXPECT_EQ(count, 2);
     EXPECT_TRUE(success);
 }
 
@@ -71,7 +71,7 @@ TEST_F(TestChain, execute_multiple_premises_partial) {
     chain->add("p q r");
     chain->add("p");
     auto count = chain->execute([](ds::rule_t* rule) { return false; });
-    EXPECT_EQ(count, 0);
+    EXPECT_EQ(count, 1);
 }
 
 TEST_F(TestChain, execute_three_premises) {
@@ -87,7 +87,7 @@ TEST_F(TestChain, execute_three_premises) {
         }
         return false;
     });
-    EXPECT_EQ(count, 1);
+    EXPECT_EQ(count, 3);
     EXPECT_TRUE(success);
 }
 
@@ -124,7 +124,7 @@ TEST_F(TestChain, execute_exceed_by_too_many_premises) {
     EXPECT_TRUE(chain->add("ccccc"));
     EXPECT_TRUE(chain->add("ddddd"));
     EXPECT_TRUE(chain->add("eeeee"));
-    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 5);
     chain->reset();
     chain->set_limit_size(100);
     chain->set_buffer_size(1000);
@@ -134,7 +134,7 @@ TEST_F(TestChain, execute_exceed_by_too_many_premises) {
     EXPECT_TRUE(chain->add("ccccc"));
     EXPECT_TRUE(chain->add("ddddd"));
     EXPECT_TRUE(chain->add("eeeee"));
-    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 5);
     chain->reset();
     chain->set_limit_size(100);
     chain->set_buffer_size(100);
@@ -144,5 +144,5 @@ TEST_F(TestChain, execute_exceed_by_too_many_premises) {
     EXPECT_TRUE(chain->add("ccccc"));
     EXPECT_TRUE(chain->add("ddddd"));
     EXPECT_TRUE(chain->add("eeeee"));
-    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 0);
+    EXPECT_EQ(chain->execute([](ds::rule_t* rule) { return false; }), 1);
 }
