@@ -94,3 +94,16 @@ def test_execute_exceed(search: apyds.Search) -> None:
     assert search.add("(2 a-very-long-fact-that-exceeds-half-of-the-limit-size)")
     count = search.execute(lambda rule: False)
     assert count == 0
+
+
+def test_iterator(search: apyds.Search) -> None:
+    search.add("a")
+    search.add("b")
+    search.add("a b c")
+    expected = ["b\n----\nc\n"]
+    count = 0
+    for rule in search:
+        assert count < len(expected)
+        assert str(rule) == expected[count]
+        count += 1
+    assert count == len(expected)

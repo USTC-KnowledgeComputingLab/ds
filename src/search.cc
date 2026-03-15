@@ -61,11 +61,28 @@ namespace ds {
         }
     }
 
-    length_t search_t::execute(const std::function<bool(rule_t*)>& callback) {
+    ds::generator<rule_t*> search_t::iterator() {
         std::set<std::unique_ptr<rule_t>, less_t> temp_rules;
         std::set<std::unique_ptr<rule_t>, less_t> temp_facts;
 
-        bool break_all = false;
+        // RAII guard，确保无论是否提前退出，清理代码都会执行
+        struct guard_t {
+            std::function<void()> cleanup;
+            ~guard_t() {
+                cleanup();
+            }
+        } guard{[&]() {
+            ++current_cycle;
+            for (auto it = temp_rules.begin(); it != temp_rules.end();) {
+                auto node = temp_rules.extract(it++);
+                rules.emplace(std::move(node.value()), current_cycle);
+            }
+            for (auto it = temp_facts.begin(); it != temp_facts.end();) {
+                auto node = temp_facts.extract(it++);
+                facts.emplace(std::move(node.value()), current_cycle);
+            }
+        }};
+
         for (auto& [rule, rules_cycle] : rules) {
             for (auto& [fact, facts_cycle] : facts) {
                 if (rules_cycle <= done_cycle && facts_cycle <= done_cycle) {
@@ -95,28 +112,21 @@ namespace ds {
                     memcpy(new_fact.get(), buffer.get(), buffer->data_size());
                     temp_facts.emplace(std::move(new_fact));
                 }
-                if (callback(buffer.get())) {
-                    break_all = true;
-                    break;
-                }
-            }
-            if (break_all) {
-                break;
+                co_yield buffer.get();
             }
         }
 
-        if (!break_all) {
-            done_cycle = current_cycle;
-        }
-        ++current_cycle;
-        length_t count = temp_rules.size() + temp_facts.size();
-        for (auto it = temp_rules.begin(); it != temp_rules.end();) {
-            auto node = temp_rules.extract(it++);
-            rules.emplace(std::move(node.value()), current_cycle);
-        }
-        for (auto it = temp_facts.begin(); it != temp_facts.end();) {
-            auto node = temp_facts.extract(it++);
-            facts.emplace(std::move(node.value()), current_cycle);
+        done_cycle = current_cycle;
+        co_return;
+    }
+
+    length_t search_t::execute(const std::function<bool(rule_t*)>& callback) {
+        length_t count = 0;
+        for (auto* rule : iterator()) {
+            ++count;
+            if (callback(rule)) {
+                break;
+            }
         }
         return count;
     }

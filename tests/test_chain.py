@@ -140,3 +140,16 @@ def test_execute_exceed_by_too_many_premises() -> None:
     assert chain.add("ddddd")
     assert chain.add("eeeee")
     assert chain.execute(lambda rule: False) == 1
+
+
+def test_iterator(chain: apyds.Chain) -> None:
+    chain.add("a")
+    chain.add("b")
+    chain.add("a b c")
+    expected = ["b\n----\nc\n", "----\nc\n"]
+    count = 0
+    for rule in chain:
+        assert count < len(expected)
+        assert str(rule) == expected[count]
+        count += 1
+    assert count == len(expected)

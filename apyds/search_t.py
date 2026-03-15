@@ -77,3 +77,20 @@ class Search:
             The number of rules processed.
         """
         return self._search.execute(lambda candidate: callback(Rule(candidate.clone())))
+
+    def __iter__(self) -> typing.Iterator[Rule]:
+        """Iterate over inferred rules.
+
+        Returns:
+            An iterator over Rule objects.
+
+        Example:
+            >>> for rule in search:
+            ...     print(rule)
+        """
+        iterator = self._search.iter()
+        while True:
+            candidate = iterator.next()
+            if candidate is None:
+                break
+            yield Rule(candidate.clone())

@@ -1,10 +1,36 @@
 #include <ds/chain.hh>
 #include <ds/ds.hh>
+#include <ds/generator.hh>
 #include <ds/search.hh>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;
+
+class Iterator {
+  public:
+    explicit Iterator(ds::generator<ds::rule_t*> _generator) : generator(std::move(_generator)), initialized(false), iterator(nullptr) { }
+
+    ds::rule_t* next() {
+        if (initialized) {
+            ++*iterator;
+        } else {
+            iterator = std::make_unique<iterator_t>(generator.begin());
+            initialized = true;
+        }
+        if (*iterator == nullptr) {
+            return nullptr;
+        }
+        ds::rule_t* result = **iterator;
+        return result;
+    }
+
+  private:
+    ds::generator<ds::rule_t*> generator;
+    bool initialized;
+    using iterator_t = decltype(generator.begin());
+    std::unique_ptr<iterator_t> iterator;
+};
 
 template<typename T>
 auto from_string(const std::string_view& string, int buffer_size) -> std::unique_ptr<T> {
@@ -169,6 +195,11 @@ PYBIND11_MODULE(_ds, m, py::mod_gil_not_used()) {
     search_t.def("reset", &ds::search_t::reset);
     search_t.def("add", &ds::search_t::add);
     search_t.def("execute", &ds::search_t::execute);
+    search_t.def(
+        "iter",
+        [](ds::search_t& self) { return Iterator(std::move(self.iterator())); },
+        py::keep_alive<0, 1>()
+    );
 
     auto chain_t = py::class_<ds::chain_t>(m, "Chain");
     chain_t.def(py::init<ds::length_t, ds::length_t>());
@@ -177,4 +208,12 @@ PYBIND11_MODULE(_ds, m, py::mod_gil_not_used()) {
     chain_t.def("reset", &ds::chain_t::reset);
     chain_t.def("add", &ds::chain_t::add);
     chain_t.def("execute", &ds::chain_t::execute);
+    chain_t.def(
+        "iter",
+        [](ds::chain_t& self) { return Iterator(std::move(self.iterator())); },
+        py::keep_alive<0, 1>()
+    );
+
+    auto iterator_t = py::class_<Iterator>(m, "Iterator");
+    iterator_t.def("next", &Iterator::next, py::return_value_policy::reference_internal);
 }

@@ -6,6 +6,7 @@
 #include <memory>
 #include <string_view>
 
+#include <ds/generator.hh>
 #include <ds/rule.hh>
 
 namespace ds {
@@ -65,6 +66,10 @@ namespace ds {
         /// @return 搜索到新的结果的数量。
         /// @note 如果回调函数返回false，则继续搜索；如果回调函数返回true，则停止搜索。
         length_t execute(const std::function<bool(rule_t*)>& callback);
+
+        /// @brief 执行一轮搜索操作，以生成器方式迭代所有匹配的规则。
+        /// @return 生成器，每次迭代返回一个匹配的规则指针。
+        generator<rule_t*> iterator();
     };
 } // namespace ds
 

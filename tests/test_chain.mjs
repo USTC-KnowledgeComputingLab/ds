@@ -134,3 +134,17 @@ test("execute_exceed_by_too_many_premises", () => {
     expect(newChain.add("eeeee")).toBe(true);
     expect(newChain.execute((rule) => false)).toBe(1);
 });
+
+test("iterator", () => {
+    chain.add("a");
+    chain.add("b");
+    chain.add("a b c");
+    const expected = ["b\n----\nc\n", "----\nc\n"];
+    let count = 0;
+    for (const rule of chain) {
+        expect(count).toBeLessThan(expected.length);
+        expect(rule.toString()).toBe(expected[count]);
+        count++;
+    }
+    expect(count).toBe(expected.length);
+});
