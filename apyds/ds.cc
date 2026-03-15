@@ -18,7 +18,7 @@ class Iterator {
             iterator = std::make_unique<iterator_t>(generator.begin());
             initialized = true;
         }
-        if (*iterator == nullptr) {
+        if (*iterator == generator.end()) {
             return nullptr;
         }
         ds::rule_t* result = **iterator;
