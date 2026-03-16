@@ -57,7 +57,7 @@ def test_create_from_bytes(t: apyds.Term) -> None:
 
 def test_create_fail() -> None:
     with pytest.raises(TypeError):
-        term = apyds.Term(100)
+        apyds.Term(100)
 
 
 def test_term() -> None:
