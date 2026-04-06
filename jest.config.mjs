@@ -3,6 +3,6 @@ export default {
     collectCoverage: true,
     extensionsToTreatAsEsm: [".mts"],
     transform: {
-        "^.+\\.m?tsx?$": ["ts-jest", {}],
+        "^.+\\.m?tsx?$": ["@swc/jest"],
     },
 };
