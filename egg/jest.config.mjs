@@ -3,6 +3,19 @@ export default {
     collectCoverage: true,
     extensionsToTreatAsEsm: [".mts"],
     transform: {
-        "^.+\\.m?tsx?$": ["@swc/jest"],
+        "^.+\\.m?tsx?$": [
+            "@swc/jest",
+            {
+                jsc: {
+                    parser: {
+                        syntax: "typescript",
+                    },
+                    target: "es2022",
+                },
+                module: {
+                    type: "es6",
+                },
+            },
+        ],
     },
 };
