@@ -19,14 +19,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_LATEST_VERSION }}
           cache: 'npm'
 
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: ${{ env.EM_CACHE_FOLDER }}
           key: docs-em-cache-${{ runner.os }}
