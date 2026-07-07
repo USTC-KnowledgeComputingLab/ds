@@ -20,7 +20,7 @@ jobs:
         node-version: ['20', '22', '24']
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: install antlr4
         run: pip install antlr4-tools
@@ -51,7 +51,7 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: recovery tag information
         run: git fetch --tags --force

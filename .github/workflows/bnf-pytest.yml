@@ -20,7 +20,7 @@ jobs:
         python-version: ['3.11', '3.12', '3.13', '3.14']
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: install antlr4
         run: pip install antlr4-tools
@@ -45,7 +45,7 @@ jobs:
     if: "github.event_name == 'push' && startsWith(github.ref, 'refs/tags')"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: recovery tag information
         run: git fetch --tags --force
