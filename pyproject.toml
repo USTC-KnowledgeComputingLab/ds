@@ -1,8 +1,8 @@
 [build-system]
 requires = [
-  "scikit-build-core>=0.11.6,<0.13.0",
+  "scikit-build-core>=0.11.6,<1.1.0",
   "pybind11~=3.0.1",
-  "setuptools-scm~=9.2.2",
+  "setuptools-scm>=9.2.2,<10.3.0",
 ]
 build-backend = "scikit_build_core.build"
 
@@ -32,8 +32,8 @@ build.verbose = true
 
 [project.optional-dependencies]
 dev = [
-  "ruff>=0.14.10,<0.16.0",
-  "pytest~=9.0.2",
+  "ruff>=0.14.10,<0.17.0",
+  "pytest>=9.0.2,<9.2.0",
   "pytest-cov>=7.0,<7.2",
 ]
 
